@@ -1,0 +1,107 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import 'tailwindcss';
+
+@theme {
+   --font-inter: "Inter", "sans-serif"; 
+
+  --color-gray: #F5F5F5;
+  --color-light-gray: #F9FAFB;
+  --color-border: #E3E3E3;
+
+  --color-light: #fff;
+  --color-dark: #868686;
+  --color-darker: #6A6A6A;
+  --color-darkest: #2B2B2B;
+
+  --color-red: #EF4444;
+  --color-light-red: #FEE2E2;
+  --color-yellow: #EAB308;
+  --color-light-yellow: #FEF3C7;
+  --color-green: #22C55E;
+  --color-light-green: #DCFCE7;
+  --color-blue: #1E40AF;
+  --color-light-blue: #DBEAFE;
+  --color-violet: #5B21B6;
+  --color-light-violet: #EDE9FE;
+
+  --color-primary: var(--color-blue);
+  --color-light-primary: var(--color-light-blue);
+}
+
+@layer base {
+  body {
+    @apply font-inter;
+  }
+
+  ul, li {
+    @apply list-none;
+  }
+
+  h1 {
+    @apply text-3xl font-semibold;
+  }
+}
+
+@layer components {
+  .contain {
+      @apply mx-auto px-6 max-w-[2000px] py-6;
+  }
+
+  .border-all {
+    @apply border-[1px] border-border;
+  }
+  .border-l {
+    @apply border-l-[1px] border-border;
+  }
+  .border-r {
+    @apply border-r-[1px] border-border;
+  }
+  .border-t {
+    @apply border-t-[1px] border-border;
+  }
+  .border-b {
+    @apply border-b-[1px] border-border;
+  }
+}
+
+@layer utilities {
+  .hide-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;     /* Firefox */
+  }
+
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;             /* Chrome, Safari */
+  }
+}
+
+/* @layer utilities {
+
+  .bg-light-red    { background-color: var(--color-light-red); }
+  .bg-light-yellow { background-color: var(--color-light-yellow); }
+  .bg-light-green  { background-color: var(--color-light-green); }
+  .bg-light-blue   { background-color: var(--color-light-blue); }
+  .bg-light-violet { background-color: var(--color-light-violet); }
+  .bg-light-gray   { background-color: var(--color-light-gray); }
+  .bg-light        { background-color: var(--color-light); }
+
+
+  .bg-red    { background-color: var(--color-red); }
+  .bg-yellow { background-color: var(--color-yellow); }
+  .bg-green  { background-color: var(--color-green); }
+  .bg-blue   { background-color: var(--color-blue); }
+  .bg-violet { background-color: var(--color-violet); }
+  .bg-gray   { background-color: var(--color-gray); }
+  .bg-dark   { background-color: var(--color-dark); }
+  .bg-darker { background-color: var(--color-darker); }
+  .bg-darkest { background-color: var(--color-darkest); }
+
+
+  .border-border    { border-color: var(--color-border); }
+  .border-l-border { border-left-color: var(--color-border); }
+  .border-l-red    { border-left-color: var(--color-red); }
+  .border-l-yellow { border-left-color: var(--color-yellow); }
+  .border-l-green  { border-left-color: var(--color-green); }
+  .border-l-blue   { border-left-color: var(--color-blue); }
+  .border-l-violet { border-left-color: var(--color-violet); }
+} */

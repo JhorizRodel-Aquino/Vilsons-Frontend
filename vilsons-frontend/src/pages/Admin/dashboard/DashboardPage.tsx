@@ -1,0 +1,105 @@
+import Header from '../../../components/Header'
+import Sidebar from '../../../components/sidebar/Sidebar'
+import FinancialCard from './FinanceCard';
+import JobOrderCard from './JobOrderCard';
+import RecentJobOrderCard from './RecenJobOrderCard';
+
+function DashboardPage() {
+    return (
+        <div className='flex h-dvh w-dvw'>
+            {/* Left Side */}
+            <Sidebar />
+
+
+            {/* Right Side */}
+            <div className='bg-light-gray flex-1 flex flex-col'>
+                <Header />
+                
+                <main className='flex-1 h-full overflow-y-auto'>
+                    <div className='contain'>
+                        <h1 className='mb-[34px]'>Dashboard</h1>
+
+                        <div className="grid gap-7">
+                            <section className='grid gap-5'>
+                                <h2 className='text-base font-medium text-darker'>Monthly Financial Overview</h2>
+                                <div className='grid gap-[10px] md:grid-cols-[repeat(auto-fit,minmax(300px,1fr))]'>
+                                    <FinancialCard label={'Revenue'} value={1485000} delta={+12.5} children={[
+                                        {label: 'Operational', value: 100000},
+                                        {label: 'Operational', value: 100000},
+                                        {label: 'Operational', value: 100000, 
+                                            children: [
+                                            {label: 'Operational', value: 100000},
+                                            {label: 'Operational', value: 100000},
+                                            {label: 'Operational', value: 100000, children: [
+                                            {label: 'Operational', value: 100000},
+                                            {label: 'Operational', value: 100000},
+                                            {label: 'Operational', value: 100000}
+                                            ]}
+                                            ]
+                                    }
+                                    ]} />
+                                    <FinancialCard label={'Profit'} value={1485000} delta={-12.5} />
+                                    <FinancialCard label={'Enxpenses'} value={1485000} delta={-12.5} />
+                                    <FinancialCard label={'Balance'} value={1485000} delta={12.5} />
+                                </div>
+                            </section>
+
+                            <section className='grid gap-5'>
+                                <h2 className='text-base font-medium text-darker'>Job Order Status</h2>
+                                <div className='grid gap-[10px] grid-cols-[repeat(auto-fit,minmax(300px,1fr))]'>
+                                    <JobOrderCard status={'pending'} value={5} />
+                                    <JobOrderCard status={'ongoing'} value={5} />
+                                    <JobOrderCard status={'completed'} value={5} />
+                                    <JobOrderCard status={'for release'} value={5} />
+                                </div>
+                            </section>
+
+                            <div className='grid gap-7 grid-cols-1 xl:grid-cols-[2fr_1fr] h-[500px]'>
+                                <section className='grid border-all rounded-[15px] bg-light gap-5 p-5 h-full'>
+                                    <h2 className='text-base font-medium text-darker'>Revenue and Profit Trends (2025)</h2>
+                                </section>
+                                
+                                <section className='grid border-all rounded-[15px] bg-light gap-5 p-5 h-full overflow-y-auto'>
+                                    <h2 className='text-base font-medium text-darker'>Recent Job Orders</h2>
+                                    <div className='grid gap-[10px]'>
+                                        <RecentJobOrderCard 
+                                            jobNumber='25-003' 
+                                            status={'ongoing'} 
+                                            plate={'ZTT-795'} 
+                                            contractor={'KV Services'} 
+                                            datetime={'Jan 4, 2022 11:30 AM'}
+                                        />
+                                        <RecentJobOrderCard 
+                                            jobNumber='25-003' 
+                                            status={'pending'} 
+                                            plate={'ZTT-795'} 
+                                            contractor={'KV Services'} 
+                                            datetime={'Jan 4, 2022 11:30 AM'}
+                                        />
+                                        <RecentJobOrderCard 
+                                            jobNumber='25-003' 
+                                            status={'completed'} 
+                                            plate={'ZTT-795'} 
+                                            contractor={'KV Services'} 
+                                            datetime={'Jan 4, 2022 11:30 AM'}
+                                        />
+                                        <RecentJobOrderCard 
+                                            jobNumber='25-003' 
+                                            status={'for release'} 
+                                            plate={'ZTT-795'} 
+                                            contractor={'KV Services'} 
+                                            datetime={'Jan 4, 2022 11:30 AM'}
+                                        />
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+
+    )
+}
+
+export default DashboardPage;
