@@ -23,7 +23,7 @@ function FinanceCard({ label, value, delta, children }: FinanceCardProps) {
         <div className='rounded-[15px] border-all p-5'>
             <h3 className='flex justify-between text-sm mb-5'>
                 {hasChildren && <button onClick={() => setExpanded(!expanded)}>
-                    <Icon iconFilename={'chev-right'} /></button>}
+                    <Icon iconFilename={'chev-right'} className={`-mx-[3px] duration-200 ${expanded ? 'rotate-90' : 'rotate-0'}`} /></button>}
                 {label}
                 <Icon iconFilename={'peso'} />
             </h3>
@@ -32,19 +32,19 @@ function FinanceCard({ label, value, delta, children }: FinanceCardProps) {
 
             <small className='text-xs text-dark'>
                 {
-                    <span className={`${delta < 0 ? 'text-red' : 'text-green'}`}>
+                    <span className={`${delta < 0 ? 'text-r ed' : 'text-green'}`}>
                         {delta > 0 ? `+${delta}` : delta}%
                     </span>
                 } from last month
             </small>
 
-            <div className={`text-xs overflow-hidden h-auto duration-300 ${expanded ? 'max-h-full' : 'max-h-0'}`}>
-                {children && children.length > 1 &&
-                    children.map((c, i) => (
-                        <FinanceCardChild key={i} child={c} depth={0} />
-                    ))
-                }
-            </div>
+            
+            {children && children.length > 1 &&
+                children.map((c, i) => (
+                    <FinanceCardChild key={i} child={c} depth={0} expand={expanded} />
+                ))
+            }
+            
 
         </div>
     )
