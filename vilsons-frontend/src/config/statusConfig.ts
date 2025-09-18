@@ -31,5 +31,3 @@ export const statusItems: Record<Status, {
     iconFilename: 'truck'
   }
 };
-
-

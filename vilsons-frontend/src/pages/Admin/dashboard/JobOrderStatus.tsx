@@ -1,5 +1,5 @@
-import { statusItems } from '../../../config/jobOrderStatusConfig';
-import type { Status } from '../../../config/jobOrderStatusConfig';
+import { statusItems } from '../../../config/statusConfig';
+import type { Status } from '../../../config/statusConfig';
 
 function JobOrderStatus({ status }: {status: Status}) {
     return (

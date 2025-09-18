@@ -1,5 +1,5 @@
 import JobOrderStatus from './JobOrderStatus';
-import type { Status } from '../../../config/jobOrderStatusConfig';
+import type { Status } from '../../../config/statusConfig';
 
 type RecentJobOrderCardProps = {
     jobNumber: string,

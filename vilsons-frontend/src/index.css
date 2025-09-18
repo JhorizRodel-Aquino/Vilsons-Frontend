@@ -62,6 +62,18 @@
   .border-b {
     @apply border-b-[1px] border-border;
   }
+
+  .btn {
+    @apply py-2 px-3 text-base font-semibold rounded-[8px] cursor-pointer;
+  }
+
+  .filter-container {
+    @apply py-[5px] px-[8px] rounded-[8px] bg-gray text-dark outline-none;
+  }
+
+  .filter-input {
+    @apply placeholder:text-dark focus:outline-none;
+  }
 }
 
 @layer utilities {
