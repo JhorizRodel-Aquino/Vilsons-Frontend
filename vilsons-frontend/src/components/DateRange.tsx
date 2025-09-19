@@ -1,21 +1,23 @@
 function DateRange() {
   return (
-    <div className="flex gap-4 items-center filter-container">
-      <div className="">
+    <div className="flex flex-col md:flex-row gap-y-2 gap-x-4 items-end filter-container">
+      <div className="flex items-center gap-2">
+        <span>From:</span>
         <input
           type="date"
           id="dateFrom"
           name="dateFrom"
-          className="rounded-[5px] bg-gray px-2 py-1 text-dark placeholder:text-dark focus:outline-none"
+          className="appearance-none rounded-[5px] focus:outline-none dark-calendar"
         />
       </div>
 
-      <div className="">
+      <div className="flex items-center gap-2">
+        <span>To:</span>
         <input
           type="date"
           id="dateTo"
           name="dateTo"
-          className="rounded-[5px] bg-gray px-2 py-1 text-dark placeholder:text-dark focus:outline-none"
+          className="appearance-none rounded-[5px] focus:outline-none dark-calendar"
         />
       </div>
     </div>

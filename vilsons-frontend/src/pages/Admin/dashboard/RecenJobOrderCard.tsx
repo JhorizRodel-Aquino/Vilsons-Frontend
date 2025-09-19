@@ -1,4 +1,4 @@
-import JobOrderStatus from './JobOrderStatus';
+import StatusIndicator from '../../../components/StatusIndicator';
 import type { Status } from '../../../config/statusConfig';
 
 type RecentJobOrderCardProps = {
@@ -14,7 +14,7 @@ function RecentJobOrderCard({ jobNumber, status, plate, contractor, datetime }: 
         <div className='p-5 bg-light rounded-[10px] border-all'>
             <div className='flex flex-wrap justify-between items-center gap-y-1 mb-[13px]'>
                 <p className='text-sm font-semibold'>{jobNumber}</p>
-                <JobOrderStatus status={status} />
+                <StatusIndicator status={status} />
             </div>
             <div className='grid gap-1 text-xs text-darker'>
                 <p >Plate: {plate}</p>

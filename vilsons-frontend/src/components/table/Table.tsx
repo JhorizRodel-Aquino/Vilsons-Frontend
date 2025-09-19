@@ -15,18 +15,18 @@ type TableProps<T> = {
 function Table<T>({ columns, rows }: TableProps<T>) {
   return (
     <div className='px-[20px]'>
-        <table className='border-collapse w-full'>
+        <table className='border-collapse w-full divide-y divide-border'>
             <thead>
-                <tr className='border-b'>
+                <tr>
                 {columns.map((col, i) => (
                     <TableHead key={i} label={col.label} />
                 ))}
                 </tr>
             </thead>
       
-            <tbody>
+            <tbody className='divide-y divide-border'>
                 {rows.map((row, i) => (
-                    <tr key={i} className='border-b hover:bg-gray'>
+                    <tr key={i} className=' hover:bg-gray'>
                         {columns.map((col, j) => (
                             <TableData key={j} row={row} column={col} />
                         ))}

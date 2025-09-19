@@ -1,22 +1,22 @@
-import SidebarNav from './SidebarNav';
-import { navItems } from './sidebarConfig';
+import SidebarItem from './SidebarItem';
+import { sidebarItems } from './sidebarConfig';
 
 
 type NavItem = {
-    name: string,
+    label: string,
     iconFilename?: string,
     children?: NavItem[]
 }
 
 function Sidebar() {
-    const renderNavItems = (navs: NavItem[], depth = 0) => {
+    const renderSidebarItems = (navs: NavItem[], depth = 0) => {
         return navs.map((nav, i) => 
             nav.children && nav.children.length > 0
             ? (
                 <li key={i}>
                     <button className='w-full'>
-                        <SidebarNav 
-                            navName={nav.name} 
+                        <SidebarItem 
+                            label={nav.label} 
                             iconFilename={depth > 0 ? undefined : nav.iconFilename} 
                             depth={depth} 
                             isGroup={true} 
@@ -24,15 +24,15 @@ function Sidebar() {
                     </button>
 
                     <ul>
-                        {renderNavItems(nav.children, depth + 1)}
+                        {renderSidebarItems(nav.children, depth + 1)}
                     </ul>
                 </li>
             )
             : (
                 <li key={i}>
                     <a href=''>
-                        <SidebarNav 
-                            navName={nav.name} 
+                        <SidebarItem 
+                            label={nav.label} 
                             iconFilename={depth > 0 ? undefined : nav.iconFilename} 
                             depth={depth} />
                     </a>
@@ -42,12 +42,12 @@ function Sidebar() {
     }
     
     return (
-        <aside className='bg-red-50 py-3 px-4 w-96 border-r h-full overflow-y-auto'>
+        <aside className='bg-light py-3 px-4 w-96 border-r h-full overflow-y-auto'>
             <div className='grid gap-[33px]'>
                 <img className='logo' src='logo.webp' alt='' />
                 <nav className='grid gap-2'>
                     <ul>
-                        {renderNavItems(navItems)}
+                        {renderSidebarItems(sidebarItems)}
                     </ul>
                 </nav>
             </div>

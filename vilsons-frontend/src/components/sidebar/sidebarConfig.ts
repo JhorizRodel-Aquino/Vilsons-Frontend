@@ -1,27 +1,27 @@
-export const navItems = [
+export const sidebarItems = [
     {
-        name: 'Dashboard',
+        label: 'Dashboard',
         iconFilename: 'dashboard', 
     },
     {
-        name: 'Other Income',
+        label: 'Other Income',
         iconFilename: 'other-income'
     },
     {
-        name: 'Transactions',
+        label: 'Transactions',
         iconFilename: 'transactions'
     },
     {
-        name: 'Finances',
+        label: 'Finances',
         iconFilename: 'finances',
         children: [
-            { name: 'Revenue and Profit' },
-            { name: 'Operational Expenses' },
-            { name: 'Overhead Expenses' }
+            { label: 'Revenue and Profit' },
+            { label: 'Operational Expenses' },
+            { label: 'Overhead Expenses' }
         ]
     },
     {
-        name: 'Transactions',
+        label: 'Transactions',
         iconFilename: 'transactions'
     },
 ];

@@ -2,9 +2,9 @@ import Icon from "./Icon";
 
 function SearchBar() {
     return (
-        <div className="filter-container grid grid-flow-col justify-between items-center gap-2">
-            <Icon iconFilename="user" />
-            <input type="text" placeholder="Search" className="filter-input" />
+        <div className="filter-container grid grid-cols-[auto_1fr] items-center gap-2">
+            <label htmlFor="search"><Icon iconFilename="search" /></label>
+            <input id="search" type="text" placeholder="Search" className="filter-input" />
         </div>
     )
 }
