@@ -23,9 +23,9 @@ function FinanceCard({ label, value, delta, children }: FinanceCardProps) {
         <div className='rounded-[15px] border-all p-5'>
             <h3 className='flex justify-between text-sm mb-5'>
                 {hasChildren && <button onClick={() => setExpanded(!expanded)}>
-                    <Icon iconFilename={'chev-right'} className={`-mx-[3px] duration-200 ${expanded ? 'rotate-90' : 'rotate-0'}`} /></button>}
+                    <Icon name={'chev-right'} className={`-mx-[3px] duration-200 ${expanded ? 'rotate-90' : 'rotate-0'}`} /></button>}
                 {label}
-                <Icon iconFilename={'peso'} />
+                <Icon name={'peso'} />
             </h3>
 
             <p className='text-3xl font-medium'>{value}</p>

@@ -11,8 +11,6 @@ import ActiveTabContent from "./ActiveTabContent";
 import ArchivedTabContent from "./ArchivedTabContent";
 
 function JobOrdersPage() {
-
-
     const tabs = ['active', 'archived'];
     const [activeTab, setActiveTab] = useState(tabs[0]);
 

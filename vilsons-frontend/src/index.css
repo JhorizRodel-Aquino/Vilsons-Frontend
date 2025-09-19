@@ -43,7 +43,6 @@
 }
 
 @layer components {
-
   .main {
     @apply flex-1 h-full overflow-y-auto;
   }

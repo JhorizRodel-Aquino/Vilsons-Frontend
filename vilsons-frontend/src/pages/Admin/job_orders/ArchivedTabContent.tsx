@@ -1,10 +1,8 @@
 import type { Column } from "../../../components/table/Table";
 import Info from "../../../components/Info"
 import Details from "../../../components/Details"
-import Button from "../../../components/Button"
 import TableFilter from "../../../components/TableFilter"
 import SearchBar from "../../../components/SearchBar"
-import StatusFilter from "../../../components/StatusFilter"
 import DateRange from "../../../components/DateRange"
 import Table from "../../../components/table/Table"
 
