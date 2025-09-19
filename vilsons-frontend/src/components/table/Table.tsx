@@ -14,7 +14,7 @@ type TableProps<T> = {
 
 function Table<T>({ columns, rows }: TableProps<T>) {
   return (
-    <div className='px-[20px]'>
+    <div className='px-[20px'>
         <table className='border-collapse w-full divide-y divide-border'>
             <thead>
                 <tr>
@@ -34,6 +34,8 @@ function Table<T>({ columns, rows }: TableProps<T>) {
                 ))}
             </tbody>
         </table>
+
+        {rows.length <= 0 && <p className='text-center my-10 italic'>No Records</p>}
     </div>
   );
 }

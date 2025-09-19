@@ -21,21 +21,21 @@ function FinanceCard({ label, value, delta, children }: FinanceCardProps) {
 
     return (
         <div className='rounded-[15px] border-all p-5'>
-            <h3 className='flex justify-between text-sm mb-5'>
-                {hasChildren && <button onClick={() => setExpanded(!expanded)}>
-                    <Icon name={'chev-right'} className={`-mx-[3px] duration-200 ${expanded ? 'rotate-90' : 'rotate-0'}`} /></button>}
-                {label}
+            <div className='flex justify-between items-center text-base mb-5'>
+                <span className={`flex flex-1 items-center ${hasChildren && 'cursor-pointer'}`} onClick={() => setExpanded(!expanded)}>
+                    {hasChildren && <Icon name={'chev-right'} className={`-mx-[2px] duration-200 ${expanded ? 'rotate-90' : 'rotate-0'}`} />}
+                    <h3>{label}</h3>
+                </span>
                 <Icon name={'peso'} />
-            </h3>
+            </div>
 
             <p className='text-3xl font-medium'>{value}</p>
 
-            <small className='text-xs text-dark'>
-                {
-                    <span className={`${delta < 0 ? 'text-r ed' : 'text-green'}`}>
-                        {delta > 0 ? `+${delta}` : delta}%
-                    </span>
-                } from last month
+            <small className='text-sm text-dark'>
+                {<span className={`${delta < 0 ? 'text-red' : 'text-green'}`}>
+                    {delta > 0 ? `+${delta}` : delta}%
+                </span>} 
+                from last month
             </small>
 
             

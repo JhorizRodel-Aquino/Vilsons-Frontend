@@ -16,11 +16,11 @@ function JobOrderCard({ status, value }: JobOrderCardProps) {
                 style={{backgroundColor: `var(--color-light-${statusItems[status].color})`, 
                 color: `var(--color-${statusItems[status].color})`}}
             >
-            <Icon iconFilename={statusItems[status].iconFilename} /></div>
+            <Icon name={statusItems[status].iconName} /></div>
             <div>
                 <p className='text-2xl font-medium mb-1'>{value}</p>
                 <h3 className='text-base'>{statusItems[status].label}</h3>
-                <small className='text-xs text-dark'>{statusItems[status].desc}</small>
+                <small className='text-sm text-dark'>{statusItems[status].desc}</small>
             </div>
         </div>
     )

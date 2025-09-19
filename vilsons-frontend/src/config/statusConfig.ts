@@ -4,30 +4,30 @@ export const statusItems: Record<Status, {
   label: string,
   desc: string,
   color: string,
-  iconFilename: string
+  iconName: string
 }> = {
   pending: {
     label: 'Pending',
     desc: 'Awaiting contractor assignment',
     color: 'red',
-    iconFilename: 'wait'
+    iconName: 'wait'
   },
   ongoing: {
     label: 'Ongoing',
     desc: 'Currently in progress',
     color: 'yellow',
-    iconFilename: 'wrench'
+    iconName: 'wrench'
   },
   completed: {
     label: 'Completed',
     desc: 'Awaiting assessment',
     color: 'green',
-    iconFilename: 'check'
+    iconName: 'check'
   },
   'for release': {
     label: 'For Release',
     desc: 'Ready for customer pickup',
     color: 'blue',
-    iconFilename: 'truck'
+    iconName: 'truck'
   }
 };

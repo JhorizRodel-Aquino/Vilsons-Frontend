@@ -51,10 +51,6 @@
     @apply mx-auto px-6 max-w-[2000px] py-6;
   }
 
-  .main-wrapper {
-    @apply grid rounded-[15px] bg-light gap-5 p-5;
-  }
-
   .border-all {
     @apply border-[1px] border-border;
   }

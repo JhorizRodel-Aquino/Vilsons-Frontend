@@ -12,11 +12,11 @@ type RecentJobOrderCardProps = {
 function RecentJobOrderCard({ jobNumber, status, plate, contractor, datetime }: RecentJobOrderCardProps) {
     return (
         <div className='p-5 bg-light rounded-[10px] border-all'>
-            <div className='flex flex-wrap justify-between items-center gap-y-1 mb-[13px]'>
-                <p className='text-sm font-semibold'>{jobNumber}</p>
+            <div className='flex flex-wrap text-base justify-between items-center gap-y-1 mb-[13px]'>
+                <p className='font-semibold'>{jobNumber}</p>
                 <StatusIndicator status={status} />
             </div>
-            <div className='grid gap-1 text-xs text-darker'>
+            <div className='grid gap-1 text-sm text-darker'>
                 <p >Plate: {plate}</p>
                 <p >Contractor: {contractor}</p>
                 <p >Datetime: {datetime}</p>
