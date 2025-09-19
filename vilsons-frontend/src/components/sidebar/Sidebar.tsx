@@ -9,18 +9,14 @@ import type { NavItem } from './sidebarConfig';
 function Sidebar() {
     const renderSidebarItems = (navs: NavItem[], depth = 0) => {
         return (
-            navs.map((nav, i) => {
-                if (nav.children && nav.children.length > 0) {
-                    return (
-                        <SidebarItem key={i}>
-                            <SidebarGroup label={nav.label} iconName={depth > 0 ? undefined : nav.iconName} depth={depth} >
-                                {renderSidebarItems(nav.children, depth + 1)}
-                            </SidebarGroup>
-                        </SidebarItem>
-                    )
-                }
-
-                return (
+            navs.map((nav, i) => (nav.children && nav.children.length > 0
+                ? (
+                    <SidebarItem key={i}>
+                        <SidebarGroup label={nav.label} iconName={depth > 0 ? undefined : nav.iconName} depth={depth} >
+                            {renderSidebarItems(nav.children, depth + 1)}
+                        </SidebarGroup>
+                    </SidebarItem>
+                ) : (
                     <SidebarItem key={i}>
                         {nav.path
                             ? (
@@ -43,7 +39,7 @@ function Sidebar() {
                         }
                     </SidebarItem>
                 )
-            })
+            ))
         )
     }
 
