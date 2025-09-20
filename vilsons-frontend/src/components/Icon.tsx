@@ -9,7 +9,7 @@ type IconProps = {
 
 function Icon({ name, size = 25, color = 'darkest', className }: IconProps) {
     return (
-        <svg className={`icon ${`text-${color}`} ${className}`} style={{ width: `${size}px`, height: `${size}px` }}>
+        <svg className={`icon ${`text-${color}`} ${className || ''}`} style={{ width: `${size}px`, height: `${size}px` }}>
             <use xlinkHref={`${sprite}#${name}`}></use>
         </svg>
     )

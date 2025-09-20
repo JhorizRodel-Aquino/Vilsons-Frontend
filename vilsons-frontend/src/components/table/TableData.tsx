@@ -7,7 +7,7 @@ type TableDataProps<T> = {
 
 function TableData<T>({ row, column }: TableDataProps<T>) {
     return (
-        <td className="text-base py-[15px]">
+        <td className="text-base py-[15px] px-2">
             {column.render ? column.render(row[column.key], row) : String(row[column.key])}
         </td>
     )

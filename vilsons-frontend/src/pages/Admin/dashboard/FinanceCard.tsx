@@ -36,8 +36,7 @@ function FinanceCard({ label, iconName, value, delta, children }: FinanceCardPro
             <small className='text-sm text-dark'>
                 {<span className={`${delta < 0 ? 'text-red' : 'text-green'}`}>
                     {delta > 0 ? `+${delta}` : delta}%
-                </span>} 
-                from last month
+                </span>} from last month
             </small>
 
             

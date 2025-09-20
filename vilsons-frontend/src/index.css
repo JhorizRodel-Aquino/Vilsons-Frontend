@@ -2,7 +2,7 @@
 @import 'tailwindcss';
 
 @theme {
-   --font-inter: "Inter", "sans-serif"; 
+  --font-inter: "Inter", "sans-serif";
 
   --color-gray: #F5F5F5;
   --color-light-gray: #F9FAFB;
@@ -33,7 +33,8 @@
     @apply font-inter text-darkest;
   }
 
-  ul, li {
+  ul,
+  li {
     @apply list-none;
   }
 
@@ -46,7 +47,7 @@
   .main {
     @apply flex-1 h-full overflow-y-auto;
   }
-  
+
   .main-container {
     @apply mx-auto px-6 max-w-[2000px] py-6;
   }
@@ -54,15 +55,19 @@
   .border-all {
     @apply border-[1px] border-border;
   }
+
   .border-l {
     @apply border-l-[1px] border-border;
   }
+
   .border-r {
     @apply border-r-[1px] border-border;
   }
+
   .border-t {
     @apply border-t-[1px] border-border;
   }
+
   .border-b {
     @apply border-b-[1px] border-border;
   }
@@ -71,7 +76,7 @@
   .btn {
     @apply py-2 px-3 text-base font-semibold rounded-[8px] cursor-pointer;
   }
-  
+
 
   .filter-container {
     @apply py-[5px] px-[8px] rounded-[8px] bg-gray text-dark outline-none;
@@ -84,12 +89,57 @@
 
 @layer utilities {
   .hide-scrollbar {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;     /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
   }
 
   .hide-scrollbar::-webkit-scrollbar {
-    display: none;             /* Chrome, Safari */
+    display: none;
+    /* Chrome, Safari */
+  }
+
+  .thin-scrollbar {
+    scrollbar-width: thin;        /* makes it thinner */
+    scrollbar-color: rgba(0, 0, 0, 0.3) transparent; 
+    /* For Firefox */
+  }
+
+  .thin-scrollbar::-webkit-scrollbar {
+    width: 6px;       /* scrollbar width */
+    height: 6px;      /* scrollbar height for horizontal scroll */
+  }
+
+  .thin-scrollbar::-webkit-scrollbar-track {
+    background: transparent; /* track background */
+  }
+
+  .thin-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.3); /* thumb color */
+    border-radius: 10px;                   /* rounded */
+  }
+
+  .hide-spinner::-webkit-inner-spin-button, 
+  .hide-spinner::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    /* For Chrome, Safari, Edge, Opera */
+  }
+
+  .hide-spinner {
+    -moz-appearance: textfield;
+     /* For Firefox */
+  }
+
+  .hide-calendar-clear::-webkit-clear-button,
+  .hide-calendar-clear::-webkit-inner-spin-button {
+      display: none;
+  }
+  
+  /* Hide the clear button in Firefox */
+  .hide-calendar-clear::-moz-clear-button {
+      display: none;
   }
 
   .dark-calendar::-webkit-calendar-picker-indicator {
@@ -99,6 +149,20 @@
   .hide-calendar::-webkit-calendar-picker-indicator {
     display: none;
     -webkit-appearance: none;
+  }
+
+  .date-icon {
+    position: absolute;
+    opacity: 100;
+    pointer-events: none;
+  }
+
+  .date-icon::-webkit-calendar-picker-indicator {
+    display: block;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
   }
 }
 

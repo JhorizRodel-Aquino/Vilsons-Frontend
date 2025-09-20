@@ -7,7 +7,7 @@ import DateRange from "../../../components/DateRange"
 import Table from "../../../components/table/Table"
 import formatPesoFromCents from '../../../utils/formatPesoFromCents';
 
-export default function ActiveTabContent() {
+export default function JobOrdersActiveTabContent() {
     type JobOrder = { 
         jobNumber: string; 
         plateNumber: string; 

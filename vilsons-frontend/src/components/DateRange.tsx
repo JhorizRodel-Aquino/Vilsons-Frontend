@@ -7,6 +7,7 @@ function DateRange() {
           type="date"
           id="dateFrom"
           name="dateFrom"
+          min="2000-01-01"
           className="appearance-none rounded-[5px] focus:outline-none dark-calendar"
         />
       </div>
@@ -17,6 +18,7 @@ function DateRange() {
           type="date"
           id="dateTo"
           name="dateTo"
+          min="2000-01-01"
           className="appearance-none rounded-[5px] focus:outline-none dark-calendar"
         />
       </div>
