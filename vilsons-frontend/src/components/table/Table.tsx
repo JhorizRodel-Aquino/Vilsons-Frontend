@@ -7,6 +7,12 @@ export type Column<T> = {
   render?: (value: T[keyof T], row: T) => React.ReactNode;
 };
 
+// export type Column<T, K extends keyof T = keyof T> = {
+//   key: K;
+//   label: string;
+//   render?: (value: T[K], row: T) => React.ReactNode;
+// };
+
 type TableProps<T> = {
   columns: Column<T>[];
   rows: T[];

@@ -5,6 +5,7 @@ import TableFilter from "../../../components/TableFilter"
 import SearchBar from "../../../components/SearchBar"
 import DateRange from "../../../components/DateRange"
 import Table from "../../../components/table/Table"
+import formatPesoFromCents from '../../../utils/formatPesoFromCents';
 
 export default function ActiveTabContent() {
     type JobOrder = { 
@@ -16,11 +17,11 @@ export default function ActiveTabContent() {
     };
 
     const jobOrderColumns: Column<JobOrder>[] = [
-        { key: "jobNumber", label: "Job Number" },
-        { key: "plateNumber", label: "Plate Number" },
-        { key: "contractor", label: "Contractor" },
-        { key: "totalBill", label: "Total Bill" },
-        { key: "balance", label: "Balance" },
+        {key: "jobNumber", label: "Job Number"},
+        {key: "plateNumber", label: "Plate Number"},
+        {key: "contractor", label: "Contractor"},
+        {key: "totalBill", label: "Total Bill", render: (value) => formatPesoFromCents(value as number)},
+        {key: "balance", label: "Balance", render: (value) => formatPesoFromCents(value as number)},
     ] ;
 
     const jobOrders: JobOrder[] = [

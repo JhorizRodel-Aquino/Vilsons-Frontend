@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Icon from '../../../components/Icon';
 import FinanceCardChild from './FinanceCardChild';
+import formatPesoFromCents from '../../../utils/formatPesoFromCents';
 
 export type Children = {
     label: string,
@@ -30,7 +31,7 @@ function FinanceCard({ label, iconName, value, delta, children }: FinanceCardPro
                 <Icon name={iconName} />
             </div>
 
-            <p className='text-3xl font-medium'>{value}</p>
+            <p className='text-3xl font-medium'>{formatPesoFromCents(value)}</p>
 
             <small className='text-sm text-dark'>
                 {<span className={`${delta < 0 ? 'text-red' : 'text-green'}`}>
