@@ -9,24 +9,25 @@ export type Children = {
 }
 
 type FinanceCardProps = {
-    label: string,
-    value: number,
-    delta: number
-    children?: Children[]
+    label: string;
+    iconName: string;
+    value: number;
+    delta: number;
+    children?: Children[];
 }
 
-function FinanceCard({ label, value, delta, children }: FinanceCardProps) {
+function FinanceCard({ label, iconName, value, delta, children }: FinanceCardProps) {
     const [expanded, setExpanded] = useState(false);
     const hasChildren = children && children.length > 0;
 
     return (
         <div className='rounded-[15px] border-all p-5'>
             <div className='flex justify-between items-center text-base mb-5'>
-                <span className={`flex flex-1 items-center ${hasChildren && 'cursor-pointer'}`} onClick={() => setExpanded(!expanded)}>
+                <span className={`flex flex-1 items-center ${hasChildren && 'cursor-pointer'}`} {...(hasChildren ? { onClick: () => setExpanded(!expanded) } : {})} >
                     {hasChildren && <Icon name={'chev-right'} className={`-mx-[2px] duration-200 ${expanded ? 'rotate-90' : 'rotate-0'}`} />}
                     <h3>{label}</h3>
                 </span>
-                <Icon name={'peso'} />
+                <Icon name={iconName} />
             </div>
 
             <p className='text-3xl font-medium'>{value}</p>

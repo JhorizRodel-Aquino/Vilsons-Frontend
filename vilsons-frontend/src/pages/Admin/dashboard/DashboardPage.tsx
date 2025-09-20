@@ -15,7 +15,7 @@ function DashboardPage() {
 
             <ContentLayout>
                 <Header />
-                
+
                 <Main>
                     <PageHeading title={'Dashboard'} />
 
@@ -23,24 +23,27 @@ function DashboardPage() {
                         <section className='grid gap-5'>
                             <h2 className='text-base font-medium text-darker'>Monthly Financial Overview</h2>
                             <div className='grid gap-[10px] grid-cols-[repeat(auto-fit,minmax(300px,1fr))]'>
-                                <FinancialCard label={'Revenue'} value={1485000} delta={+12.5} children={[
-                                    {label: 'Operational', value: 100000},
-                                    {label: 'Operational', value: 100000},
-                                    {label: 'Operational', value: 100000, 
+                                <FinancialCard label={'Revenue'} iconName={'peso'} value={1485000} delta={+12.5} children={[
+                                    { label: 'Operational', value: 100000 },
+                                    { label: 'Operational', value: 100000 },
+                                    {
+                                        label: 'Operational', value: 100000,
                                         children: [
-                                        {label: 'Operational', value: 100000},
-                                        {label: 'Operational', value: 100000},
-                                        {label: 'Operational', value: 100000, children: [
-                                        {label: 'Operational', value: 100000},
-                                        {label: 'Operational', value: 100000},
-                                        {label: 'Operational', value: 100000}
-                                        ]}
+                                            { label: 'Operational', value: 100000 },
+                                            { label: 'Operational', value: 100000 },
+                                            {
+                                                label: 'Operational', value: 100000, children: [
+                                                    { label: 'Operational', value: 100000 },
+                                                    { label: 'Operational', value: 100000 },
+                                                    { label: 'Operational', value: 100000 }
+                                                ]
+                                            }
                                         ]
-                                }
+                                    }
                                 ]} />
-                                <FinancialCard label={'Profit'} value={1485000} delta={-12.5} />
-                                <FinancialCard label={'Enxpenses'} value={1485000} delta={-12.5} />
-                                <FinancialCard label={'Balance'} value={1485000} delta={12.5} />
+                                <FinancialCard label={'Profit'} iconName={'rising'} value={1485000} delta={-12.5} />
+                                <FinancialCard label={'Enxpenses'} iconName={'falling'} value={1485000} delta={-12.5} />
+                                <FinancialCard label={'Balance'} iconName={'balance'} value={1485000} delta={12.5} />
                             </div>
                         </section>
 
@@ -58,36 +61,36 @@ function DashboardPage() {
                             <section className='grid border-all rounded-[15px] bg-light gap-5 p-5 h-full'>
                                 <h2 className='text-base font-medium text-darker'>Revenue and Profit Trends (2025)</h2>
                             </section>
-                            
+
                             <section className='grid border-all rounded-[15px] bg-light gap-5 p-5 h-full overflow-y-auto'>
                                 <h2 className='text-base font-medium text-darker'>Recent Job Orders</h2>
                                 <div className='grid gap-[10px]'>
-                                    <RecentJobOrderCard 
-                                        jobNumber='25-003' 
-                                        status={'ongoing'} 
-                                        plate={'ZTT-795'} 
-                                        contractor={'KV Services'} 
+                                    <RecentJobOrderCard
+                                        jobNumber='25-003'
+                                        status={'ongoing'}
+                                        plate={'ZTT-795'}
+                                        contractor={'KV Services'}
                                         datetime={'Jan 4, 2022 11:30 AM'}
                                     />
-                                    <RecentJobOrderCard 
-                                        jobNumber='25-003' 
-                                        status={'pending'} 
-                                        plate={'ZTT-795'} 
-                                        contractor={'KV Services'} 
+                                    <RecentJobOrderCard
+                                        jobNumber='25-003'
+                                        status={'pending'}
+                                        plate={'ZTT-795'}
+                                        contractor={'KV Services'}
                                         datetime={'Jan 4, 2022 11:30 AM'}
                                     />
-                                    <RecentJobOrderCard 
-                                        jobNumber='25-003' 
-                                        status={'completed'} 
-                                        plate={'ZTT-795'} 
-                                        contractor={'KV Services'} 
+                                    <RecentJobOrderCard
+                                        jobNumber='25-003'
+                                        status={'completed'}
+                                        plate={'ZTT-795'}
+                                        contractor={'KV Services'}
                                         datetime={'Jan 4, 2022 11:30 AM'}
                                     />
-                                    <RecentJobOrderCard 
-                                        jobNumber='25-003' 
-                                        status={'for release'} 
-                                        plate={'ZTT-795'} 
-                                        contractor={'KV Services'} 
+                                    <RecentJobOrderCard
+                                        jobNumber='25-003'
+                                        status={'for release'}
+                                        plate={'ZTT-795'}
+                                        contractor={'KV Services'}
                                         datetime={'Jan 4, 2022 11:30 AM'}
                                     />
                                 </div>
