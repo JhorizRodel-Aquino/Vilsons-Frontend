@@ -66,10 +66,6 @@ export default function MonthPicker() {
     };
   }, [isMonthOverlayOpen]);  
 
-  useEffect(() => {
-    setMonthYear(`${month}, ${year}`)
-  }, [month, year])
-
   const toggleYearOverlay = () => {
     setIsYearOverlayOpen(!isYearOverlayOpen);
   };
@@ -85,6 +81,7 @@ export default function MonthPicker() {
 
   const selectMonth = (month: string) => {
     setMonth(month);
+    setMonthYear(`${month}, ${year}`)
     setIsMonthOverlayOpen(false);
   }
   
@@ -143,7 +140,7 @@ export default function MonthPicker() {
                 key={mo}
                 onClick={() => selectMonth(mo)}
                 className={`text-xs p-2 cursor-default rounded-xs hover:bg-[#b2d4ff] hover:border-black
-                  ${mo === month && year === currentYear ? 'bg-[#0075ff] text-white border-2 border-black'
+                  ${`${mo}, ${year}` === monthYear ? 'bg-[#0075ff] text-white border-2 border-black'
                       : mo === currentMonth && year === currentYear ? 'text-black border-[1px] border-black'
                         : 'text-black border-[1px] border-transparent'}
                 `}
@@ -166,8 +163,5 @@ export default function MonthPicker() {
 
       </div>
     </div>
-
-
-
   );
 }
