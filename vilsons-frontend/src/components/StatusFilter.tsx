@@ -1,16 +1,16 @@
 import { statusItems } from "../config/statusConfig";
+import Dropdown from "./Dropdown";
 
 function StatusFilter() {
   return (
-    <div  className="filter-container">
-    <select name="status" id="status">
-      <option key='all' value="all">All Status</option>
-      {Object.entries(statusItems).map(([stat, item]) => (
-          <option key={stat} value={stat}>
-          {item.label}
-          </option>
-      ))}
-    </select></div>
+    <Dropdown>
+      <option key='all' value="all" className="p-0 m-0"><p>All Status</p></option>
+        {Object.entries(statusItems).map(([stat, item]) => (
+            <option key={stat} value={stat}>
+            {item.label}
+            </option>
+        ))}
+    </Dropdown>
   );
 }
 

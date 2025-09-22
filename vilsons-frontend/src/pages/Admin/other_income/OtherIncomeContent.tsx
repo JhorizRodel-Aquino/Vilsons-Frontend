@@ -1,15 +1,13 @@
+import { useState } from "react";
 import type { Column } from "../../../components/table/Table";
 import Info from "../../../components/Info"
 import Details from "../../../components/Details"
 import Button from "../../../components/Button";
 import TableFilter from "../../../components/TableFilter"
 import SearchBar from "../../../components/SearchBar"
-import DateRange from "../../../components/DateRange"
 import Table from "../../../components/table/Table"
 import formatPesoFromCents from '../../../utils/formatPesoFromCents';
-import YearPicker from "../../../components/YearPicker";
-import MonthPicker from "../../../components/MonthPicker";
-import MonthPickerOld from "../../../components/MonthPickerOld";
+import MonthYearFilter from "../../../components/MonthYearFilter";
 
 export default function OtherIncomeContent() {
     type OtherIncome = { 
@@ -33,6 +31,8 @@ export default function OtherIncomeContent() {
         {datetime: 'Jan 4, 2022 11:30 AM', description: '1kg of metal', amount: 102000},
         {datetime: 'Jan 4, 2022 11:30 AM', description: '1kg of metal', amount: 102000},
     ];
+  const [monthYear, setMonthYear] = useState('2018-01');
+  const [year, setYear] = useState(`2018`);
 
     return (
         <>
@@ -43,15 +43,10 @@ export default function OtherIncomeContent() {
 
             <TableFilter>
                 <SearchBar />
-
-                <TableFilter.Group>
-                    <DateRange />
-                    <MonthPicker />
-                    <MonthPickerOld />
-                    <YearPicker />
-                    
-                </TableFilter.Group>
+                <MonthYearFilter />
             </TableFilter>
+
+
 
             <Table columns={otherIncomeColumns} rows={otherIncomes} />
         </>

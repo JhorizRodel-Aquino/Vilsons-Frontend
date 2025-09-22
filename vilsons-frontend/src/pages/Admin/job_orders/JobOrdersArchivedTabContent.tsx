@@ -42,10 +42,7 @@ export default function JobOrdersActiveTabContent() {
 
             <TableFilter>
                 <SearchBar />
-
-                <TableFilter.Group>
-                    <DateRange />
-                </TableFilter.Group>
+                <DateRange />
             </TableFilter>
 
             <Table columns={jobOrderColumns} rows={jobOrders} />

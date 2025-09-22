@@ -79,11 +79,11 @@
 
 
   .filter-container {
-    @apply py-[5px] px-[8px] rounded-[8px] bg-gray text-dark outline-none;
+    @apply py-[5px] rounded-[8px] bg-gray text-dark outline-none relative;
   }
 
   .filter-input {
-    @apply placeholder:text-dark focus:outline-none;
+    @apply placeholder:text-dark focus:outline-none px-[8px] text-dark;
   }
 }
 
@@ -163,6 +163,19 @@
     right: 10px;
     top: 50%;
     transform: translateY(-50%);
+  }
+
+  /* Hide native select dropdown arrow */
+  .hide-select-icon {
+    -webkit-appearance: none; /* Safari/Chrome */
+    -moz-appearance: none;    /* Firefox */
+    appearance: none;         /* Standard */
+    background: none;         /* Remove default background */
+  }
+
+  /* Optional: remove extra padding on the right */
+  .hide-select-icon::-ms-expand {
+    display: none; /* IE/Edge */
   }
 }
 
