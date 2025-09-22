@@ -6,7 +6,7 @@ export default function MonthPicker() {
   // Generate a list of years from 2000 to current year
   const years = Array.from(
     { length: currentYear - 2000 + 1 },
-    (_, i) => 2000 + i
+    (_, i) => currentYear - i
   );
 
   const months = [
