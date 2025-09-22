@@ -1,4 +1,3 @@
-import { useState } from "react";
 import type { Column } from "../../../components/table/Table";
 import Info from "../../../components/Info"
 import Details from "../../../components/Details"
@@ -31,8 +30,6 @@ export default function OtherIncomeContent() {
         {datetime: 'Jan 4, 2022 11:30 AM', description: '1kg of metal', amount: 102000},
         {datetime: 'Jan 4, 2022 11:30 AM', description: '1kg of metal', amount: 102000},
     ];
-  const [monthYear, setMonthYear] = useState('2018-01');
-  const [year, setYear] = useState(`2018`);
 
     return (
         <>
