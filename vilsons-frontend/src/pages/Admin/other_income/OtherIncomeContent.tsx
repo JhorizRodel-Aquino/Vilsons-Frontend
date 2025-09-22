@@ -7,6 +7,7 @@ import SearchBar from "../../../components/SearchBar"
 import Table from "../../../components/table/Table"
 import formatPesoFromCents from '../../../utils/formatPesoFromCents';
 import MonthYearFilter from "../../../components/MonthYearFilter";
+import TableTotal from "../../../components/TableTotal";
 
 export default function OtherIncomeContent() {
     type OtherIncome = { 
@@ -43,9 +44,9 @@ export default function OtherIncomeContent() {
                 <MonthYearFilter />
             </TableFilter>
 
+            <Table columns={otherIncomeColumns} rows={otherIncomes} setHR={true} />
 
-
-            <Table columns={otherIncomeColumns} rows={otherIncomes} />
+            <TableTotal value={10000000} />
         </>
     )
 }

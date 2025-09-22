@@ -16,11 +16,12 @@ export type Column<T> = {
 type TableProps<T> = {
   columns: Column<T>[];
   rows: T[];
+  setHR?: boolean;
 };
 
-function Table<T>({ columns, rows }: TableProps<T>) {
+function Table<T>({ columns, rows, setHR = false }: TableProps<T>) {
   return (
-    <div className='px-[20px'>
+    <div className='mx-[20px]'>
         <table className='border-collapse w-full divide-y divide-border'>
             <thead>
                 <tr>
@@ -40,6 +41,8 @@ function Table<T>({ columns, rows }: TableProps<T>) {
                 ))}
             </tbody>
         </table>
+
+        {setHR && <hr/>}
 
         {rows.length <= 0 && <p className='text-center my-10 italic'>No Records</p>}
     </div>
