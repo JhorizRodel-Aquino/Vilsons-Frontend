@@ -12,7 +12,7 @@ import Table from "../../../components/table/Table"
 import formatPesoFromCents from '../../../utils/formatPesoFromCents';
 
 export default function JobOrdersActiveTabContent() {
-    type JobOrder = { 
+    type ActiveJobOrder = { 
         jobNumber: string; 
         status: Status;
         plateNumber: string; 
@@ -21,7 +21,7 @@ export default function JobOrdersActiveTabContent() {
         balance: number; 
     };
 
-    const jobOrderColumns: Column<JobOrder>[] = [
+    const activeJobOrderColumns: Column<ActiveJobOrder>[] = [
         {key: "jobNumber", label: "Job Number"},
         {key: "status", label: "Status", render: (value) => <StatusIndicator status={value as Status} />},
         {key: "plateNumber", label: "Plate Number"},
@@ -30,7 +30,7 @@ export default function JobOrdersActiveTabContent() {
         {key: "balance", label: "Balance", render: (value) => formatPesoFromCents(value as number)},
     ] ;
 
-    const jobOrders: JobOrder[] = [
+    const activeJobOrders: ActiveJobOrder[] = [
         {jobNumber: 'JO-25-233', status: 'completed', plateNumber: 'ABD-322', contractor: 'Jhoriz Rodel', totalBill: 102000, balance: 30000},
         {jobNumber: 'JO-25-233', status: 'completed', plateNumber: 'ABD-322', contractor: 'Jhoriz Rodel', totalBill: 102000, balance: 30000},
         {jobNumber: 'JO-25-233', status: 'completed', plateNumber: 'ABD-322', contractor: 'Jhoriz Rodel', totalBill: 102000, balance: 30000},
@@ -56,7 +56,7 @@ export default function JobOrdersActiveTabContent() {
                 </TableFilter.Group>
             </TableFilter>
 
-            <Table columns={jobOrderColumns} rows={jobOrders} />
+            <Table columns={activeJobOrderColumns} rows={activeJobOrders} />
         </>
     )
 }

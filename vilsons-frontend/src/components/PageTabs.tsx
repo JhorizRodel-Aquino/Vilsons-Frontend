@@ -32,7 +32,6 @@ export default function PageTabs({ tabs, activeTab, setActiveTab }: PageTabsProp
                     onClick={() => {
                         if (activeTab === tab) return;
                         setActiveTab(tab)
-                        console.log(underlineStyle)
                     }}
                 >
                     {tab}

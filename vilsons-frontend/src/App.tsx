@@ -5,6 +5,7 @@ import NotFoundPage from './pages/NotFoundPage'
 import './App.css'
 import OtherIncomePage from './pages/Admin/other_income/OtherIncomePage'
 import TransactionsPage from './pages/Admin/transactions/TransactionsPage'
+import OperationalExpensesPage from './pages/Admin/operational_expenses/OperationalExpensesPage'
 
 function App() {
   return (
@@ -15,7 +16,7 @@ function App() {
       <Route path='/other-income' element={<OtherIncomePage />} />
       <Route path='/transactions' element={<TransactionsPage />} />
       <Route path='/revenue-and-profit' element={<JobOrdersPage />} />
-      <Route path='/operational-expenses' element={<JobOrdersPage />} />
+      <Route path='/operational-expenses' element={<OperationalExpensesPage />} />
       <Route path='/overhead-expenses' element={<JobOrdersPage />} />
       <Route path='/trucks' element={<JobOrdersPage />} />
       <Route path="*" element={<NotFoundPage />} />
