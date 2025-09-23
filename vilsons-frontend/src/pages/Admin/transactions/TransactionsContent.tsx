@@ -7,7 +7,6 @@ import SearchBar from "../../../components/SearchBar"
 import Table from "../../../components/table/Table"
 import formatPesoFromCents from '../../../utils/formatPesoFromCents';
 import MonthYearFilter from "../../../components/MonthYearFilter";
-import Test from '../../../components/Test'
 import TableTotal from "../../../components/TableTotal";
 
 export default function TransactionContent() {

@@ -44,14 +44,6 @@
 }
 
 @layer components {
-  .main {
-    @apply flex-1 h-full overflow-y-auto;
-  }
-
-  .main-container {
-    @apply mx-auto px-6 max-w-[2000px] py-6;
-  }
-
   .border-all {
     @apply border-[1px] border-border;
   }
