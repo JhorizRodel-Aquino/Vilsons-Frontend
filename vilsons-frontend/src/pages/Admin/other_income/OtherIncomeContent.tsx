@@ -1,13 +1,12 @@
-import type { Column } from "../../../components/table/Table";
+import type { Column } from "../../../components/StandardTable";
 import Info from "../../../components/Info"
 import Details from "../../../components/Details"
 import Button from "../../../components/Button";
 import TableFilter from "../../../components/TableFilter"
 import SearchBar from "../../../components/SearchBar"
-import Table from "../../../components/table/Table"
+import StandardTable from "../../../components/StandardTable"
 import formatPesoFromCents from '../../../utils/formatPesoFromCents';
 import MonthYearFilter from "../../../components/MonthYearFilter";
-import TableTotal from "../../../components/TableTotal";
 
 export default function OtherIncomeContent() {
     type OtherIncome = { 
@@ -44,9 +43,7 @@ export default function OtherIncomeContent() {
                 <MonthYearFilter />
             </TableFilter>
 
-            <Table columns={otherIncomeColumns} rows={otherIncomes} setHR={true} />
-
-            <TableTotal value={10000000} />
+            <StandardTable columns={otherIncomeColumns} rows={otherIncomes} total={10000000} />
         </>
     )
 }

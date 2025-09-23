@@ -1,5 +1,5 @@
 import type { Status } from "../../../config/statusConfig";
-import type { Column } from "../../../components/table/Table";
+import type { Column } from "../../../components/StandardTable";
 import StatusIndicator from "../../../components/StatusIndicator";
 import Info from "../../../components/Info"
 import Details from "../../../components/Details"
@@ -8,7 +8,7 @@ import TableFilter from "../../../components/TableFilter"
 import SearchBar from "../../../components/SearchBar"
 import StatusFilter from "../../../components/StatusFilter"
 import DateRange from "../../../components/DateRange"
-import Table from "../../../components/table/Table"
+import StandardTable from "../../../components/StandardTable"
 import formatPesoFromCents from '../../../utils/formatPesoFromCents';
 
 export default function JobOrdersActiveTabContent() {
@@ -56,7 +56,7 @@ export default function JobOrdersActiveTabContent() {
                 </TableFilter.Group>
             </TableFilter>
 
-            <Table columns={activeJobOrderColumns} rows={activeJobOrders} />
+            <StandardTable columns={activeJobOrderColumns} rows={activeJobOrders} />
         </>
     )
 }

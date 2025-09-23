@@ -1,13 +1,13 @@
-import type { Column } from "../../../components/table/Table";
+import type { Column } from "../../../components/StandardTable";
 import Info from "../../../components/Info"
 import Details from "../../../components/Details"
 import Button from "../../../components/Button";
 import TableFilter from "../../../components/TableFilter"
 import SearchBar from "../../../components/SearchBar"
-import Table from "../../../components/table/Table"
+import StandardTable from "../../../components/StandardTable"
 import formatPesoFromCents from '../../../utils/formatPesoFromCents';
 import MonthYearFilter from "../../../components/MonthYearFilter";
-import TableTotal from "../../../components/TableTotal";
+
 
 export default function OperationalExpensesEquipmentsTabContent() {
     type EquipmentExpense = { 
@@ -48,9 +48,7 @@ export default function OperationalExpensesEquipmentsTabContent() {
                 <MonthYearFilter />
             </TableFilter>
 
-            <Table columns={equipmentExpenseColumns} rows={equipmentExpenses} setHR={true} />
-
-            <TableTotal value={20002039} />
+            <StandardTable columns={equipmentExpenseColumns} rows={equipmentExpenses} total={10000000}/>
         </>
     )
 }

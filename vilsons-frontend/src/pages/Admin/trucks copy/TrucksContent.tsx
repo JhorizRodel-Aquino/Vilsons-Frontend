@@ -4,7 +4,7 @@ import Details from "../../../components/Details"
 import TableFilter from "../../../components/TableFilter"
 import SearchBar from "../../../components/SearchBar"
 import DateRange from "../../../components/DateRange";
-import StandardTable from "../../../components/StandardTable"
+import Table from "../../../components/StandardTable"
 
 export default function TrucksContent() {
     type Truck = { 
@@ -20,7 +20,7 @@ export default function TrucksContent() {
         {key: "make", label: "Make"},
         {key: "model", label: "Model"},
         {key: "owner", label: "Owner"},
-        {key: "dateAdded", label: "Date Added"},
+        {key: "dateAdded", label: "DateAdded"},
     ];
 
     const trucks: Truck[] = [
@@ -44,7 +44,7 @@ export default function TrucksContent() {
                 <DateRange />
             </TableFilter>
 
-            <StandardTable columns={truckColumns} rows={trucks} />
+            <Table columns={truckColumns} rows={trucks} />
         </>
     )
 }
