@@ -1,4 +1,4 @@
-import type { Column } from "../StandardTable"; // reuse the Column type
+import type { Column } from "./Table"; // reuse the Column type
 
 type TableDataProps<T> = {
   row: T;

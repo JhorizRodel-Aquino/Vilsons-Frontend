@@ -1,10 +1,10 @@
-import type { Column } from "../../../components/StandardTable";
+import type { Column } from "../../../components/table/Table";
 import Info from "../../../components/Info"
 import Details from "../../../components/Details"
 import Button from "../../../components/Button";
 import TableFilter from "../../../components/TableFilter"
 import SearchBar from "../../../components/SearchBar"
-import StandardTable from "../../../components/StandardTable"
+import Table from "../../../components/table/Table"
 import formatPesoFromCents from '../../../utils/formatPesoFromCents';
 import MonthYearFilter from "../../../components/MonthYearFilter";
 
@@ -51,7 +51,7 @@ export default function TransactionContent() {
                 <MonthYearFilter />
             </TableFilter>
 
-            <StandardTable columns={transactionColumns} rows={transactions} total={10000000}/>
+            <Table columns={transactionColumns} rows={transactions} total={10000000}/>
         </>
     )
 }

@@ -1,10 +1,10 @@
-import type { Column } from "../../../components/StandardTable";
+import type { Column } from "../../../components/table/Table";
 import Info from "../../../components/Info"
 import Details from "../../../components/Details"
 import TableFilter from "../../../components/TableFilter"
 import SearchBar from "../../../components/SearchBar"
 import DateRange from "../../../components/DateRange";
-import Table from "../../../components/StandardTable"
+import Table from "../../../components/table/Table"
 
 export default function TrucksContent() {
     type Truck = { 

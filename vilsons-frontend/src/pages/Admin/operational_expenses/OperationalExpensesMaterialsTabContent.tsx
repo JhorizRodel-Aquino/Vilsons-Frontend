@@ -1,9 +1,9 @@
-import type { Column } from "../../../components/StandardTable";
+import type { Column } from "../../../components/table/Table";
 import Info from "../../../components/Info"
 import Details from "../../../components/Details"
 import TableFilter from "../../../components/TableFilter"
 import SearchBar from "../../../components/SearchBar"
-import StandardTable from "../../../components/StandardTable"
+import Table from "../../../components/table/Table"
 import formatPesoFromCents from '../../../utils/formatPesoFromCents';
 import MonthYearFilter from "../../../components/MonthYearFilter";
 
@@ -49,7 +49,7 @@ export default function OperationalExpensesMaterialsTabContent() {
                 <MonthYearFilter />
             </TableFilter>
 
-            <StandardTable columns={materialExpenseColumns} rows={materialExpenses} total={10000000}/>
+            <Table columns={materialExpenseColumns} rows={materialExpenses} total={10000000}/>
         </>
     )
 }
