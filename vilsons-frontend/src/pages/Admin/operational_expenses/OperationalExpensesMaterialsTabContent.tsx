@@ -10,8 +10,8 @@ import TableTotal from "../../../components/TableTotal";
 
 export default function OperationalExpensesMaterialsTabContent() {
     type MaterialExpense = { 
-        plateNumber: string; 
         jobNumber: string; 
+        plateNumber: string; 
         material: string; 
         quantity: number;
         amount: number;

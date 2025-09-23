@@ -7,6 +7,7 @@ import OtherIncomePage from './pages/Admin/other_income/OtherIncomePage'
 import TransactionsPage from './pages/Admin/transactions/TransactionsPage'
 import OperationalExpensesPage from './pages/Admin/operational_expenses/OperationalExpensesPage'
 import OverheadExpensesPage from './pages/Admin/overhead_expenses/OverheadExpensesPage'
+import TrucksPage from './pages/Admin/trucks/TrucksPage'
 
 function App() {
   return (
@@ -19,7 +20,7 @@ function App() {
       <Route path='/revenue-and-profit' element={<JobOrdersPage />} />
       <Route path='/operational-expenses' element={<OperationalExpensesPage />} />
       <Route path='/overhead-expenses' element={<OverheadExpensesPage />} />
-      <Route path='/trucks' element={<JobOrdersPage />} />
+      <Route path='/trucks' element={<TrucksPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   )
