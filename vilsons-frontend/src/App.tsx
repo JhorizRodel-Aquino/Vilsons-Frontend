@@ -8,6 +8,7 @@ import TransactionsPage from './pages/Admin/transactions/TransactionsPage'
 import OperationalExpensesPage from './pages/Admin/operational_expenses/OperationalExpensesPage'
 import OverheadExpensesPage from './pages/Admin/overhead_expenses/OverheadExpensesPage'
 import TrucksPage from './pages/Admin/trucks/TrucksPage'
+import ActivityLogsPage from './pages/Admin/activity_logs/ActivityLogsPage'
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
       <Route path='/operational-expenses' element={<OperationalExpensesPage />} />
       <Route path='/overhead-expenses' element={<OverheadExpensesPage />} />
       <Route path='/trucks' element={<TrucksPage />} />
+      <Route path='/activity-logs' element={<ActivityLogsPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   )

@@ -20,7 +20,7 @@ export default function TrucksContent() {
         {key: "make", label: "Make"},
         {key: "model", label: "Model"},
         {key: "owner", label: "Owner"},
-        {key: "dateAdded", label: "DateAdded"},
+        {key: "dateAdded", label: "Date Added"},
     ];
 
     const trucks: Truck[] = [
