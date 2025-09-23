@@ -19,8 +19,8 @@ export default function OperationalExpensesMaterialsTabContent() {
     };
 
     const materialExpenseColumns: Column<MaterialExpense>[] = [
-        {key: "plateNumber", label: "Plate Number"},
         {key: "jobNumber", label: "Job Number"},
+        {key: "plateNumber", label: "Plate Number"},
         {key: "material", label: "Material"},
         {key: "quantity", label: "Quantity"},
         {key: "amount", label: "Amount", render: (value) => formatPesoFromCents(value as number)},
@@ -28,15 +28,15 @@ export default function OperationalExpensesMaterialsTabContent() {
     ];
 
     const materialExpenses: MaterialExpense[] = [
-        {plateNumber: 'ABD-322', jobNumber: 'JO-25-233', material: 'Aluminum Bars', quantity: 20, amount: 10000000, totalAmount: 10000000},
-        {plateNumber: 'ABD-322', jobNumber: 'JO-25-233', material: 'Aluminum Bars', quantity: 20, amount: 10000000, totalAmount: 10000000},
-        {plateNumber: 'ABD-322', jobNumber: 'JO-25-233', material: 'Aluminum Bars', quantity: 20, amount: 10000000, totalAmount: 10000000},
-        {plateNumber: 'ABD-322', jobNumber: 'JO-25-233', material: 'Aluminum Bars', quantity: 20, amount: 10000000, totalAmount: 10000000},
-        {plateNumber: 'ABD-322', jobNumber: 'JO-25-233', material: 'Aluminum Bars', quantity: 20, amount: 10000000, totalAmount: 10000000},
-        {plateNumber: 'ABD-322', jobNumber: 'JO-25-233', material: 'Aluminum Bars', quantity: 20, amount: 10000000, totalAmount: 10000000},
-        {plateNumber: 'ABD-322', jobNumber: 'JO-25-233', material: 'Aluminum Bars', quantity: 20, amount: 10000000, totalAmount: 10000000},
-        {plateNumber: 'ABD-322', jobNumber: 'JO-25-233', material: 'Aluminum Bars', quantity: 20, amount: 10000000, totalAmount: 10000000},
-        {plateNumber: 'ABD-322', jobNumber: 'JO-25-233', material: 'Aluminum Bars', quantity: 20, amount: 10000000, totalAmount: 10000000},
+        {jobNumber: 'JO-25-233', plateNumber: 'ABD-322', material: 'Aluminum Bars', quantity: 20, amount: 10000000, totalAmount: 10000000},
+        {jobNumber: 'JO-25-233', plateNumber: 'ABD-322', material: 'Aluminum Bars', quantity: 20, amount: 10000000, totalAmount: 10000000},
+        {jobNumber: 'JO-25-233', plateNumber: 'ABD-322', material: 'Aluminum Bars', quantity: 20, amount: 10000000, totalAmount: 10000000},
+        {jobNumber: 'JO-25-233', plateNumber: 'ABD-322', material: 'Aluminum Bars', quantity: 20, amount: 10000000, totalAmount: 10000000},
+        {jobNumber: 'JO-25-233', plateNumber: 'ABD-322', material: 'Aluminum Bars', quantity: 20, amount: 10000000, totalAmount: 10000000},
+        {jobNumber: 'JO-25-233', plateNumber: 'ABD-322', material: 'Aluminum Bars', quantity: 20, amount: 10000000, totalAmount: 10000000},
+        {jobNumber: 'JO-25-233', plateNumber: 'ABD-322', material: 'Aluminum Bars', quantity: 20, amount: 10000000, totalAmount: 10000000},
+        {jobNumber: 'JO-25-233', plateNumber: 'ABD-322', material: 'Aluminum Bars', quantity: 20, amount: 10000000, totalAmount: 10000000},
+        {jobNumber: 'JO-25-233', plateNumber: 'ABD-322', material: 'Aluminum Bars', quantity: 20, amount: 10000000, totalAmount: 10000000},
     ];
 
     return (
