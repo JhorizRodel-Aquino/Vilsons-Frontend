@@ -15,7 +15,7 @@ export default function RevenueAndProfitPage() {
             <ContentLayout>
                 <Header />
                 <Main>
-                    <PageHeading title={'Overhead Expenses'} />
+                    <PageHeading title={'Revenue and Profit'} />
                    
                     <PageContent>
                         <RevenueAndProfitContent />

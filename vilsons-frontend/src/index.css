@@ -40,6 +40,18 @@
 
   h1 {
     @apply text-3xl font-semibold;
+  }  
+
+  th {
+    @apply text-start text-base font-semibold text-primary py-[20px] px-2;
+  }
+
+  td {
+    @apply text-base py-[15px] px-2;
+  }
+  
+  hr {
+    @apply border-border;
   }
 }
 
@@ -76,10 +88,6 @@
 
   .filter-input {
     @apply placeholder:text-dark focus:outline-none px-[8px] text-dark;
-  }
-
-  hr {
-    @apply border-border;
   }
 }
 

@@ -1,13 +1,17 @@
 type DetailsProps = {
     subtitle: string;
     modifiedDate?: string;
+    description?: string;
 }
 
-function Details({ subtitle, modifiedDate }: DetailsProps) {
+function Details({ subtitle, modifiedDate, description }: DetailsProps) {
     return (
         <div className="text-base">
             <h2 className="text-darker font-bold">{subtitle}</h2>
-            {modifiedDate && <p className="text-dark font-medium">Last updated: {modifiedDate}</p>}
+            <p className="text-dark font-medium">
+                {modifiedDate && `Last updated: ${modifiedDate}`}
+                {description && `${description}`}
+            </p>
         </div>
     )
 }

@@ -1,6 +1,5 @@
 import TableHead from './TableHead';
 import TableData from './TableData';
-import formatPesoFromCents from "../../utils/formatPesoFromCents";
 import TableTotal from './TableTotal';
 
 export type Column<T> = {
@@ -19,11 +18,12 @@ type TableProps<T> = {
   columns: Column<T>[];
   rows: T[];
   total?: number;
+  className?: string;
 };
 
-export default function Table<T>({ columns, rows, total }: TableProps<T>) {
+export default function Table<T>({ columns, rows, total, className }: TableProps<T>) {
   return (
-    <div className='mx-[20px] divide-y divide-border grid gap-[20px]'>
+    <div className={`mx-[20px] divide-y divide-border grid gap-[20px] ${className || ''}`}>
       <table className='border-collapse w-full divide-y divide-border'>
         <thead>
           <tr>
@@ -35,7 +35,7 @@ export default function Table<T>({ columns, rows, total }: TableProps<T>) {
   
         <tbody className='divide-y divide-border'>
           {rows.map((row, i) => (
-              <tr key={i} className=' hover:bg-gray'>
+              <tr key={i} className='hover:bg-gray'>
                 {columns.map((col, j) => (
                   <TableData key={j} row={row} column={col} />
                 ))}
