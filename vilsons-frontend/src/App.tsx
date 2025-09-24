@@ -10,6 +10,7 @@ import OverheadExpensesPage from './pages/Admin/overhead-expenses/OverheadExpens
 import TrucksPage from './pages/Admin/trucks/TrucksPage'
 import ActivityLogsPage from './pages/Admin/activity-logs/ActivityLogsPage'
 import './App.css'
+import AllUsersPage from './pages/Admin/all-users/AllUsersPage'
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
       <Route path='/overhead-expenses' element={<OverheadExpensesPage />} />
       <Route path='/trucks' element={<TrucksPage />} />
       <Route path='/activity-logs' element={<ActivityLogsPage />} />
+      <Route path='/all-users' element={<AllUsersPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   )
