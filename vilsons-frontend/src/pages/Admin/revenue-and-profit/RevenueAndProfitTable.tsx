@@ -1,37 +1,10 @@
 import formatPesoFromCents from "../../../utils/formatPesoFromCents";
 
-// export type RevenueAndProfitTableProps = {
-//     totalRevenue: number;
-//     serviceRevenue: number;
-//     otherIncome: number;
-//     totalExpenses: number;
-//     operationalExpenses: number;
-//     materialExpenses: number;
-//     equipmentExpenses: number;
-//     laborExpenses: number;
-//     overheadExpenses: number;
-//     grossProfit: number;  
-// };
-
-
 export type RevenueAndProfit = {
     category: string;
     amount: number
     depth?: number
 }
-
-// {
-//     totalRevenue, 
-//     serviceRevenue, 
-//     otherIncome, 
-//     totalExpenses, 
-//     operationalExpenses, 
-//     materialExpenses, 
-//     equipmentExpenses, 
-//     laborExpenses, 
-//     overheadExpenses, 
-//     grossProfit 
-// }: RevenueAndProfitTableProps
 
 export default function RevenueAndProfitTable({ rows }: { rows: RevenueAndProfit[] }) {
 
@@ -40,8 +13,8 @@ export default function RevenueAndProfitTable({ rows }: { rows: RevenueAndProfit
             <table className='border-collapse w-full divide-y divide-border'>
                 <thead>
                     <tr>
-                        <th className="text-left">Category</th>
-                        <th className="text-right">Amount</th>
+                        <th className="text-start w-full">Category</th>
+                        <th className="text-end">Amount</th>
                     </tr>
                 </thead>
 
@@ -54,12 +27,8 @@ export default function RevenueAndProfitTable({ rows }: { rows: RevenueAndProfit
                     ))}
                 </tbody>
             </table>
-            {/* 
-            {total !== undefined && rows.length > 0 && (
-            <TableTotal total={10000000} />
-            )}
 
-            {rows.length <= 0 && <p className='text-center my-10 italic'>No Records</p>} */}
+            {rows.length <= 0 && <p className='text-center my-10 italic'>No Records</p>}
         </div>
     )
 }

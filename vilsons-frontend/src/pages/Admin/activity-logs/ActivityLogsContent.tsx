@@ -4,7 +4,7 @@ import Details from "../../../components/Details"
 import TableFilter from "../../../components/TableFilter"
 import SearchBar from "../../../components/SearchBar"
 import DateRange from "../../../components/DateRange";
-import StandardTable from "../../../components/table/Table"
+import Table from "../../../components/table/Table"
 
 export default function ActivityLogsContent() {
     type ActivityLog = { 
@@ -38,7 +38,7 @@ export default function ActivityLogsContent() {
                 <DateRange />
             </TableFilter>
 
-            <StandardTable columns={activityLogColumns} rows={activityLogs} />
+            <Table columns={activityLogColumns} rows={activityLogs} />
         </>
     )
 }
