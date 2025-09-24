@@ -53,6 +53,10 @@
   hr {
     @apply border-border;
   }
+
+  table {
+    @apply border-collapse w-full divide-y divide-border [&_th:last-child]:w-0 [&_th:last-child]:whitespace-nowrap [&_td:last-child]:w-0 [&_td:last-child]:whitespace-nowrap;
+  }
 }
 
 @layer components {

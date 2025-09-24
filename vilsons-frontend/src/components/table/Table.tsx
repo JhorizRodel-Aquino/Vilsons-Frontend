@@ -23,8 +23,8 @@ type TableProps<T> = {
 
 export default function Table<T>({ columns, rows, total, className }: TableProps<T>) {
   return (
-    <div className={`mx-[20px] divide-y divide-border grid gap-[20px] [&_td:last-child]:w-0 [&_td:last-child]:whitespace-nowrap ${className || ''}`}>
-      <table className='border-collapse w-full divide-y divide-border'>
+    <div className={`mx-[20px] divide-y divide-border grid gap-[20px] ${className || ''}`}>
+      <table>
         <thead>
           <tr>
             {columns.map((col, i) => (

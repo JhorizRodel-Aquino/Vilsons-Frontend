@@ -9,18 +9,18 @@ export type RevenueAndProfit = {
 export default function RevenueAndProfitTable({ rows }: { rows: RevenueAndProfit[] }) {
 
     return (
-        <div className='px-[20px] divide-y divide-border grid gap-[20px]'>
-            <table className='border-collapse w-full divide-y divide-border'>
+        <div className='mx-[20px] divide-y divide-border grid gap-[20px]'>
+            <table>
                 <thead>
                     <tr>
-                        <th className="text-start w-full">Category</th>
+                        <th className="text-start">Category</th>
                         <th className="text-end">Amount</th>
                     </tr>
                 </thead>
 
                 <tbody className='divide-y divide-border'>
-                    {rows.map(row => (
-                        <tr className={`hover:bg-gray ${row.depth === 0 ? 'bg-light-gray text-primary font-semibold uppercase' : row.depth === 1 ? 'capitalize' : 'text-darker capitalize'}`}>
+                    {rows.map((row, i) => (
+                        <tr key={i} className={`hover:bg-gray ${row.depth === 0 ? 'bg-light-gray text-primary font-semibold uppercase' : row.depth === 1 ? 'capitalize' : 'text-darker capitalize'}`}>
                             <td style={{ paddingLeft: 16 * ((row.depth ?? 0) - 1) + 8 }}>{row.category}</td>
                             <td className="text-end">{formatPesoFromCents(row.amount)}</td>
                         </tr>

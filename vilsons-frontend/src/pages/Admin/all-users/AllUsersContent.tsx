@@ -11,25 +11,33 @@ export default function AllUserContent() {
     type AllUser = { 
         name: string; 
         username: string; 
-        role: string; 
+        roles: string[]; 
         datetime: string; 
     };
 
     const allUserColumns: Column<AllUser>[] = [
         {key: "name", label: "Name"},
         {key: "username", label: "User Name"},
-        {key: "role", label: "Role"},
+        {key: "roles", label: "Roles", 
+            render: (roles) => (
+                (roles as string[]).map((role, i) => (
+                    <div key={i}>
+                        {role}{i < roles.length - 1 && ","}
+                    </div>
+                ))
+            )
+        },
         {key: "datetime", label: "Datetime"},
     ] ;
 
     const allUsers: AllUser[] = [
-        {name: 'Jhoriz Rodel Aquino', username: 'jrfa22', role: 'Admin', datetime: 'Jan 4, 2022 11:30 AM'},
-        {name: 'Jhoriz Rodel Aquino', username: 'jrfa22', role: 'Customer', datetime: 'Jan 4, 2022 11:30 AM'},
-        {name: 'Jhoriz Rodel Aquino', username: 'jrfa22', role: 'Employee', datetime: 'Jan 4, 2022 11:30 AM'},
-        {name: 'Jhoriz Rodel Aquino', username: 'jrfa22', role: 'Contractor', datetime: 'Jan 4, 2022 11:30 AM'},
-        {name: 'Jhoriz Rodel Aquino', username: 'jrfa22', role: 'Contractor', datetime: 'Jan 4, 2022 11:30 AM'},
-        {name: 'Jhoriz Rodel Aquino', username: 'jrfa22', role: 'Customer', datetime: 'Jan 4, 2022 11:30 AM'},
-        {name: 'Jhoriz Rodel Aquino', username: 'jrfa22', role: 'Employee', datetime: 'Jan 4, 2022 11:30 AM'},
+        {name: 'Jhoriz Rodel Aquino', username: 'jrfa22', roles: ['Manager', 'Employee'], datetime: 'Jan 4, 2022 11:30 AM'},
+        {name: 'Jhoriz Rodel Aquino', username: 'jrfa22', roles: ['Customer'], datetime: 'Jan 4, 2022 11:30 AM'},
+        {name: 'Jhoriz Rodel Aquino', username: 'jrfa22', roles: ['Employee'], datetime: 'Jan 4, 2022 11:30 AM'},
+        {name: 'Jhoriz Rodel Aquino', username: 'jrfa22', roles: ['Admin'], datetime: 'Jan 4, 2022 11:30 AM'},
+        {name: 'Jhoriz Rodel Aquino', username: 'jrfa22', roles: ['Contractor'], datetime: 'Jan 4, 2022 11:30 AM'},
+        {name: 'Jhoriz Rodel Aquino', username: 'jrfa22', roles: ['Customer'], datetime: 'Jan 4, 2022 11:30 AM'},
+        {name: 'Jhoriz Rodel Aquino', username: 'jrfa22', roles: ['Cashier', 'Employee'], datetime: 'Jan 4, 2022 11:30 AM'},
     ];
 
     return (
