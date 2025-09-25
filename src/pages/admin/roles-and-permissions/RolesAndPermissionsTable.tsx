@@ -19,10 +19,10 @@ export type ModulePermissions = {
 export default function PermissionsTable({ modulePermissions }: { modulePermissions: ModulePermissions[] }) {
 
     return (
-        <div>
+        <div className="table-section">
             <div className="table-container">
                 <table>
-                    <thead className="border-b border-border">
+                    <thead className="border-b">
                         <tr>
                             <th>Permission</th>
                             <th>Approval</th>
@@ -30,7 +30,8 @@ export default function PermissionsTable({ modulePermissions }: { modulePermissi
                     </thead>
                 </table>
             </div>
-            <div className='table-container'>
+
+            <div className='table-container main'>
                 <table>
                     {/* <thead>
                         <tr>
@@ -44,7 +45,7 @@ export default function PermissionsTable({ modulePermissions }: { modulePermissi
                             const permissions = [...modulePerm.view, ...modulePerm.create, ...modulePerm.edit, ...modulePerm.delete]
                             return (
                                 <Fragment key={i}>
-                                    <tr className='bg-light-gray text-primary font-semibold capitalize'>
+                                    <tr className='bg-light-gray text-primary font-semibold capitalize sticky top-0'>
                                         <td colSpan={2} className="pl-2">{modulePerm.module}</td>
                                     </tr>
                                     

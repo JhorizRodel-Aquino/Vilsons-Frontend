@@ -23,32 +23,35 @@ type TableProps<T> = {
 
 export default function Table<T>({ columns, rows, total, className }: TableProps<T>) {
   return (
-    <div className={`table-container ${className || ''}`}>
-      <table>
-        <thead>
-          <tr>
-            {columns.map((col, i) => (
-                <TableHead key={i} label={col.label} />
+    <div className='table-section'>
+      <div className={`table-container main ${className || ''}`}>
+        <table>
+          <thead>
+            <tr>
+              {columns.map((col, i) => (
+                  <TableHead key={i} label={col.label} />
+              ))}
+            </tr>
+            
+          </thead>
+    
+          <tbody className='divide-y divide-border'>
+            {rows.map((row, i) => (
+                <tr key={i} className='hover:bg-gray'>
+                  {columns.map((col, j) => (
+                    <TableData key={j} row={row} column={col} />
+                  ))}
+                </tr>
             ))}
-          </tr>
-        </thead>
-  
-        <tbody className='divide-y divide-border'>
-          {rows.map((row, i) => (
-              <tr key={i} className='hover:bg-gray'>
-                {columns.map((col, j) => (
-                  <TableData key={j} row={row} column={col} />
-                ))}
-              </tr>
-          ))}
-        </tbody>
-      </table>
+          </tbody>
+        </table>
 
-      {total !== undefined && rows.length > 0 && (
-        <TableTotal total={10000000}/>
-      )}
+        {total !== undefined && rows.length > 0 && (
+          <TableTotal total={10000000}/>
+        )}
 
-      {rows.length <= 0 && <p className='text-center my-10 italic'>No Records</p>}
+        {rows.length <= 0 && <p className='text-center my-10 italic'>No Records</p>}
+      </div>
     </div>
   );
 }
