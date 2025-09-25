@@ -128,7 +128,7 @@ export default function MonthYearPicker({ value, onChange, minYear = 2000, class
 
        {open && (
         <FloatingFocusManager context={context} modal={false}>
-          <div ref={refs.setFloating} style={floatingStyles} {...getFloatingProps()} className='text-black bg-white w-[150px] p-3 border-[1px] border-[#BFBFBF]' >
+          <div ref={refs.setFloating} style={floatingStyles} {...getFloatingProps()} className='text-black bg-white w-[150px] p-3 border-[1px] border-[#BFBFBF] z-50' >
             <div ref={(el) => { yearOverlayZoneRefs.current[0] = el }} className="year-selection relative items-center bg-[#EFEFEF]">
               <input
                 id="year"

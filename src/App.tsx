@@ -1,16 +1,17 @@
 import { Routes, Route } from 'react-router'
-import DashboardPage from './pages/Admin/dashboard/DashboardPage'
-import JobOrdersPage from './pages/Admin/job-orders/JobOrdersPage'
+import DashboardPage from './pages/admin/dashboard/DashboardPage'
+import JobOrdersPage from './pages/admin/job-orders/JobOrdersPage'
 import NotFoundPage from './pages/NotFoundPage'
-import OtherIncomePage from './pages/Admin/other-income/OtherIncomePage'
-import TransactionsPage from './pages/Admin/transactions/TransactionsPage'
-import RevenueAndProfitPage from './pages/Admin/revenue-and-profit/RevenueAndProfitPage'
-import OperationalExpensesPage from './pages/Admin/operational-expenses/OperationalExpensesPage'
-import OverheadExpensesPage from './pages/Admin/overhead-expenses/OverheadExpensesPage'
-import TrucksPage from './pages/Admin/trucks/TrucksPage'
-import ActivityLogsPage from './pages/Admin/activity-logs/ActivityLogsPage'
+import OtherIncomePage from './pages/admin/other-income/OtherIncomePage'
+import TransactionsPage from './pages/admin/transactions/TransactionsPage'
+import RevenueAndProfitPage from './pages/admin/revenue-and-profit/RevenueAndProfitPage'
+import OperationalExpensesPage from './pages/admin/operational-expenses/OperationalExpensesPage'
+import OverheadExpensesPage from './pages/admin/overhead-expenses/OverheadExpensesPage'
+import TrucksPage from './pages/admin/trucks/TrucksPage'
+import ActivityLogsPage from './pages/admin/activity-logs/ActivityLogsPage'
 import './App.css'
-import AllUsersPage from './pages/Admin/all-users/AllUsersPage'
+import AllUsersPage from './pages/admin/all-users/AllUsersPage'
+import RolesAndPermissionsPage from './pages/admin/roles-and-permissions/RolesAndPermissionsPage'
 
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
       <Route path='/trucks' element={<TrucksPage />} />
       <Route path='/activity-logs' element={<ActivityLogsPage />} />
       <Route path='/all-users' element={<AllUsersPage />} />
+      <Route path='/roles-and-permissions' element={<RolesAndPermissionsPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   )

@@ -9,7 +9,7 @@ export type RevenueAndProfit = {
 export default function RevenueAndProfitTable({ rows }: { rows: RevenueAndProfit[] }) {
 
     return (
-        <div className='mx-[20px] divide-y divide-border grid gap-[20px]'>
+        <div className='table-container'>
             <table>
                 <thead>
                     <tr>

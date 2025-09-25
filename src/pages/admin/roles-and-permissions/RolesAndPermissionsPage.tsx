@@ -5,9 +5,9 @@ import ContentLayout from "../../../components/ContentLayout";
 import Main from "../../../components/Main";
 import PageContent from "../../../components/PageContent";
 import AppLayout from "../../../components/AppLayout";
-import RevenueAndProfitContent from "./RevenueAndProfitContent"
+import RolesAndPermissionsContent from "./RolesAndPermissionsContent";
 
-export default function RevenueAndProfitPage() {
+export default function RolesAndPermissionsPage() {
     return (
         <AppLayout>
             <Sidebar />
@@ -15,10 +15,10 @@ export default function RevenueAndProfitPage() {
             <ContentLayout>
                 <Header />
                 <Main>
-                    <PageHeading title={'Revenue and Profit'} />
+                    <PageHeading title={'Overhead Expenses'} />
                    
                     <PageContent>
-                        <RevenueAndProfitContent />
+                        <RolesAndPermissionsContent />
                     </PageContent>
                 </Main>
             </ContentLayout>

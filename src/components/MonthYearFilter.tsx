@@ -5,17 +5,15 @@ import YearPicker from './YearPicker'
 import TableFilter from './TableFilter';
 
 export default function MonthYearFilter() {
-  const [option, setOption] = useState("monthly"); // default
+  const options = ['Monthly', 'Yearly']
+  const [option, setOption] = useState(options[0]); // default
 
   return (
     <TableFilter.Group>
-        <Dropdown value={option} onChange={(e) => setOption(e.target.value)}>
-            <option value="monthly">Monthly</option>
-            <option value="yearly">Yearly</option>
-        </Dropdown>
+        <Dropdown options={options} value={option} setValue={setOption}/>
         
-        {option === "monthly" && <MonthYearPicker />}
-        {option === "yearly" && <YearPicker />}
+        {option === options[0] && <MonthYearPicker />}
+        {option === options[1] && <YearPicker />}
     </TableFilter.Group>
   )
 }

@@ -65,7 +65,7 @@ export const sidebarItems: NavItem[] = [
             },
             { 
                 label: 'Roles and Permissions', 
-                path: '/rles-and-permissions'  
+                path: '/roles-and-permissions'  
             },
             { 
                 label: 'My Profile', 

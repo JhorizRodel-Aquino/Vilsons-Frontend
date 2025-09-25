@@ -19,7 +19,7 @@ export default function AllUserContent() {
         {key: "name", label: "Name"},
         {key: "username", label: "User Name"},
         {key: "roles", label: "Roles", 
-            render: (roles) => (
+            render: (roles ) => (
                 (roles as string[]).map((role, i) => (
                     <div key={i}>
                         {role}{i < roles.length - 1 && ","}

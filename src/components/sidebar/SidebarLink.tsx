@@ -19,11 +19,11 @@ function SidebarLink({ label, iconName, isGroup=false, depth, isSelected=false, 
 
     return (
         <div className={baseClasses} style={{ paddingLeft }} >
-            {iconName && <Icon name={iconName} size={35} />}
+            {iconName && <Icon name={iconName} size={35} color={`${!isGroup && isSelected ? 'primary' : 'darker'}`} />}
             <p className='text-base font-semibold flex-1 text-start'>
                 {label}
             </p>
-            {isGroup && <Icon name='chev-right' className={`duration-200 ${isGroup && expanded ? 'rotate-90' : 'rotate-0'}`} />}
+            {isGroup && <Icon name='chev-right' className={`duration-200 ${isGroup && expanded ? 'rotate-90' : 'rotate-0'}`} color='darker' />}
         </div>
     )
 }

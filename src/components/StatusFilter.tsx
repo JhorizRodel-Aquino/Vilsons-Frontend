@@ -1,16 +1,16 @@
+import { useEffect, useState } from "react";
 import { statusItems } from "../config/statusConfig";
 import Dropdown from "./Dropdown";
 
 function StatusFilter() {
+  const statusArr = Object.values(statusItems).map(item => item.label);
+  const options = ['All Status', ...statusArr];
+  const [status, setStatus] = useState(options[0]);
+
+  useEffect(() => console.log(status), [status]) 
+
   return (
-    <Dropdown>
-      <option key='all' value="all" className="p-0 m-0">All Status</option>
-        {Object.entries(statusItems).map(([stat, item]) => (
-            <option key={stat} value={stat}>
-            {item.label}
-            </option>
-        ))}
-    </Dropdown>
+    <Dropdown options={options} value={status} setValue={setStatus} />
   );
 }
 
