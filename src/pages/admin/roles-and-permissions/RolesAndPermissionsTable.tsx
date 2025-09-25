@@ -1,5 +1,7 @@
 import { Fragment } from "react/jsx-runtime";
 import Checkbox from "../../../components/Checkbox";
+import Switch from "../../../components/Swicth";
+import RolesAndPermissionsTableData from "./RolesAndPermissionTableData";
 
 export type Permission = {
     permission: string;
@@ -17,7 +19,6 @@ export type ModulePermissions = {
 };
 
 export default function PermissionsTable({ modulePermissions }: { modulePermissions: ModulePermissions[] }) {
-
     return (
         <div className="table-section">
             <div className="table-container">
@@ -52,19 +53,7 @@ export default function PermissionsTable({ modulePermissions }: { modulePermissi
                                     {
                                         permissions.map((perm, j) => (
                                             <tr key={j} className="hover:bg-gray ">
-                                                <td className="pl-6 py-0">
-                                                    <label htmlFor={perm.permission} className="flex gap-3 items-center py-3">
-                                                        <Checkbox value={perm.permission}/>
-                                                        {perm.permission}
-                                                    </label>
-                                                </td>
-                                                <td className="py-0 pr-6">
-                                                    {perm.approval != null && 
-                                                        <div className="flex items-center justify-center">
-                                                            <Checkbox value={`${perm.permission}-approval`}/>
-                                                        </div>
-                                                    }
-                                                </td>
+                                                <RolesAndPermissionsTableData permission={perm.permission} approval={perm.approval} />
                                             </tr>
                                         ))
                                     }
