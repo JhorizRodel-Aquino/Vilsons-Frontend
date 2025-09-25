@@ -44,14 +44,14 @@ function Sidebar() {
     }
 
     return (
-        <aside className='bg-light px-4 w-96 border-r h-full overflow-y-auto'>
-            <div className='grid gap-5'>
+        <aside className='bg-light px-4 w-96 border-r h-full overflow-y-auto thin-scrollbar'>
+            <div className='grid gap-2'>
                 <div className='logo sticky top-0 bg-light py-3 flex justify-start z-10'>
                     <NavLink to='/' >
                         <img src='logo.webp' alt='' />
                     </NavLink>
                 </div>
-                <nav className='grid gap-2'>
+                <nav className='grid gap-2 py-3'>
                     <ul>
                         {renderSidebarItems(sidebarItems)}
                     </ul>

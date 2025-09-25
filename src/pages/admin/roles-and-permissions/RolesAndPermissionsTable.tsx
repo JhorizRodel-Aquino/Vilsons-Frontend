@@ -58,7 +58,7 @@ export default function PermissionsTable({ modulePermissions }: { modulePermissi
                                                         {perm.permission}
                                                     </label>
                                                 </td>
-                                                <td className="py-0">
+                                                <td className="py-0 pr-6">
                                                     {perm.approval != null && 
                                                         <div className="flex items-center justify-center">
                                                             <Checkbox value={`${perm.permission}-approval`}/>
