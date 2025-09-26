@@ -13,6 +13,7 @@ import AllUsersPage from './pages/admin/all-users/AllUsersPage'
 import RolesAndPermissionsPage from './pages/admin/roles-and-permissions/RolesAndPermissionsPage'
 import MyProfilePage from './pages/admin/profile/MyProfilePage'
 import './App.css'
+import ContractorSinglePage from './pages/admin/contractors/single-page/ContractorsSinglePage'
 
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
       <Route path='/all-users' element={<AllUsersPage />} />
       <Route path='/roles-and-permissions' element={<RolesAndPermissionsPage />} />
       <Route path='/my-profile' element={<MyProfilePage />} />
+      <Route path="*" element={<ContractorSinglePage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   )

@@ -89,8 +89,8 @@
 }
 
 @layer components {
-  section.card {
-    @apply border-[1px] border-border rounded-[15px] bg-light p-5 h-full;
+  .card {
+    @apply border-[1px] border-border rounded-[15px] bg-light p-5;
   }
 
   .table-section {
@@ -172,6 +172,10 @@
 }
 
 @layer utilities {
+  .align-items-start {
+    align-items: start;
+  }
+
   .hide-scrollbar {
     -ms-overflow-style: none;
     /* IE and Edge */

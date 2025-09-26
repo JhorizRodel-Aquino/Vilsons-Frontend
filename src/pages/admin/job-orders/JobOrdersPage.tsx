@@ -25,7 +25,7 @@ function JobOrdersPage() {
 
                     <PageTabs tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
                    
-                    <PageContent useCard={true}>
+                    <PageContent useCard={true} scroll={false}>
                         {activeTab === tabs[0] && <JobOrdersActiveTabContent />}
                         {activeTab === tabs[1] && <JobOrdersArchivedTabContent />}
                     </PageContent>

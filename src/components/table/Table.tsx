@@ -23,7 +23,7 @@ type TableProps<T> = {
 
 export default function Table<T>({ columns, rows, total, className }: TableProps<T>) {
   return (
-    <div className='table-section'>
+    <div className={`table-section`}>
       <div className={`table-container main ${className || ''}`}>
         <table>
           <thead>
