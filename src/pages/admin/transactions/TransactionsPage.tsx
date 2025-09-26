@@ -17,7 +17,7 @@ export default function TransactionsPage() {
                 <Main>
                     <PageHeading title={'Transactions'} />
                    
-                    <PageContent>
+                    <PageContent useCard={true}>
                         <TransactionsContent />
                     </PageContent>
                 </Main>

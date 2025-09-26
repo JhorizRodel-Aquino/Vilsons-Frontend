@@ -2,6 +2,7 @@ import AppLayout from '../../../components/AppLayout';
 import ContentLayout from '../../../components/ContentLayout';
 import Header from '../../../components/Header'
 import Main from '../../../components/Main';
+import PageContent from '../../../components/PageContent';
 import PageHeading from '../../../components/PageHeading';
 import Sidebar from '../../../components/sidebar/Sidebar'
 import FinancialCard from './FinanceCard';
@@ -19,7 +20,7 @@ function DashboardPage() {
                 <Main>
                     <PageHeading title={'Dashboard'} />
 
-                    <div className="grid gap-7">
+                    <PageContent>
                         <section className='grid gap-5'>
                             <h2 className='text-base font-medium text-darker'>Monthly Financial Overview</h2>
                             <div className='grid gap-[10px] grid-cols-[repeat(auto-fit,minmax(300px,1fr))]'>
@@ -96,7 +97,7 @@ function DashboardPage() {
                                 </div>
                             </section>
                         </div>
-                    </div>
+                    </PageContent>
                 </Main>
             </ContentLayout>
         </AppLayout>

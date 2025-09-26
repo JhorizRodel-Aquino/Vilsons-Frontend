@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Checkbox from "../../../components/Checkbox";
 import Switch from "../../../components/Swicth";
 

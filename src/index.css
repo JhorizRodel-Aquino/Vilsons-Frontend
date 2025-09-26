@@ -89,6 +89,10 @@
 }
 
 @layer components {
+  section.card {
+    @apply border-[1px] border-border rounded-[15px] bg-light p-5 h-full;
+  }
+
   .table-section {
     @apply py-[20px] flex flex-col flex-1 overflow-y-auto;
   }
@@ -154,7 +158,7 @@
 
 
   .btn {
-    @apply py-2 px-3 text-base font-semibold rounded-[8px] cursor-pointer;
+    @apply text-base rounded-[8px] cursor-pointer;
   }
 
 

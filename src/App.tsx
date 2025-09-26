@@ -9,9 +9,10 @@ import OperationalExpensesPage from './pages/admin/operational-expenses/Operatio
 import OverheadExpensesPage from './pages/admin/overhead-expenses/OverheadExpensesPage'
 import TrucksPage from './pages/admin/trucks/TrucksPage'
 import ActivityLogsPage from './pages/admin/activity-logs/ActivityLogsPage'
-import './App.css'
 import AllUsersPage from './pages/admin/all-users/AllUsersPage'
 import RolesAndPermissionsPage from './pages/admin/roles-and-permissions/RolesAndPermissionsPage'
+import MyProfilePage from './pages/admin/profile/MyProfilePage'
+import './App.css'
 
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
       <Route path='/activity-logs' element={<ActivityLogsPage />} />
       <Route path='/all-users' element={<AllUsersPage />} />
       <Route path='/roles-and-permissions' element={<RolesAndPermissionsPage />} />
+      <Route path='/my-profile' element={<MyProfilePage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   )

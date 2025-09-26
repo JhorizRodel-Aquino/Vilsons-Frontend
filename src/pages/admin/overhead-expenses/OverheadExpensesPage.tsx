@@ -17,7 +17,7 @@ export default function OverheadExpensesPage() {
                 <Main>
                     <PageHeading title={'Overhead Expenses'} />
                    
-                    <PageContent>
+                    <PageContent useCard={true}>
                         <OverheadExpensesContent />
                     </PageContent>
                 </Main>

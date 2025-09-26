@@ -1,6 +1,4 @@
 import { Fragment } from "react/jsx-runtime";
-import Checkbox from "../../../components/Checkbox";
-import Switch from "../../../components/Swicth";
 import RolesAndPermissionsTableData from "./RolesAndPermissionTableData";
 
 export type Permission = {

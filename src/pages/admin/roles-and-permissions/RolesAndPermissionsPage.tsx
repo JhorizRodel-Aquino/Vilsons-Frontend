@@ -15,9 +15,9 @@ export default function RolesAndPermissionsPage() {
             <ContentLayout>
                 <Header />
                 <Main>
-                    <PageHeading title={'Overhead Expenses'} />
+                    <PageHeading title={'Roles And Permissions'} />
                    
-                    <PageContent>
+                    <PageContent useCard={true}>
                         <RolesAndPermissionsContent />
                     </PageContent>
                 </Main>

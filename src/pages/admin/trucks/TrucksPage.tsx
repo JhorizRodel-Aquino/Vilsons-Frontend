@@ -17,7 +17,7 @@ export default function TrucksPage() {
                 <Main>
                     <PageHeading title={'Trucks'} />
                    
-                    <PageContent>
+                    <PageContent useCard={true}>
                         <TrucksContent />
                     </PageContent>
                 </Main>

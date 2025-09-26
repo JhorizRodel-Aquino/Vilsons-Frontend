@@ -26,7 +26,7 @@ function OperationalExpensesPage() {
 
                     <PageTabs tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
                    
-                    <PageContent>
+                    <PageContent useCard={true}>
                         {activeTab === tabs[0] && <OperationalExpensesMaterialsTabContent />}
                         {activeTab === tabs[1] && <OperationalExpensesEquipmentTabContent />}
                         {activeTab === tabs[2] && <OperationalExpensesLaborTabContent />}

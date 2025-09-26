@@ -17,7 +17,7 @@ export default function AllUsersPage() {
                 <Main>
                     <PageHeading title={'All Users'} />
                    
-                    <PageContent>
+                    <PageContent useCard={true}>
                         <AllUsersContent />
                     </PageContent>
                 </Main>

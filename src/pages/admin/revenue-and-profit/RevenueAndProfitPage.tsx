@@ -17,7 +17,7 @@ export default function RevenueAndProfitPage() {
                 <Main>
                     <PageHeading title={'Revenue and Profit'} />
                    
-                    <PageContent>
+                    <PageContent useCard={true}>
                         <RevenueAndProfitContent />
                     </PageContent>
                 </Main>

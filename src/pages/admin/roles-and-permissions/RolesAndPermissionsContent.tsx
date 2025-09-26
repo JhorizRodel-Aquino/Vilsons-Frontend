@@ -7,7 +7,7 @@ import Dropdown from "../../../components/Dropdown";
 import type { ModulePermissions } from "./RolesAndPermissionsTable";
 import PermissionsTable from "./RolesAndPermissionsTable";
 
-export default function RolesAndPermissionPermissionsTabContent() {
+export default function RolesAndPermissionsContent() {
   const modulePermissions: ModulePermissions[] = [
     {
       module: "Job Orders",
