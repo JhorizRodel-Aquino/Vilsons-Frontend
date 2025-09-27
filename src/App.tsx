@@ -13,7 +13,10 @@ import AllUsersPage from './pages/admin/all-users/AllUsersPage'
 import RolesAndPermissionsPage from './pages/admin/roles-and-permissions/RolesAndPermissionsPage'
 import MyProfilePage from './pages/admin/profile/MyProfilePage'
 import './App.css'
-import ContractorSinglePage from './pages/admin/contractors/single-page/ContractorsSinglePage'
+import ContractorDetailsPage from './pages/admin/contractors/details/ContractorDetailsPage'
+import CustomerDetailsPage from './pages/admin/customers/details/CustomerDetailsPage'
+import JobOrderDetailsPage from './pages/admin/job-orders/details/JobOrderDetailsPage'
+import TruckDetailsPage from './pages/admin/trucks/details/TruckDetailsPage'
 
 
 function App() {
@@ -32,7 +35,13 @@ function App() {
       <Route path='/all-users' element={<AllUsersPage />} />
       <Route path='/roles-and-permissions' element={<RolesAndPermissionsPage />} />
       <Route path='/my-profile' element={<MyProfilePage />} />
-      <Route path="*" element={<ContractorSinglePage />} />
+   
+      <Route path="/customer" element={<CustomerDetailsPage />} />
+      <Route path="/contractor" element={<ContractorDetailsPage />} />
+      <Route path="/job-orders/id" element={<JobOrderDetailsPage />} />
+      <Route path="/contractor" element={<ContractorDetailsPage />} />
+      <Route path="/trucks/id" element={<TruckDetailsPage />} />
+
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   )

@@ -17,7 +17,7 @@ export default function ActivityLogsPage() {
                 <Main>
                     <PageHeading title={'Activity Logs'} />
                    
-                    <PageContent>
+                    <PageContent useCard={true}>
                         <ActivityLogsContent />
                     </PageContent>
                 </Main>
