@@ -5,7 +5,7 @@ import ContentLayout from "../../../components/ContentLayout";
 import Main from "../../../components/Main";
 import PageContent from "../../../components/PageContent";
 import AppLayout from "../../../components/AppLayout";
-import TransactionsContent from "./TransactionsContent";
+import TransactionsSection from "./TransactionsSection";
 
 export default function TransactionsPage() {
     return (
@@ -18,7 +18,7 @@ export default function TransactionsPage() {
                     <PageHeading title={'Transactions'} />
                    
                     <PageContent useCard={true}>
-                        <TransactionsContent />
+                        <TransactionsSection />
                     </PageContent>
                 </Main>
             </ContentLayout>

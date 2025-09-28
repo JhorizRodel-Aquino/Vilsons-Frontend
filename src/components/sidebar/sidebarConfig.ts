@@ -56,22 +56,24 @@ export const sidebarItems: NavItem[] = [
         path: '/activity-logs' 
     },
     {
-        label: 'Users',
+        label: 'User Management',
         iconName: 'users',
         children: [
             { 
-                label: 'All Users', 
-                path: '/all-users' 
+                label: 'Users', 
+                path: '/users' 
             },
             { 
                 label: 'Roles and Permissions', 
                 path: '/roles-and-permissions'  
             },
-            { 
-                label: 'My Profile', 
-                path: '/my-profile'  
 
-            }
         ]
+    },
+    {
+        label: 'My Account',
+        iconName: 'users',            
+        path: '/my-account'  
+            
     },
 ];

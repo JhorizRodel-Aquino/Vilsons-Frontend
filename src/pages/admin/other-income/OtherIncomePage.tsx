@@ -5,7 +5,7 @@ import ContentLayout from "../../../components/ContentLayout";
 import Main from "../../../components/Main";
 import PageContent from "../../../components/PageContent";
 import AppLayout from "../../../components/AppLayout";
-import OtherIncomeContent from "./OtherIncomeContent";
+import OtherIncomeSection from "./OtherIncomeSection";
 
 export default function OtherIncomePage() {
     return (
@@ -18,7 +18,7 @@ export default function OtherIncomePage() {
                     <PageHeading title={'Other Income'} />
                    
                     <PageContent useCard={true}>
-                        <OtherIncomeContent />
+                        <OtherIncomeSection />
                     </PageContent>
                 </Main>
             </ContentLayout>

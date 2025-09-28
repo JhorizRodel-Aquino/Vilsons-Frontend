@@ -89,6 +89,10 @@
 }
 
 @layer components {
+  .single-main-section {
+    @apply grid gap-5 overflow-y-hidden min-h-[500px] content-start;
+  }
+
   .card {
     @apply border-[1px] border-border rounded-[15px] bg-light p-5;
   }

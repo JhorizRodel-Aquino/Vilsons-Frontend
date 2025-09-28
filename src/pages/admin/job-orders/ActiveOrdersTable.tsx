@@ -1,17 +1,14 @@
 import type { Status } from "../../../config/statusConfig";
 import type { Column } from "../../../components/table/Table";
-import StatusIndicator from "../../../components/StatusIndicator";
-import Info from "../../../components/Info"
-import Details from "../../../components/Details"
-import Button from "../../../components/Button"
 import TableFilter from "../../../components/TableFilter"
 import SearchBar from "../../../components/SearchBar"
 import StatusFilter from "../../../components/StatusFilter"
 import DateRange from "../../../components/DateRange"
 import Table from "../../../components/table/Table"
+import StatusIndicator from "../../../components/StatusIndicator";
 import formatPesoFromCents from '../../../utils/formatPesoFromCents';
 
-export default function JobOrdersActiveTabContent() {
+export default function ActiveOrdersTable() {
     type ActiveJobOrder = { 
         jobNumber: string; 
         status: Status;
@@ -42,11 +39,6 @@ export default function JobOrdersActiveTabContent() {
 
     return (
         <>
-            <Info>
-                <Details subtitle={'All Active Job Orders'} modifiedDate="Aug 9, 2025" />
-                <Button label={'Create Job Order'} onClick={() => console.log('clicked')} variant="primary" />
-            </Info>
-
             <TableFilter>
                 <SearchBar />
 

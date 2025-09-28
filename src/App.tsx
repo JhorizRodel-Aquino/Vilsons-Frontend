@@ -9,14 +9,14 @@ import OperationalExpensesPage from './pages/admin/operational-expenses/Operatio
 import OverheadExpensesPage from './pages/admin/overhead-expenses/OverheadExpensesPage'
 import TrucksPage from './pages/admin/trucks/TrucksPage'
 import ActivityLogsPage from './pages/admin/activity-logs/ActivityLogsPage'
-import AllUsersPage from './pages/admin/all-users/AllUsersPage'
+import UsersPage from './pages/admin/users/UsersPage'
 import RolesAndPermissionsPage from './pages/admin/roles-and-permissions/RolesAndPermissionsPage'
-import MyProfilePage from './pages/admin/profile/MyProfilePage'
-import './App.css'
+import MyAccountPage from './pages/admin/my-account/MyAccountPage'
 import ContractorDetailsPage from './pages/admin/contractors/details/ContractorDetailsPage'
 import CustomerDetailsPage from './pages/admin/customers/details/CustomerDetailsPage'
 import JobOrderDetailsPage from './pages/admin/job-orders/details/JobOrderDetailsPage'
 import TruckDetailsPage from './pages/admin/trucks/details/TruckDetailsPage'
+import './App.css'
 
 
 function App() {
@@ -32,9 +32,9 @@ function App() {
       <Route path='/overhead-expenses' element={<OverheadExpensesPage />} />
       <Route path='/trucks' element={<TrucksPage />} />
       <Route path='/activity-logs' element={<ActivityLogsPage />} />
-      <Route path='/all-users' element={<AllUsersPage />} />
+      <Route path='/users' element={<UsersPage />} />
       <Route path='/roles-and-permissions' element={<RolesAndPermissionsPage />} />
-      <Route path='/my-profile' element={<MyProfilePage />} />
+      <Route path='/my-account' element={<MyAccountPage />} />
    
       <Route path="/customer" element={<CustomerDetailsPage />} />
       <Route path="/contractor" element={<ContractorDetailsPage />} />

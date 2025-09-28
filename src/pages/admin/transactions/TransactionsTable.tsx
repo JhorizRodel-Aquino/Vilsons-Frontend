@@ -1,15 +1,12 @@
 import type { Column } from "../../../components/table/Table";
-import Info from "../../../components/Info"
-import Details from "../../../components/Details"
-import Button from "../../../components/Button";
 import TableFilter from "../../../components/TableFilter"
 import SearchBar from "../../../components/SearchBar"
 import Table from "../../../components/table/Table"
 import formatPesoFromCents from '../../../utils/formatPesoFromCents';
 import MonthYearFilter from "../../../components/MonthYearFilter";
 
-export default function TransactionContent() {
-    type Transaction = { 
+export default function TransactionsTable() {
+        type Transaction = { 
         referenceNumber: string; 
         jobNumber: string; 
         senderName: string; 
@@ -41,12 +38,7 @@ export default function TransactionContent() {
 
     return (
         <>
-            <Info>
-                <Details subtitle={'All Transactions'} modifiedDate="Aug 9, 2025" />
-                <Button label={'Add Transaction'} onClick={() => console.log('clicked')} variant="primary" />
-            </Info>
-
-            <TableFilter>
+                      <TableFilter>
                 <SearchBar />
                 <MonthYearFilter />
             </TableFilter>

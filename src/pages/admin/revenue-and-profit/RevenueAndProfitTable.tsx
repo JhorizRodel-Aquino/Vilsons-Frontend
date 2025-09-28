@@ -7,7 +7,6 @@ export type RevenueAndProfit = {
 }
 
 export default function RevenueAndProfitTable({ rows }: { rows: RevenueAndProfit[] }) {
-
     return (
         <div className="table-section">
             <div className='table-container'>

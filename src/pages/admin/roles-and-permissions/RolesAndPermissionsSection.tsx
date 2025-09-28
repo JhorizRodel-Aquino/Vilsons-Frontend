@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Info from "../../../components/Info";
+import SectionHeading from "../../../components/SectionHeading";
 import Details from "../../../components/Details";
 import TableFilter from "../../../components/TableFilter";
 import SearchBar from "../../../components/SearchBar";
@@ -7,7 +7,7 @@ import Dropdown from "../../../components/Dropdown";
 import type { ModulePermissions } from "./RolesAndPermissionsTable";
 import PermissionsTable from "./RolesAndPermissionsTable";
 
-export default function RolesAndPermissionsContent() {
+export default function RolesAndPermissionsSection() {
   const modulePermissions: ModulePermissions[] = [
     {
       module: "Job Orders",
@@ -84,9 +84,9 @@ export default function RolesAndPermissionsContent() {
 
   return (
     <>
-        <Info>
+        <SectionHeading>
             <Details subtitle={"All Permissions"} modifiedDate="Aug 9, 2025" />
-        </Info>
+        </SectionHeading>
 
         <TableFilter>
             <SearchBar />

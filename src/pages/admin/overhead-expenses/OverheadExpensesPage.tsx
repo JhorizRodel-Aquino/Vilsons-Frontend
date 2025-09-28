@@ -5,7 +5,7 @@ import ContentLayout from "../../../components/ContentLayout";
 import Main from "../../../components/Main";
 import PageContent from "../../../components/PageContent";
 import AppLayout from "../../../components/AppLayout";
-import OverheadExpensesContent from "./OverheadExpensesContent";
+import OverheadExpensesSection from "./OverheadExpensesSection";
 
 export default function OverheadExpensesPage() {
     return (
@@ -18,7 +18,7 @@ export default function OverheadExpensesPage() {
                     <PageHeading title={'Overhead Expenses'} />
                    
                     <PageContent useCard={true}>
-                        <OverheadExpensesContent />
+                        <OverheadExpensesSection />
                     </PageContent>
                 </Main>
             </ContentLayout>

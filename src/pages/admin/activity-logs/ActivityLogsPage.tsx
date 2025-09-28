@@ -5,7 +5,7 @@ import ContentLayout from "../../../components/ContentLayout";
 import Main from "../../../components/Main";
 import PageContent from "../../../components/PageContent";
 import AppLayout from "../../../components/AppLayout";
-import ActivityLogsContent from "./ActivityLogsContent";
+import ActivityLogsSection from "./ActivityLogsSection";
 
 export default function ActivityLogsPage() {
     return (
@@ -18,7 +18,7 @@ export default function ActivityLogsPage() {
                     <PageHeading title={'Activity Logs'} />
                    
                     <PageContent useCard={true}>
-                        <ActivityLogsContent />
+                        <ActivityLogsSection />
                     </PageContent>
                 </Main>
             </ContentLayout>

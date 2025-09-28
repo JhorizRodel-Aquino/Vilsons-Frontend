@@ -5,7 +5,7 @@ import ContentLayout from "../../../components/ContentLayout";
 import Main from "../../../components/Main";
 import PageContent from "../../../components/PageContent";
 import AppLayout from "../../../components/AppLayout";
-import RevenueAndProfitContent from "./RevenueAndProfitContent"
+import RevenueAndProfitSection from "./RevenueAndProfitSection"
 
 export default function RevenueAndProfitPage() {
     return (
@@ -18,7 +18,7 @@ export default function RevenueAndProfitPage() {
                     <PageHeading title={'Revenue and Profit'} />
                    
                     <PageContent useCard={true}>
-                        <RevenueAndProfitContent />
+                        <RevenueAndProfitSection />
                     </PageContent>
                 </Main>
             </ContentLayout>

@@ -3,11 +3,11 @@ import Header from "../../../components/Header";
 import PageHeading from "../../../components/PageHeading";
 import ContentLayout from "../../../components/ContentLayout";
 import Main from "../../../components/Main";
-import AppLayout from "../../../components/AppLayout";
-import MyProfileContent from "./MyProfileContent";
 import PageContent from "../../../components/PageContent";
+import AppLayout from "../../../components/AppLayout";
+import UsersSection from "./UsersSection";
 
-export default function MyProfilePage() {
+export default function UsersPage() {
     return (
         <AppLayout>
             <Sidebar />
@@ -15,10 +15,10 @@ export default function MyProfilePage() {
             <ContentLayout>
                 <Header />
                 <Main>
-                    <PageHeading title={'My Profile'} />
-                    
-                    <PageContent>
-                        <MyProfileContent />
+                    <PageHeading title={'All Users'} />
+                   
+                    <PageContent useCard={true}>
+                        <UsersSection />
                     </PageContent>
                 </Main>
             </ContentLayout>

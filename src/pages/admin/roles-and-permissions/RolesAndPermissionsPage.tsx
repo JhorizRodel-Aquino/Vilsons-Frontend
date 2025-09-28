@@ -5,7 +5,7 @@ import ContentLayout from "../../../components/ContentLayout";
 import Main from "../../../components/Main";
 import PageContent from "../../../components/PageContent";
 import AppLayout from "../../../components/AppLayout";
-import RolesAndPermissionsContent from "./RolesAndPermissionsContent";
+import RolesAndPermissionsSection from "./RolesAndPermissionsSection";
 
 export default function RolesAndPermissionsPage() {
     return (
@@ -18,7 +18,7 @@ export default function RolesAndPermissionsPage() {
                     <PageHeading title={'Roles And Permissions'} />
                    
                     <PageContent useCard={true}>
-                        <RolesAndPermissionsContent />
+                        <RolesAndPermissionsSection />
                     </PageContent>
                 </Main>
             </ContentLayout>

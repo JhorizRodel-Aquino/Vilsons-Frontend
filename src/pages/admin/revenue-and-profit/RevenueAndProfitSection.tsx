@@ -1,11 +1,11 @@
-import Info from "../../../components/Info"
+import SectionHeading from "../../../components/SectionHeading"
 import Details from "../../../components/Details"
 import TableFilter from "../../../components/TableFilter"
 import MonthYearFilter from "../../../components/MonthYearFilter";
 import RevenueAndProfitTable from "./RevenueAndProfitTable";
 import type { RevenueAndProfit } from "./RevenueAndProfitTable";
 
-export default function RevenueAndProfitContent() {
+export default function RevenueAndProfitSection() {
   const revenueAndProfits: RevenueAndProfit[] = [
     {category: "Revenue", amount: 10000000, depth: 0},
     {category: "Service Revenue", amount: 10000000, depth: 1},
@@ -21,9 +21,9 @@ export default function RevenueAndProfitContent() {
 
   return (
     <>
-      <Info>
+      <SectionHeading>
         <Details subtitle={'All Income Statements'} description={'Detailed Financial Breakdown'} />
-      </Info>
+      </SectionHeading>
 
       <TableFilter>
         <MonthYearFilter />

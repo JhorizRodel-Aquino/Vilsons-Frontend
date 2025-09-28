@@ -7,8 +7,8 @@ import PageContent from "../../../components/PageContent";
 import AppLayout from "../../../components/AppLayout";
 import PageTabs from "../../../components/PageTabs";
 import { useState } from "react";
-import JobOrdersActiveTabContent from "./JobOrdersActiveTabContent";
-import JobOrdersArchivedTabContent from "./JobOrdersArchivedTabContent";
+import ActiveOrdersSection from "./ActiveOrdersSection";
+import ArchivedOrdersSection from "./ArchivedOrdersSection";
 
 function JobOrdersPage() {
     const tabs = ['active', 'archived'];
@@ -26,8 +26,8 @@ function JobOrdersPage() {
                     <PageTabs tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
                    
                     <PageContent useCard={true} scroll={false}>
-                        {activeTab === tabs[0] && <JobOrdersActiveTabContent />}
-                        {activeTab === tabs[1] && <JobOrdersArchivedTabContent />}
+                        {activeTab === tabs[0] && <ActiveOrdersSection />}
+                        {activeTab === tabs[1] && <ArchivedOrdersSection />}
                     </PageContent>
                 </Main>
             </ContentLayout>

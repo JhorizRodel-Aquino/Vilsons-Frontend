@@ -7,9 +7,9 @@ import PageContent from "../../../components/PageContent";
 import AppLayout from "../../../components/AppLayout";
 import PageTabs from "../../../components/PageTabs";
 import { useState } from "react";
-import OperationalExpensesMaterialsTabContent from "./OperationalExpensesMaterialsTabContent";
-import OperationalExpensesEquipmentTabContent from "./OperationalExpensesEquipmentTabContent";
-import OperationalExpensesLaborTabContent from "./OperationalExpensesLaborTabContent";
+import MaterialExpensesSection from "./MaterialExpensesSection";
+import EquipmentExpensesSection from "./EquipmentExpensesSection";
+import LaborExpensesSection from "./LaborSection";
 
 function OperationalExpensesPage() {
     const tabs = ['Materials', 'equipment', 'labor'];
@@ -27,9 +27,9 @@ function OperationalExpensesPage() {
                     <PageTabs tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
                    
                     <PageContent useCard={true}>
-                        {activeTab === tabs[0] && <OperationalExpensesMaterialsTabContent />}
-                        {activeTab === tabs[1] && <OperationalExpensesEquipmentTabContent />}
-                        {activeTab === tabs[2] && <OperationalExpensesLaborTabContent />}
+                        {activeTab === tabs[0] && <MaterialExpensesSection />}
+                        {activeTab === tabs[1] && <EquipmentExpensesSection />}
+                        {activeTab === tabs[2] && <LaborExpensesSection />}
                     </PageContent>
                 </Main>
             </ContentLayout>

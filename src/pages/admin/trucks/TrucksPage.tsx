@@ -5,7 +5,7 @@ import ContentLayout from "../../../components/ContentLayout";
 import Main from "../../../components/Main";
 import PageContent from "../../../components/PageContent";
 import AppLayout from "../../../components/AppLayout";
-import TrucksContent from "./TrucksContent";
+import TrucksSection from "./TrucksSection";
 
 export default function TrucksPage() {
     return (
@@ -18,7 +18,7 @@ export default function TrucksPage() {
                     <PageHeading title={'Trucks'} />
                    
                     <PageContent useCard={true}>
-                        <TrucksContent />
+                        <TrucksSection />
                     </PageContent>
                 </Main>
             </ContentLayout>
