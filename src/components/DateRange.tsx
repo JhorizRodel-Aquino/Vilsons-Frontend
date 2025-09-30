@@ -3,7 +3,7 @@ import InputBox from './InputBox'
 function DateRange() {
   return (
     <InputBox>
-      <div className="flex flex-row gap-y-2 gap-x-4 items-end filter-input">
+      <div className="flex flex-row gap-y-2 gap-x-4 items-end input">
         <div className="flex items-center gap-2">
           <span>From:</span>
           <input

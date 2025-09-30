@@ -18,7 +18,7 @@ export default function Dropdown({ value, onChange, children, className }: Dropd
           id="status"
           value={value}
           onChange={onChange}
-          className="hide-select-icon w-full pr-8 filter-input"
+          className="hide-select-icon w-full pr-8 input"
         >
           {children}
         </select>

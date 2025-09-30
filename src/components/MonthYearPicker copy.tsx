@@ -122,7 +122,7 @@ export default function MonthYearPicker({ value, onChange, minYear = 2000, class
 
   return (
     <InputBox className={`w-[150px] ${className || ''}`}>
-      <div className='relative filter-input'>
+      <div className='relative input'>
         <div className="flex items-center justify-between">
           <input
             type="text"

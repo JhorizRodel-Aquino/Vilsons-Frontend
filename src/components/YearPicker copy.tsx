@@ -61,7 +61,7 @@ export default function YearPicker({ value, onChange, minYear = 2000, className 
 
   return (
     <InputBox className={`w-[150px] ${className || ''}`}>
-      <div className='relative filter-input'>
+      <div className='relative input'>
         <div className="flex items-center justify-between">
           <input
             id="year"

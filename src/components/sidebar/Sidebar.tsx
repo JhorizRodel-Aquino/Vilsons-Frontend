@@ -49,7 +49,7 @@ function Sidebar() {
                 <div className='logo sticky top-0 bg-light py-3 flex justify-start z-10'>
                     <NavLink to='/' >
                         <img src='logo.webp' alt='' />
-                    </NavLink>  
+                    </NavLink>
                 </div>
                 <nav className='grid gap-2 py-3'>
                     <ul>

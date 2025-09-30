@@ -17,7 +17,7 @@ export default function Dropdown({ options, value, setValue, className }: Dropdo
           id="status"
           value={value} // 👈 controlled
           onChange={(e) => setValue(e.target.value)}
-          className="hide-select-icon w-full pr-8 filter-input"
+          className="hide-select-icon w-full pr-8 input"
         >
           {options.map((option, i) => (
             <option key={i} value={option}>

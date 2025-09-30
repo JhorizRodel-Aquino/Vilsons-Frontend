@@ -69,6 +69,10 @@
     ;
   }
 
+  input[type='text'] {
+    @apply focus:outline-none;
+  }
+
   input[type='checkbox'] {
     @apply 
       appearance-none 
@@ -166,13 +170,28 @@
   }
 
 
-  .filter-container {
+  .input-container {
     @apply py-[5px] rounded-[8px] bg-gray text-dark outline-none text-base;
   }
 
-  .filter-input {
-    @apply placeholder:text-dark focus:outline-none px-[8px] text-dark;
+  .input {
+    @apply focus:outline-none px-[8px] text-darker w-full;
   }
+
+  .modal {
+    @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[40%] max-w-[1100px] max-h-[80dvh] overflow-hidden flex flex-col z-50;
+  }  
+  
+  .backdrop {
+    @apply h-full w-full z-20 bg-darkest/20 backdrop-blur-[1px] absolute;
+  }
+  
+  .fields {
+    @apply overflow-y-auto flex-1;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.3) transparent; 
+  }
+
 }
 
 @layer utilities {
