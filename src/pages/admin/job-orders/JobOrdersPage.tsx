@@ -1,10 +1,5 @@
-import Sidebar from "../../../components/sidebar/Sidebar";
-import Header from "../../../components/Header";
 import PageHeading from "../../../components/PageHeading";
-import ContentLayout from "../../../components/ContentLayout";
-import Main from "../../../components/Main";
 import PageContent from "../../../components/PageContent";
-import AppLayout from "../../../components/AppLayout";
 import PageTabs from "../../../components/PageTabs";
 import { useState } from "react";
 import ActiveOrdersSection from "./ActiveOrdersSection";
@@ -15,23 +10,16 @@ function JobOrdersPage() {
     const [activeTab, setActiveTab] = useState(tabs[0]);
 
     return (
-        <AppLayout>
-            <Sidebar />
+        <>
+            <PageHeading title={'Job Orders'} />
 
-            <ContentLayout>
-                <Header />
-                <Main>
-                    <PageHeading title={'Job Orders'} />
+            <PageTabs tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
 
-                    <PageTabs tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
-                   
-                    <PageContent useCard={true} scroll={false}>
-                        {activeTab === tabs[0] && <ActiveOrdersSection />}
-                        {activeTab === tabs[1] && <ArchivedOrdersSection />}
-                    </PageContent>
-                </Main>
-            </ContentLayout>
-        </AppLayout>
+            <PageContent useCard={true} scroll={false}>
+                {activeTab === tabs[0] && <ActiveOrdersSection />}
+                {activeTab === tabs[1] && <ArchivedOrdersSection />}
+            </PageContent>
+        </>
     )
 }
 

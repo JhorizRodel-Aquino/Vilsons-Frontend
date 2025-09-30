@@ -1,27 +1,15 @@
-import Sidebar from "../../../components/sidebar/Sidebar";
-import Header from "../../../components/Header";
 import PageHeading from "../../../components/PageHeading";
-import ContentLayout from "../../../components/ContentLayout";
-import Main from "../../../components/Main";
 import PageContent from "../../../components/PageContent";
-import AppLayout from "../../../components/AppLayout";
 import UsersSection from "./UsersSection";
 
 export default function UsersPage() {
     return (
-        <AppLayout>
-            <Sidebar />
+        <>
+            <PageHeading title={'All Users'} />
 
-            <ContentLayout>
-                <Header />
-                <Main>
-                    <PageHeading title={'All Users'} />
-                   
-                    <PageContent useCard={true}>
-                        <UsersSection />
-                    </PageContent>
-                </Main>
-            </ContentLayout>
-        </AppLayout>
+            <PageContent useCard={true}>
+                <UsersSection />
+            </PageContent>
+        </>
     )
 }

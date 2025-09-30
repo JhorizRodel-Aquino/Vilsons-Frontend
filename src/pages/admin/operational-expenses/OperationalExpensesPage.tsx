@@ -1,10 +1,5 @@
-import Sidebar from "../../../components/sidebar/Sidebar";
-import Header from "../../../components/Header";
 import PageHeading from "../../../components/PageHeading";
-import ContentLayout from "../../../components/ContentLayout";
-import Main from "../../../components/Main";
 import PageContent from "../../../components/PageContent";
-import AppLayout from "../../../components/AppLayout";
 import PageTabs from "../../../components/PageTabs";
 import { useState } from "react";
 import MaterialExpensesSection from "./MaterialExpensesSection";
@@ -16,24 +11,17 @@ function OperationalExpensesPage() {
     const [activeTab, setActiveTab] = useState(tabs[0]);
 
     return (
-        <AppLayout>
-            <Sidebar />
+        <>
+            <PageHeading title={'Operational Expenses'} />
 
-            <ContentLayout>
-                <Header />
-                <Main>
-                    <PageHeading title={'Operational Expenses'} />
+            <PageTabs tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
 
-                    <PageTabs tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
-                   
-                    <PageContent useCard={true}>
-                        {activeTab === tabs[0] && <MaterialExpensesSection />}
-                        {activeTab === tabs[1] && <EquipmentExpensesSection />}
-                        {activeTab === tabs[2] && <LaborExpensesSection />}
-                    </PageContent>
-                </Main>
-            </ContentLayout>
-        </AppLayout>
+            <PageContent useCard={true}>
+                {activeTab === tabs[0] && <MaterialExpensesSection />}
+                {activeTab === tabs[1] && <EquipmentExpensesSection />}
+                {activeTab === tabs[2] && <LaborExpensesSection />}
+            </PageContent>
+        </>
     )
 }
 

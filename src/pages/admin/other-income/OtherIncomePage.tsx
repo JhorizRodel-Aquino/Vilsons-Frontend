@@ -1,27 +1,15 @@
-import Sidebar from "../../../components/sidebar/Sidebar";
-import Header from "../../../components/Header";
 import PageHeading from "../../../components/PageHeading";
-import ContentLayout from "../../../components/ContentLayout";
-import Main from "../../../components/Main";
 import PageContent from "../../../components/PageContent";
-import AppLayout from "../../../components/AppLayout";
 import OtherIncomeSection from "./OtherIncomeSection";
 
 export default function OtherIncomePage() {
     return (
-        <AppLayout>
-            <Sidebar />
+        <>
+            <PageHeading title={'Other Income'} />
 
-            <ContentLayout>
-                <Header />
-                <Main>
-                    <PageHeading title={'Other Income'} />
-                   
-                    <PageContent useCard={true}>
-                        <OtherIncomeSection />
-                    </PageContent>
-                </Main>
-            </ContentLayout>
-        </AppLayout>
+            <PageContent useCard={true}>
+                <OtherIncomeSection />
+            </PageContent>
+        </>
     )
 }

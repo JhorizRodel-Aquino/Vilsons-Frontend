@@ -16,34 +16,49 @@ import ContractorDetailsPage from './pages/admin/contractors/details/ContractorD
 import CustomerDetailsPage from './pages/admin/customers/details/CustomerDetailsPage'
 import JobOrderDetailsPage from './pages/admin/job-orders/details/JobOrderDetailsPage'
 import TruckDetailsPage from './pages/admin/trucks/details/TruckDetailsPage'
+import AppLayout from './components/AppLayout'
+import Sidebar from './components/sidebar/Sidebar'
+import ContentLayout from './components/ContentLayout'
+import Header from './components/Header'
+import Main from './components/Main'
 import './App.css'
-
 
 function App() {
   return (
-    <Routes>
-      <Route index element={<DashboardPage />} />
-      <Route path='/dashboard' element={<DashboardPage />} />
-      <Route path='/job-orders' element={<JobOrdersPage />} />
-      <Route path='/other-income' element={<OtherIncomePage />} />
-      <Route path='/transactions' element={<TransactionsPage />} />
-      <Route path='/revenue-and-profit' element={<RevenueAndProfitPage />} />
-      <Route path='/operational-expenses' element={<OperationalExpensesPage />} />
-      <Route path='/overhead-expenses' element={<OverheadExpensesPage />} />
-      <Route path='/trucks' element={<TrucksPage />} />
-      <Route path='/activity-logs' element={<ActivityLogsPage />} />
-      <Route path='/users' element={<UsersPage />} />
-      <Route path='/roles-and-permissions' element={<RolesAndPermissionsPage />} />
-      <Route path='/my-account' element={<MyAccountPage />} />
-   
-      <Route path="/customer" element={<CustomerDetailsPage />} />
-      <Route path="/contractor" element={<ContractorDetailsPage />} />
-      <Route path="/job-orders/id" element={<JobOrderDetailsPage />} />
-      <Route path="/contractor" element={<ContractorDetailsPage />} />
-      <Route path="/trucks/id" element={<TruckDetailsPage />} />
+    <AppLayout>
+      <Sidebar />
 
-      <Route path="*" element={<NotFoundPage />} />
-    </Routes>
+      <ContentLayout>
+        <Header />
+        <Main>
+          
+          <Routes>
+            <Route index element={<DashboardPage />} />
+            <Route path='/dashboard' element={<DashboardPage />} />
+            <Route path='/job-orders' element={<JobOrdersPage />} />
+            <Route path='/other-income' element={<OtherIncomePage />} />
+            <Route path='/transactions' element={<TransactionsPage />} />
+            <Route path='/revenue-and-profit' element={<RevenueAndProfitPage />} />
+            <Route path='/operational-expenses' element={<OperationalExpensesPage />} />
+            <Route path='/overhead-expenses' element={<OverheadExpensesPage />} />
+            <Route path='/trucks' element={<TrucksPage />} />
+            <Route path='/activity-logs' element={<ActivityLogsPage />} />
+            <Route path='/users' element={<UsersPage />} />
+            <Route path='/roles-and-permissions' element={<RolesAndPermissionsPage />} />
+            <Route path='/my-account' element={<MyAccountPage />} />
+
+            <Route path="/customer" element={<CustomerDetailsPage />} />
+            <Route path="/contractor" element={<ContractorDetailsPage />} />
+            <Route path="/job-orders/id" element={<JobOrderDetailsPage />} />
+            <Route path="/contractor" element={<ContractorDetailsPage />} />
+            <Route path="/trucks/id" element={<TruckDetailsPage />} />
+
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+
+        </Main>
+      </ContentLayout>
+    </AppLayout>
   )
 }
 

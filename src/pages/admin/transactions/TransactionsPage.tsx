@@ -1,27 +1,15 @@
-import Sidebar from "../../../components/sidebar/Sidebar";
-import Header from "../../../components/Header";
 import PageHeading from "../../../components/PageHeading";
-import ContentLayout from "../../../components/ContentLayout";
-import Main from "../../../components/Main";
 import PageContent from "../../../components/PageContent";
-import AppLayout from "../../../components/AppLayout";
 import TransactionsSection from "./TransactionsSection";
 
 export default function TransactionsPage() {
     return (
-        <AppLayout>
-            <Sidebar />
+        <>
+            <PageHeading title={'Transactions'} />
 
-            <ContentLayout>
-                <Header />
-                <Main>
-                    <PageHeading title={'Transactions'} />
-                   
-                    <PageContent useCard={true}>
-                        <TransactionsSection />
-                    </PageContent>
-                </Main>
-            </ContentLayout>
-        </AppLayout>
+            <PageContent useCard={true}>
+                <TransactionsSection />
+            </PageContent>
+        </>
     )
 }

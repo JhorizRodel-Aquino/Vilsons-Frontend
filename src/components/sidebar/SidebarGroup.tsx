@@ -13,7 +13,7 @@ export default function SidebarGroup({ label, iconName, depth, children }: Sideb
     const [expanded, setExpanded] = useState(true);
     return (
         <>
-            <button className='w-full' onClick={() => setExpanded(!expanded)}>
+            <button className='w-full cursor-pointer' onClick={() => setExpanded(!expanded)}>
                 <SidebarNav
                     label={label}
                     iconName={iconName}
