@@ -44,7 +44,7 @@ function Sidebar() {
     }
 
     return (
-        <aside className='bg-light px-4 w-96 border-r h-full overflow-y-auto thin-scrollbar'>
+        <aside className='bg-light px-4 w-96 border-r h-full overflow-y-auto thin-scrollbar z-30'>
             <div className='grid gap-2'>
                 <div className='logo sticky top-0 bg-light py-3 flex justify-start z-10'>
                     <NavLink to='/' >

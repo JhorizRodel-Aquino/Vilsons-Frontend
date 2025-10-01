@@ -31,8 +31,9 @@ function App() {
       <ContentLayout>
         <Header />
         <Main>
-          
+
           <Routes>
+            {/* Main Pages */}
             <Route index element={<DashboardPage />} />
             <Route path='/dashboard' element={<DashboardPage />} />
             <Route path='/job-orders' element={<JobOrdersPage />} />
@@ -47,6 +48,7 @@ function App() {
             <Route path='/roles-and-permissions' element={<RolesAndPermissionsPage />} />
             <Route path='/my-account' element={<MyAccountPage />} />
 
+            {/* Details Pages */}
             <Route path="/customer" element={<CustomerDetailsPage />} />
             <Route path="/contractor" element={<ContractorDetailsPage />} />
             <Route path="/job-orders/id" element={<JobOrderDetailsPage />} />

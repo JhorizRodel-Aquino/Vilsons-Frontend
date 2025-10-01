@@ -2,7 +2,7 @@ import Icon from './Icon';
 
 function Header() {
     return (
-        <header className='bg-light py-3 px-6 border-b'>
+        <header className='bg-light py-3 px-6 border-b z-30'>
             <div className='grid grid-flow-col justify-between text-darker'>
                 <div className='flex gap-[10px]'>
                     <Icon name='menu' />

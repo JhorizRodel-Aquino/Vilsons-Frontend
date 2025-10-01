@@ -183,7 +183,7 @@
   }  
   
   .backdrop {
-    @apply h-full w-full z-20 bg-darkest/20 backdrop-blur-[1px] absolute;
+    @apply h-full w-full z-10 bg-darkest/20 backdrop-blur-[1px] fixed left-0 top-0;
   }
   
   .fields {
