@@ -2,7 +2,7 @@ import SectionHeading from "../../../components/SectionHeading"
 import Details from "../../../components/Details"
 import Button from "../../../components/Button"
 import ActiveOrdersTable from "./ActiveOrdersTable"
-import CreateOrderModal from "./CreateOrderModal"
+import JobOrderModal from "./JobOrderModal"
 import { useState } from "react"
 
 export default function JobOrdersActiveTabContent() {
@@ -20,7 +20,7 @@ export default function JobOrdersActiveTabContent() {
 
             <ActiveOrdersTable />
 
-            {showCreateModal && <CreateOrderModal setShowModal={setShowCreateModal}/>}
+            {showCreateModal && <JobOrderModal setShowModal={setShowCreateModal}/>}
         </>
     )
 }

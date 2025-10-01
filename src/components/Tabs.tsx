@@ -1,12 +1,12 @@
 import { useRef, useEffect, useState } from "react";
 
-type PageTabsProps = {
+type TabsProps = {
     tabs: string[];
     activeTab: string;
     setActiveTab: Function;
 };
 
-export default function PageTabs({ tabs, activeTab, setActiveTab }: PageTabsProps) {
+export default function Tabs({ tabs, activeTab, setActiveTab }: TabsProps) {
     const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
     const [underlineStyle, setUnderlineStyle] = useState({ width: 0, left: 0 });
 

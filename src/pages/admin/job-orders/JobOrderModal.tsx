@@ -11,7 +11,7 @@ type Material = {
     cost?: number
 }
 
-export default function CreateOrderModal({ setShowModal }: { setShowModal: (show: boolean) => void }) {
+export default function JobOrderModal({ setShowModal }: { setShowModal: (show: boolean) => void }) {
     const [createNewCustomer, setCreateNewCustomer] = useState(false)
     const [materials, setMaterials] = useState<Material[]>([{ id: 0, name: "", qty: 0, cost: 0 }])
 
@@ -27,7 +27,7 @@ export default function CreateOrderModal({ setShowModal }: { setShowModal: (show
         <>
             <article className="card modal gap-[20px]">
                 <div className="text-xl flex justify-between items-center">
-                    <h2 className="font-bold text-primary">Create New Job Order</h2>
+                    <h2 className="font-bold">Create  Job Order</h2>
                     <button className="cursor-pointer" onClick={closeModal}>✕</button>
                 </div>
                 
@@ -86,7 +86,7 @@ export default function CreateOrderModal({ setShowModal }: { setShowModal: (show
                         <div className="grid grid-cols-[3fr_1fr_2fr_auto_2fr] gap-x-5 gap-y-[20px] font-semibold">
                             <span>Material</span>
                             <span>Qty</span>
-                            <span>Unit Cost (₱)</span>
+                            <span>Unit Cost</span>
                             <span className="opacity-0"><Icon name="Delete" /></span>
                             <span></span>
                         </div>
@@ -95,8 +95,8 @@ export default function CreateOrderModal({ setShowModal }: { setShowModal: (show
                             {materials.map((material, i) => (
                                 <li key={i} className="grid grid-cols-[3fr_1fr_2fr_auto_2fr] gap-x-5 gap-y-[20px]">
                                     <Field.Text />
-                                    <Field.Number />
-                                    <Field.Text />
+                                    <Field.Number placeholder="0"/>
+                                    <Field.Money/>
                                     <button className="mt-auto py-[5px] cursor-pointer" onClick={() => { }}><Icon name="Delete" color="dark" /></button>
                                     <p className="py-[5px] text-end">{formatPesoFromCents(10000)}</p>
                                 </li>
@@ -112,7 +112,7 @@ export default function CreateOrderModal({ setShowModal }: { setShowModal: (show
                     <div className="grid grid-cols-2 gap-[20px]">
                         <fieldset className="block card">
                             <h3 className="text-lg font-semibold mb-5">Labor Cost (₱)</h3>
-                            <Field.Number />
+                            <Field.Money/>
                         </fieldset>
 
                         <dl className="block card">

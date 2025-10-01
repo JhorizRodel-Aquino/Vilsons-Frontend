@@ -1,6 +1,6 @@
 import PageHeading from "../../../components/PageHeading";
 import PageContent from "../../../components/PageContent";
-import PageTabs from "../../../components/PageTabs";
+import Tabs from "../../../components/Tabs";
 import { useState } from "react";
 import ActiveOrdersSection from "./ActiveOrdersSection";
 import ArchivedOrdersSection from "./ArchivedOrdersSection";
@@ -13,7 +13,7 @@ function JobOrdersPage() {
         <>
             <PageHeading title={'Job Orders'} />
 
-            <PageTabs tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
+            <Tabs tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
 
             <PageContent useCard={true} scroll={false}>
                 {activeTab === tabs[0] && <ActiveOrdersSection />}
