@@ -23,7 +23,7 @@ export default function OverheadModal({ setShowModal }: { setShowModal: (show: b
 
                 <div className="flex justify-end items-center gap-[20px]">
                     <Button variant="gray" label="Cancel" onClick={closeModal} />
-                    <Button variant="primary" label="Create Job Order" onClick={() => { }} />
+                    <Button variant="primary" label="Add Bill" onClick={() => { }} />
                 </div>
             </article>
 

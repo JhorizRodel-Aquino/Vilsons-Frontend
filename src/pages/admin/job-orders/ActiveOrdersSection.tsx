@@ -1,5 +1,4 @@
 import SectionHeading from "../../../components/SectionHeading"
-import Details from "../../../components/Details"
 import Button from "../../../components/Button"
 import ActiveOrdersTable from "./ActiveOrdersTable"
 import JobOrderModal from "./JobOrderModal"

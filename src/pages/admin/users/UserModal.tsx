@@ -26,7 +26,7 @@ export default function UserModal({ setShowModal }: { setShowModal: (show: boole
 
                 <div className="flex justify-end items-center gap-[20px]">
                     <Button variant="gray" label="Cancel" onClick={closeModal} />
-                    <Button variant="primary" label="Create Job Order" onClick={() => { }} />
+                    <Button variant="primary" label="Create User" onClick={() => { }} />
                 </div>
             </article>
 

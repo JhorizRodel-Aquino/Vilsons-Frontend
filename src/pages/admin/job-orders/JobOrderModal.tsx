@@ -92,7 +92,7 @@ export default function JobOrderModal({ setShowModal }: { setShowModal: (show: b
                         </div>
 
                         <ol className="grid gap-2 list-decimal list-inside">
-                            {materials.map((material, i) => (
+                            {materials.map((_, i) => (
                                 <li key={i} className="grid grid-cols-[3fr_1fr_2fr_auto_2fr] gap-x-5 gap-y-[20px]">
                                     <Field.Text />
                                     <Field.Number placeholder="0"/>

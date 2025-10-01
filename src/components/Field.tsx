@@ -1,6 +1,5 @@
 import type { ReactNode } from "react"
 import InputBox from "./InputBox"
-import Icon from "./Icon"
 
 export default function Field() {
     return (
@@ -74,7 +73,7 @@ Field.Number = function Number({ id, label, width = 'hug', placeholder='' }: { i
     )
 }
 
-Field.Money = function Money({ id, label, width = 'hug', placeholder='' }: { id?: string, label?: string, width?: 'hug' | 'full', placeholder?: string }) {
+Field.Money = function Money({ id, label, width = 'hug'}: { id?: string, label?: string, width?: 'hug' | 'full', placeholder?: string }) {
     const fieldWidth = {
         hug: 'w-auto',
         full: 'w-full'

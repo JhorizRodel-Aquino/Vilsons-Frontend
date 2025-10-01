@@ -10,7 +10,7 @@ export default function TransactionModal({ setShowModal }: { setShowModal: (show
         <>
             <article className="card modal gap-[20px]">
                 <div className="text-xl flex justify-between items-center">
-                    <h2 className="font-bold text-primary">Create  Job Order</h2>
+                    <h2 className="font-bold">Add Transaction</h2>
                     <button className="cursor-pointer" onClick={closeModal}>✕</button>
                 </div>
 
@@ -26,7 +26,7 @@ export default function TransactionModal({ setShowModal }: { setShowModal: (show
 
                 <div className="flex justify-end items-center gap-[20px]">
                     <Button variant="gray" label="Cancel" onClick={closeModal} />
-                    <Button variant="primary" label="Create Job Order" onClick={() => { }} />
+                    <Button variant="primary" label="Add Transaction" onClick={() => { }} />
                 </div>
             </article>
 
