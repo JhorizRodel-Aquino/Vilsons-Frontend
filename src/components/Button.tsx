@@ -1,7 +1,7 @@
 type ButtonProps = { 
   label: string;
   onClick: (e: React.MouseEvent<HTMLButtonElement>) => void; // ✅ better typing
-  variant?: 'primary' | 'gray' | 'outline';
+  variant?: 'primary' | 'gray' | 'outline' | 'red';
   size?: 'standard' | 'mini';
 };
 
@@ -10,6 +10,7 @@ function Button({ label, onClick, variant = 'primary', size = 'standard' }: Butt
     primary: "bg-primary text-light hover:bg-primary/80",
     gray: "bg-border text-darker hover:bg-border/70",
     outline: "bg-none text-darker border-all border-[2px] hover:bg-border/30",
+    red: "bg-red text-light hover:bg-red/80",
   }[variant];
 
   const sizes = {

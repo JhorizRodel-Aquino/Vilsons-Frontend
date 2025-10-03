@@ -14,18 +14,6 @@ type YearPickerProps = {
 export default function YearPicker({ value, onChange, minYear = 2000, className }: YearPickerProps) {
   const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    function handleScroll() {
-      setOpen(false);
-    }
-
-    window.addEventListener("scroll", handleScroll); // true = capture phase, catches scrolling in nested elements
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
-
   // Setup floating-ui with positioning middlewares
   const { refs, floatingStyles, context } = useFloating({
     open,

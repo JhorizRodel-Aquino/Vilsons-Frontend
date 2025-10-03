@@ -97,7 +97,7 @@ export default function JobOrderModal({ setShowModal }: { setShowModal: (show: b
                                     <Field.Text />
                                     <Field.Number placeholder="0"/>
                                     <Field.Money/>
-                                    <button className="mt-auto py-[5px] cursor-pointer" onClick={() => { }}><Icon name="Delete" color="dark" /></button>
+                                    <button className="mt-auto py-[5px] cursor-pointer" onClick={() => { }}><Icon name="delete" color="dark" /></button>
                                     <p className="py-[5px] text-end">{formatPesoFromCents(10000)}</p>
                                 </li>
                             ))}
