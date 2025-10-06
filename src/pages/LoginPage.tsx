@@ -6,21 +6,13 @@ import useAuth from '../hooks/useAuth'
 
 export default function LoginPage() {
     const [showMessageModal, setShowMessageModal] = useState(false)
-    const [message, setMessage] = useState("");
     const [loginData, setLoginData] = useState({ username: '', password: '' })
-    const { handleLogin, loading } = useAuth();
+    const { handleLogin, loading, error } = useAuth();
 
     const onSubmit = async () => {
-        if (!loginData.username || !loginData.password) {
-            setMessage('Please enter your username and password.');
-            setShowMessageModal(true);
-            return;
-        }  
-        
         try {
             await handleLogin(loginData);
         } catch (err: any) {
-            setMessage(err.message);
             setShowMessageModal(true);
         }
     };
@@ -41,7 +33,7 @@ export default function LoginPage() {
                 </div>
             </div>
 
-            {showMessageModal && <MessageModal title='Login Failed' message={message} setShowModal={setShowMessageModal}/>}
+            {showMessageModal && <MessageModal title='Login Failed' message={error!} setShowModal={setShowMessageModal}/>}
         </>
 
     )

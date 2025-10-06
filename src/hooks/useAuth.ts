@@ -5,32 +5,43 @@ import axios from "axios";
 interface UseAuthResult {
   handleLogin: (loginData: LoginData) => Promise<any>;
   loading: boolean;
+  error: string | null;
 }
 
 export default function useAuth(): UseAuthResult {
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleLogin = async (loginData: LoginData): Promise<any> => {
-    setLoading(true);
+    if (!loginData.username || !loginData.password) {
+      setError("Please fill in both username and password.");
+      throw new Error(error!)
+    }
 
+    setLoading(true);
     try {
       const data = await login(loginData);
       window.location.href = "/dashboard"
-
       return data;
     } catch (err: unknown) {
-      console.error("Login failed:", err);
+      
 
       if (axios.isAxiosError(err)) {
-      
-        throw new Error(err.response?.data?.message || "An unexpected error occurred.");
+        if (err.code === "ERR_NETWORK") {
+          setError("Cannot connect to server.");
+        } else {
+          setError(err.response?.data?.message || "Check your username and password and try again.");
+        }
+      } else if (err instanceof Error) {
+        setError(err.message);
       } else {
-        throw new Error("An unexpected error occurred.");
+        setError("An unexpected error occurred.");
       }
+      throw new Error(error!)
     } finally {
       setLoading(false);
     }
   };
 
-  return { handleLogin, loading };
+  return { handleLogin, loading, error };
 }

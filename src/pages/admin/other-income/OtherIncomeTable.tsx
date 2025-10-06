@@ -4,29 +4,44 @@ import SearchBar from "../../../components/SearchBar"
 import Table from "../../../components/table/Table"
 import formatPesoFromCents from '../../../utils/formatPesoFromCents';
 import MonthYearFilter from "../../../components/MonthYearFilter";
+import useGetOtherIncome from "../../../hooks/other-income/useGetOtherIncome";
+import { useEffect, useState } from "react";
+import MessageModal from "../../../components/MessageModal";
+import Loading from "../../../components/Loading";
 
 export default function OtherIncomeTable() {
-        type OtherIncome = { 
-        datetime: string; 
-        description: string; 
-        amount: number; 
+    const [showMessageModal, setShowMessageModal] = useState(false)
+    const { data, loading, error } = useGetOtherIncome();
+
+    const otherIncomeItems = data.data?.otherIncome || [];
+    const total = data.data?.total || 0;
+
+    useEffect(() => {
+        if (error) setShowMessageModal(true);
+    }, [error]);
+
+    if (loading) return <Loading />;
+
+    type OtherIncome = {
+        datetime: string;
+        description: string;
+        amount: number;
     };
 
     const otherIncomeColumns: Column<OtherIncome>[] = [
-        {key: "datetime", label: "Datetime"},
-        {key: "description", label: "Description"},
-        {key: "amount", label: "Amount", render: (value) => formatPesoFromCents(value as number)},
+        { key: "datetime", label: "Datetime" },
+        { key: "description", label: "Description" },
+        { key: "amount", label: "Amount", render: (value) => formatPesoFromCents(value as number) },
 
-    ] ;
-
-    const otherIncomes: OtherIncome[] = [
-        {datetime: 'Jan 4, 2022 11:30 AM', description: '1kg of metal 1kg of metal 1kg of metal 1kg of metal 1kg of metal 1kg of metal 1kg of metal 1kg of metal 1kg of metal 1kg of metal 1kg of metal1kg of metal1kg of metal1kg of metal1kg of metal1kg of metal1kg of metal1kg of metal1kg of metal1kg of metal1kg of metal1kg of metal1kg of metal1kg of metal 1kg of metal 1kg of metal 1kg of metal 1kg of metal 1kg of metal 1kg of metal', amount: 102000},
-        {datetime: 'Jan 4, 2022 11:30 AM', description: '1kg of metal', amount: 102000},
-        {datetime: 'Jan 4, 2022 11:30 AM', description: '1kg of metal', amount: 102000},
-        {datetime: 'Jan 4, 2022 11:30 AM', description: '1kg of metal', amount: 102000},
-        {datetime: 'Jan 4, 2022 11:30 AM', description: '1kg of metal', amount: 102000},
-        {datetime: 'Jan 4, 2022 11:30 AM', description: '1kg of metal', amount: 102000},
     ];
+
+    const otherIncomes: OtherIncome[] = otherIncomeItems.map(
+        (item: Record<string, any>) => ({
+            datetime: item.createdAt,
+            description: item.description,
+            amount: item.amount
+        })
+    );
 
     return (
         <>
@@ -35,7 +50,9 @@ export default function OtherIncomeTable() {
                 <MonthYearFilter />
             </TableFilter>
 
-            <Table columns={otherIncomeColumns} rows={otherIncomes} total={10000000} />
+            <Table columns={otherIncomeColumns} rows={otherIncomes} total={total} />
+
+            {showMessageModal && <MessageModal title='Error' message={error!} setShowModal={setShowMessageModal} />}
         </>
     )
 }

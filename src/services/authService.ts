@@ -6,16 +6,6 @@ export type LoginData = {
     password: string; 
 }
 
-// export const login = async (loginData: LoginData) => {
-//   const response = await axios.post(`${API_URL}/auth`, loginData);
-//   const { accessToken } = response.data;
-
-//   // Save token globally for future requests
-//   axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
-
-//   return response.data; // you might return user info too if backend provides it
-// };
-
 let inMemoryAccessToken: string | null = null; // 🔐 stored only in memory
 
 export const login = async (loginData: LoginData) => {
