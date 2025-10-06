@@ -1,6 +1,6 @@
 import Button from "./Button"; 
 
-type DeleteModalProps = {
+type ConfirmModalProps = {
   title?: string;
   message?: string;
   setShowModal: (show: boolean) => void;
@@ -8,7 +8,7 @@ type DeleteModalProps = {
   red?: boolean
 }
 
-export default function ConfirmModal({ title, message, setShowModal, onConfirm, red }: DeleteModalProps) {
+export default function ConfirmModal({ title, message, setShowModal, onConfirm, red }: ConfirmModalProps) {
     const closeModal = () => {
         setShowModal(false)
     }
