@@ -8,7 +8,6 @@ import useGetMaterialExpenses from "../../../hooks/material-expenses/useGetMater
 import useMonthYearFilter from "../../../hooks/useMonthYearFilter";
 import ErrorModal from "../../../components/ErrorModal";
 import Loading from "../../../components/Loading";
-import { useEffect } from "react";
 
 export default function MaterialExpensesTable() {
     const { data, loading, error, closeError, setMonthYearParams } = useGetMaterialExpenses();
@@ -17,8 +16,7 @@ export default function MaterialExpensesTable() {
     if (loading) return <Loading />;
 
     const materialExpenseItems = data.data?.materials || [];
-    const total = data.data?.totalAmount || 0;
-
+    const total = data.data?.totalMaterialsAmount || 0;
 
     type MaterialExpense = {
         jobNumber: string;
@@ -48,11 +46,6 @@ export default function MaterialExpensesTable() {
             totalAmount: item.totalAmount
         })
     );
-
-    
-    useEffect(() => {
-        console.log(total)
-    }, [total])
 
     return (
         <>
