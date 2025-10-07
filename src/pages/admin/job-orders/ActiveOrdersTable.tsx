@@ -80,7 +80,7 @@ export default function ActiveOrdersTable({ setShowEditModal }: {setShowEditModa
 
                 <TableFilter.Group>
                     <StatusFilter />
-                    <DateRange />
+                    {/* <DateRange /> */}
                 </TableFilter.Group>
             </TableFilter>
 

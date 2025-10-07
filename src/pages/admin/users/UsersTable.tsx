@@ -42,7 +42,7 @@ export default function UserTable() {
         <>
             <TableFilter>
                 <SearchBar />
-                <DateRange />
+                {/* <DateRange /> */}
             </TableFilter>
 
             <Table columns={allUserColumns} rows={allUsers} />

@@ -29,7 +29,7 @@ export default function ActivityLogsTable() {
         <>
             <TableFilter>
                 <SearchBar />
-                <DateRange />
+                {/* <DateRange /> */}
             </TableFilter>
 
             <Table columns={activityLogColumns} rows={activityLogs} />

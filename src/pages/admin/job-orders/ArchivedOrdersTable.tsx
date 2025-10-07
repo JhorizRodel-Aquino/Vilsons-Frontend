@@ -40,7 +40,7 @@ export default function ArchivedOrdersTable() {
         <>
             <TableFilter>
                 <SearchBar />
-                <DateRange />
+                {/* <DateRange /> */}
             </TableFilter>
             
             <Table columns={archivedJobOrderColumns} rows={archivedJobOrders} />

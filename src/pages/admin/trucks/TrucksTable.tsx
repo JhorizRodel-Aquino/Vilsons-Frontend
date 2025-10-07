@@ -3,8 +3,18 @@ import TableFilter from "../../../components/TableFilter"
 import SearchBar from "../../../components/SearchBar"
 import DateRange from "../../../components/DateRange";
 import Table from "../../../components/table/Table"
+import useGetTrucks from "../../../hooks/trucks/useGetTrucks";
+import Loading from "../../../components/Loading";
+import ErrorModal from "../../../components/ErrorModal";
+import formatDate from "../../../utils/formatDate";
 
 export default function TrucksTable() {
+    const { data, loading, error, closeError, dateRangeParams, setDateRangeParams } = useGetTrucks();
+
+    if (loading) return <Loading />;
+
+    const truckItems = data.data?.trucks || [];
+
     type Truck = {
         plateNumber: string;
         make: string;
@@ -18,27 +28,30 @@ export default function TrucksTable() {
         { key: "make", label: "Make" },
         { key: "model", label: "Model" },
         { key: "owner", label: "Owner" },
-        { key: "dateAdded", label: "Date Added" },
+        { key: "dateAdded", label: "Date Added", render: (isoDate) => formatDate(isoDate as string) },
     ];
 
-    const trucks: Truck[] = [
-        { make: 'Toyota', plateNumber: 'ABD-322', model: 'Innova', owner: 'Venice Transport', dateAdded: 'Jan 4, 2022' },
-        { make: 'Toyota', plateNumber: 'ABD-322', model: 'Innova', owner: 'Venice Transport', dateAdded: 'Jan 4, 2022' },
-        { make: 'Toyota', plateNumber: 'ABD-322', model: 'Innova', owner: 'Venice Transport', dateAdded: 'Jan 4, 2022' },
-        { make: 'Toyota', plateNumber: 'ABD-322', model: 'Innova', owner: 'Venice Transport', dateAdded: 'Jan 4, 2022' },
-        { make: 'Toyota', plateNumber: 'ABD-322', model: 'Innova', owner: 'Venice Transport', dateAdded: 'Jan 4, 2022' },
-        { make: 'Toyota', plateNumber: 'ABD-322', model: 'Innova', owner: 'Venice Transport', dateAdded: 'Jan 4, 2022' },
-        { make: 'Toyota', plateNumber: 'ABD-322', model: 'Innova', owner: 'Venice Transport', dateAdded: 'Jan 4, 2022' },
-    ];
+    const trucks: Truck[] = truckItems.map(
+        (item: Record<string, any>) => ({
+            plateNumber: item.plate,
+            make: item.make,
+            model: item.model,
+            owner: item.customerFullName,
+            dateAdded: item.createdAt
+        })
+    );
+
 
     return (
         <>
             <TableFilter>
                 <SearchBar />
-                <DateRange />
+                <DateRange dateRange={dateRangeParams} setDateRange={setDateRangeParams} />
             </TableFilter>
 
             <Table columns={truckColumns} rows={trucks} />
+
+            {error && <ErrorModal error={error!} closeError={closeError} />}
         </>
     )
 }
