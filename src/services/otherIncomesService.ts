@@ -8,7 +8,7 @@ export const getOtherIncomes = async ({ year, month }: { year?: number, month?: 
 
   try {
     const response = await api.get("/api/other-incomes", { params });
-    console.log('Other Income:', response.data)
+    console.log('Other Incomes:', response.data)
     return response.data;
   } catch (error) {
     console.error("Failed to fetch other incomes:", error);

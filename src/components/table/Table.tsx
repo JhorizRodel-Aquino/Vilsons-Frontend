@@ -47,7 +47,7 @@ export default function Table<T>({ columns, rows, total, className }: TableProps
         </table>
 
         {total !== undefined && rows.length > 0 && (
-          <TableTotal total={10000000}/>
+          <TableTotal total={total}/>
         )}
 
         {rows.length <= 0 && <p className='text-center my-10 italic'>No Records</p>}

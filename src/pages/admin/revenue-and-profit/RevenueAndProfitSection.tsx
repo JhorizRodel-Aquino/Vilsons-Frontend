@@ -4,7 +4,7 @@ import TableFilter from "../../../components/TableFilter"
 import MonthYearFilter from "../../../components/MonthYearFilter";
 import RevenueAndProfitTable from "./RevenueAndProfitTable";
 import type { RevenueAndProfit } from "./RevenueAndProfitTable";
-import useGetRevenueAndProfit from "../../../hooks/finances/useGetRevenueAndProfit";
+import useGetRevenueAndProfit from "../../../hooks/revenue-and-profit/useGetRevenueAndProfit";
 import Loading from "../../../components/Loading";
 import useMonthYearFilter from "../../../hooks/useMonthYearFilter";
 import ErrorModal from "../../../components/ErrorModal";

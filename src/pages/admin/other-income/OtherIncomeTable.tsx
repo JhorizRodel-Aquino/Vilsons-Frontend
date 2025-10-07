@@ -14,10 +14,10 @@ export default function OtherIncomeTable() {
     const { data, loading, error, closeError, setMonthYearParams } = useGetOtherIncomes();
     const { options, option, setOption, monthYear, setMonthYear, year, setYear } = useMonthYearFilter(setMonthYearParams);
 
-    const otherIncomeItems = data.data?.otherIncome || [];
-    const total = data.data?.total || 0;
-
     if (loading) return <Loading />;
+
+    const otherIncomeItems = data.data?.otherIncome || [];
+    const total = data.data?.totalAmount || 0;
 
     type OtherIncome = {
         datetime: string;
