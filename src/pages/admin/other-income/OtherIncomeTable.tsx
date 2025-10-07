@@ -4,22 +4,18 @@ import SearchBar from "../../../components/SearchBar"
 import Table from "../../../components/table/Table"
 import formatPesoFromCents from '../../../utils/formatPesoFromCents';
 import MonthYearFilter from "../../../components/MonthYearFilter";
-import useGetOtherIncome from "../../../hooks/other-income/useGetOtherIncome";
-import { useEffect, useState } from "react";
-import MessageModal from "../../../components/MessageModal";
+import useGetOtherIncomes from "../../../hooks/other-income/useGetOtherIncomes";
 import Loading from "../../../components/Loading";
 import formatDate from "../../../utils/formatDate";
+import useMonthYearFilter from "../../../hooks/useMonthYearFilter";
+import ErrorModal from "../../../components/ErrorModal";
 
 export default function OtherIncomeTable() {
-    const [showMessageModal, setShowMessageModal] = useState(false)
-    const { data, loading, error } = useGetOtherIncome();
+    const { data, loading, error, closeError, setMonthYearParams } = useGetOtherIncomes();
+    const { options, option, setOption, monthYear, setMonthYear, year, setYear } = useMonthYearFilter(setMonthYearParams);
 
     const otherIncomeItems = data.data?.otherIncome || [];
     const total = data.data?.total || 0;
-
-    useEffect(() => {
-        if (error) setShowMessageModal(true);
-    }, [error]);
 
     if (loading) return <Loading />;
 
@@ -48,12 +44,12 @@ export default function OtherIncomeTable() {
         <>
             <TableFilter>
                 <SearchBar />
-                {/* <MonthYearFilter /> */}
+                <MonthYearFilter options={options} option={option} setOption={setOption} monthYear={monthYear} year={year} setMonthYear={setMonthYear} setYear={setYear} />
             </TableFilter>
 
             <Table columns={otherIncomeColumns} rows={otherIncomes} total={total} />
 
-            {showMessageModal && <MessageModal title='Error' message={error!} setShowModal={setShowMessageModal} />}
+            {error && <ErrorModal error={error!} closeError={closeError} />}
         </>
     )
 }

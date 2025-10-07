@@ -92,7 +92,6 @@ export default function MonthYearPicker({ value, onChange, minYear = 2000, class
   useEffect(() => {
     if (value) {
       setMonthYear(value);
-      const [yr] = value.split('-')
     }
   }, [value]);
 

@@ -4,24 +4,16 @@ import TableFilter from "../../../components/TableFilter"
 import MonthYearFilter from "../../../components/MonthYearFilter";
 import RevenueAndProfitTable from "./RevenueAndProfitTable";
 import type { RevenueAndProfit } from "./RevenueAndProfitTable";
-import useGetFinances from "../../../hooks/finances/useGetFinances";
-import { useEffect, useState } from "react";
-import MessageModal from "../../../components/MessageModal";
+import useGetRevenueAndProfit from "../../../hooks/finances/useGetRevenueAndProfit";
 import Loading from "../../../components/Loading";
-import dayjs from "dayjs";
+import useMonthYearFilter from "../../../hooks/useMonthYearFilter";
+import ErrorModal from "../../../components/ErrorModal";
 
 export default function RevenueAndProfitSection() {
-  const options = ['Monthly', 'Yearly']
-  const [option, setOption] = useState(options[0]);
-  const today = dayjs();
-  const monthToday = today.format('MM');
-  const yearToday = today.format('YYYY');
-  const [monthYear, setMonthYear] = useState(`${yearToday}-${monthToday}`)
-  const [year, setYear] = useState(`${yearToday}`)
+  const { data, loading, error, closeError, setMonthYearParams } = useGetRevenueAndProfit();
+  const { options, option, setOption, monthYear, setMonthYear, year, setYear } = useMonthYearFilter(setMonthYearParams);
 
-  const [showMessageModal, setShowMessageModal] = useState(false)
-  const { data, loading, error, setMonthYearParams } = useGetFinances();
-
+  if (loading) return <Loading />;
 
   const financeItems = data.data;
   let revenueAndProfits: RevenueAndProfit[] = []
@@ -42,23 +34,6 @@ export default function RevenueAndProfitSection() {
     ]
   }
 
-  useEffect(() => {
-    if (error) setShowMessageModal(true);
-  }, [error]);
-
-  useEffect(() => {
-    if (option === 'Monthly') {
-      setMonthYearParams({
-        year: Number(monthYear.split('-')[0]),
-        month: Number(monthYear.split('-')[1]),
-      });
-    } else {
-      setMonthYearParams({ year: Number(year) });
-    }
-  }, [option, monthYear, year, setMonthYearParams]);
-
-  if (loading) return <Loading />;
-
   return (
     <>
       <SectionHeading>
@@ -71,7 +46,7 @@ export default function RevenueAndProfitSection() {
 
       <RevenueAndProfitTable rows={revenueAndProfits} />
 
-      {showMessageModal && <MessageModal title='Error' message={error!} setShowModal={setShowMessageModal} />}
+      {error && <ErrorModal error={error!} closeError={closeError} />}
     </>
   )
 }

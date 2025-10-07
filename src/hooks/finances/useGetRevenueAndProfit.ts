@@ -1,30 +1,28 @@
 import { useEffect, useState } from "react";
-import { getFinances } from "../../services/financesService";
-import axios from "axios";
+import { getRevenueAndProfit } from "../../services/revenueAndProfitService";
+import handleAxiosError from "../../utils/handleAxiosError";
 
 export type MonthYearParams = { month?: number, year?: number }
 
 let cachedData: any;
 let prevMonthYearParams: MonthYearParams | undefined;
 
-export default function useGetFinances() {
+export default function useGetRevenueAndProfit() {
   const [data, setData] = useState<Record<string, any>>(cachedData || {});
   const [loading, setLoading] = useState(!cachedData);
   const [error, setError] = useState<string | null>(null);
   const [monthYearParams, setMonthYearParams] = useState<MonthYearParams>({});
 
+  const closeError = () => setError(null)
+
   const fetchData = async (params: MonthYearParams = monthYearParams) => {
     setLoading(true);
     try {
-      const result = await getFinances(params);
+      const result = await getRevenueAndProfit(params);
       setData(result);
       cachedData = result;
     } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
-        if (err.code === "ERR_NETWORK") setError("Cannot connect to server.");
-        else setError(err.response?.data?.message || "Something went wrong.");
-      } else if (err instanceof Error) setError(err.message);
-      else setError("An unexpected error occurred.");
+      setError(handleAxiosError(err))
     } finally {
       setLoading(false);
     }
@@ -47,5 +45,5 @@ export default function useGetFinances() {
     }
   }, [monthYearParams]);
 
-  return { data, loading, error, refetch: fetchData, setMonthYearParams };
+  return { data, loading, error, closeError, refetch: fetchData, setMonthYearParams };
 }
