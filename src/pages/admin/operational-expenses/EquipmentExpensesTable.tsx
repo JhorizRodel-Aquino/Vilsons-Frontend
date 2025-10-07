@@ -18,8 +18,6 @@ export default function EquipmentExpensesTable() {
     const equipmentExpenseItems = data.data?.equipments || [];
     const total = data.data?.totalEquipmentsAmount || 0;
 
-    console.log(equipmentExpenseItems)
-
     type EquipmentExpense = {
         equipment: string;
         quantity: number;
