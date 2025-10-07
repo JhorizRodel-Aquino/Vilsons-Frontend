@@ -26,7 +26,7 @@ export default function OtherIncomeTable() {
     };
 
     const otherIncomeColumns: Column<OtherIncome>[] = [
-        { key: "datetime", label: "Datetime", render: (isoString) => formatDate(isoString as string)},
+        { key: "datetime", label: "Datetime", render: (isoDate) => formatDate(isoDate as string)},
         { key: "description", label: "Description" },
         { key: "amount", label: "Amount", render: (value) => formatPesoFromCents(value as number) },
 
