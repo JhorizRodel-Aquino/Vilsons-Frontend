@@ -8,6 +8,7 @@ import useGetOtherIncome from "../../../hooks/other-income/useGetOtherIncome";
 import { useEffect, useState } from "react";
 import MessageModal from "../../../components/MessageModal";
 import Loading from "../../../components/Loading";
+import formatDate from "../../../utils/formatDate";
 
 export default function OtherIncomeTable() {
     const [showMessageModal, setShowMessageModal] = useState(false)
@@ -29,7 +30,7 @@ export default function OtherIncomeTable() {
     };
 
     const otherIncomeColumns: Column<OtherIncome>[] = [
-        { key: "datetime", label: "Datetime" },
+        { key: "datetime", label: "Datetime", render: (isoString) => formatDate(isoString as string)},
         { key: "description", label: "Description" },
         { key: "amount", label: "Amount", render: (value) => formatPesoFromCents(value as number) },
 
@@ -47,7 +48,7 @@ export default function OtherIncomeTable() {
         <>
             <TableFilter>
                 <SearchBar />
-                <MonthYearFilter />
+                {/* <MonthYearFilter /> */}
             </TableFilter>
 
             <Table columns={otherIncomeColumns} rows={otherIncomes} total={total} />

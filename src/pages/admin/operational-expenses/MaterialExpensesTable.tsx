@@ -40,7 +40,7 @@ export default function MaterialExpensesTable() {
         <>
             <TableFilter>
                 <SearchBar />
-                <MonthYearFilter />
+                {/* <MonthYearFilter /> */}
             </TableFilter>
 
             <Table columns={materialExpenseColumns} rows={materialExpenses} total={10000000} />

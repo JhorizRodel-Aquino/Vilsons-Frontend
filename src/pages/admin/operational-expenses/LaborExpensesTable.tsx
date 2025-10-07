@@ -38,7 +38,7 @@ export default function LaborExpensesTable() {
         <>
             <TableFilter>
                 <SearchBar />
-                <MonthYearFilter />
+                {/* <MonthYearFilter /> */}
             </TableFilter>
 
             <Table columns={laborExpenseColumns} rows={laborExpenses} total={10000000} />

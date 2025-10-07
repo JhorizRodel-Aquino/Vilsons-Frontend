@@ -30,7 +30,7 @@ export default function OverheadExpensesTable() {
         <>
             <TableFilter>
                 <SearchBar />
-                <MonthYearFilter />
+                {/* <MonthYearFilter /> */}
             </TableFilter>
 
             <Table columns={overheadExpenseColumns} rows={overheadExpenses} total={10000000} />

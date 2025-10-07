@@ -36,7 +36,7 @@ export default function EquipmentExpensesTable() {
         <>
             <TableFilter>
                 <SearchBar />
-                <MonthYearFilter />
+                {/* <MonthYearFilter /> */}
             </TableFilter>
 
             <Table columns={equipmentExpenseColumns} rows={equipmentExpenses} total={10000000} />

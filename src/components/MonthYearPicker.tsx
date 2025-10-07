@@ -93,7 +93,6 @@ export default function MonthYearPicker({ value, onChange, minYear = 2000, class
     if (value) {
       setMonthYear(value);
       const [yr] = value.split('-')
-      console.log(yr)
     }
   }, [value]);
 

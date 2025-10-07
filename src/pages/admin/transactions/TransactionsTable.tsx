@@ -40,7 +40,7 @@ export default function TransactionsTable() {
         <>
                       <TableFilter>
                 <SearchBar />
-                <MonthYearFilter />
+                {/* <MonthYearFilter /> */}
             </TableFilter>
 
             <Table columns={transactionColumns} rows={transactions} total={10000000}/>

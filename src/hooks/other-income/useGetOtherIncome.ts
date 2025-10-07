@@ -1,4 +1,3 @@
-// src/hooks/useOtherIncome.ts
 import { useEffect, useState } from "react";
 import { getOtherIncome } from "../../services/otherIncomeService";
 import axios from "axios";
