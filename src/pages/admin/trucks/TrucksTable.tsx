@@ -3,13 +3,13 @@ import TableFilter from "../../../components/TableFilter"
 import SearchBar from "../../../components/SearchBar"
 import DateRange from "../../../components/DateRange";
 import Table from "../../../components/table/Table"
-import useGetTrucks from "../../../hooks/trucks/useGetTrucks";
 import Loading from "../../../components/Loading";
 import ErrorModal from "../../../components/ErrorModal";
 import formatDate from "../../../utils/formatDate";
+import useGetByDateRange from "../../../hooks/useGetByDateRange";
 
 export default function TrucksTable() {
-    const { data, loading, error, closeError, searchParams, setSearchParams, dateRangeParams, setDateRangeParams } = useGetTrucks();
+    const { data, loading, error, closeError, searchParams, setSearchParams, dateRangeParams, setDateRangeParams } = useGetByDateRange('/api/trucks');
     if (loading) return <Loading />;
 
     const truckItems = data.data?.trucks || [];
@@ -44,7 +44,7 @@ export default function TrucksTable() {
     return (
         <>
             <TableFilter>
-                <SearchBar search={searchParams} setSearch={setSearchParams}/>
+                <SearchBar search={searchParams} setSearch={setSearchParams} placeholder="Truck make or model"/>
                 <DateRange dateRange={dateRangeParams} setDateRange={setDateRangeParams} />
             </TableFilter>
 

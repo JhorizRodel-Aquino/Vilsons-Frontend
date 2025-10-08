@@ -76,7 +76,7 @@ export default function ActiveOrdersTable({ setShowEditModal }: {setShowEditModa
     return (
         <>
             <TableFilter>
-                {/* <SearchBar /> */}
+                {/* <SearchBar search={searchParams} placeholder='Material name or job number' setSearch={setSearchParams}/> */}
 
                 <TableFilter.Group>
                     <StatusFilter />

@@ -18,7 +18,7 @@ export default function useMonthYearFilter(
   useEffect(() => {
     const [yr, mo] = monthYear.split("-");
     setMonthYearParams(option === "Monthly" ? { year: +yr, month: +mo } : { year: +year });
-  }, [option, monthYear, year, setMonthYearParams]);
+  }, [option, monthYear, year]);
 
   return {
     options,

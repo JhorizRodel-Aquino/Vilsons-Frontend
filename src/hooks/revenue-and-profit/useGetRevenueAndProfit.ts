@@ -11,7 +11,7 @@ export default function useGetRevenueAndProfit() {
   const [data, setData] = useState<Record<string, any>>(cachedData || {});
   const [loading, setLoading] = useState(!cachedData);
   const [error, setError] = useState<string | null>(null);
-  const [monthYearParams, setMonthYearParams] = useState<MonthYearParams>({});
+  const [monthYearParams, setMonthYearParams] = useState<MonthYearParams>({month: +dayjs().format("MM"), year: +dayjs().format("YYYY")});
 
   const closeError = () => setError(null)
 

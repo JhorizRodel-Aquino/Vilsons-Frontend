@@ -4,14 +4,14 @@ import SearchBar from "../../../components/SearchBar"
 import Table from "../../../components/table/Table"
 import formatPesoFromCents from '../../../utils/formatPesoFromCents';
 import MonthYearFilter from "../../../components/MonthYearFilter";
-import useGetOtherIncomes from "../../../hooks/other-income/useGetOtherIncomes";
 import Loading from "../../../components/Loading";
 import formatDate from "../../../utils/formatDate";
 import useMonthYearFilter from "../../../hooks/useMonthYearFilter";
 import ErrorModal from "../../../components/ErrorModal";
+import useGetByMonthYear from "../../../hooks/useGetByMonthYear";
 
 export default function OtherIncomeTable() {
-    const { data, loading, error, closeError, setMonthYearParams } = useGetOtherIncomes();
+    const { data, loading, error, closeError, searchParams, setSearchParams, setMonthYearParams } = useGetByMonthYear('/api/other-incomes');
     const { options, option, setOption, monthYear, setMonthYear, year, setYear } = useMonthYearFilter(setMonthYearParams);
 
     if (loading) return <Loading />;
@@ -43,7 +43,7 @@ export default function OtherIncomeTable() {
     return (
         <>
             <TableFilter>
-                {/* <SearchBar /> */}
+                <SearchBar search={searchParams} setSearch={setSearchParams} placeholder='Income description' />
                 <MonthYearFilter options={options} option={option} setOption={setOption} monthYear={monthYear} year={year} setMonthYear={setMonthYear} setYear={setYear} />
             </TableFilter>
 

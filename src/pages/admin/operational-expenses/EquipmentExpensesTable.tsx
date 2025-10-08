@@ -3,15 +3,15 @@ import TableFilter from "../../../components/TableFilter"
 import SearchBar from "../../../components/SearchBar"
 import Table from "../../../components/table/Table"
 import MonthYearFilter from "../../../components/MonthYearFilter";
-import useGetEquipmentExpenses from "../../../hooks/equipment-expenses/useGetEquipmentExpenses";
 import useMonthYearFilter from "../../../hooks/useMonthYearFilter";
 import ErrorModal from "../../../components/ErrorModal";
 import Loading from "../../../components/Loading";
 import formatPesoFromCents from "../../../utils/formatPesoFromCents";
+import useGetByMonthYear from "../../../hooks/useGetByMonthYear";
 
 export default function EquipmentExpensesTable() {
-    const { data, loading, error, closeError, setMonthYearParams } = useGetEquipmentExpenses();
-    const { options, option, setOption, monthYear, setMonthYear, year, setYear } = useMonthYearFilter(setMonthYearParams);
+        const { data, loading, error, closeError, searchParams, setSearchParams, setMonthYearParams } = useGetByMonthYear('/api/equipments');
+        const { options, option, setOption, monthYear, setMonthYear, year, setYear } = useMonthYearFilter(setMonthYearParams);
 
     if (loading) return <Loading />;
 
@@ -44,7 +44,7 @@ export default function EquipmentExpensesTable() {
     return (
         <>
             <TableFilter>
-                {/* <SearchBar /> */}
+                <SearchBar search={searchParams} setSearch={setSearchParams} placeholder='Equipment name' />
                 <MonthYearFilter options={options} option={option} setOption={setOption} monthYear={monthYear} year={year} setMonthYear={setMonthYear} setYear={setYear} />
             </TableFilter>
 

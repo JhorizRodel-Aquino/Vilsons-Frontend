@@ -38,10 +38,10 @@ export default function TransactionsTable() {
 
     return (
         <>
-                      <TableFilter>
-                {/* <SearchBar /> */}
-                {/* <MonthYearFilter /> */}
-            </TableFilter>
+                      {/* <TableFilter>
+                <SearchBar search={searchParams} placeholder='Material name or job number' setSearch={setSearchParams}/>
+                <MonthYearFilter />
+            </TableFilter> */}
 
             <Table columns={transactionColumns} rows={transactions} total={10000000}/>
         </>

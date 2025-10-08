@@ -1,7 +1,8 @@
 import api from "../utils/axiosInstance";
 
-export const getOverheadExpenses = async ({ year, month }: { year?: number, month?: number }) => {
+export const getOverheadExpenses = async ({ search, year, month }: { search?: string, year?: number, month?: number }) => {
   const params = {
+      ...(search && { search }),
       ...(year && { year }),
       ...(month && { month }),
     };

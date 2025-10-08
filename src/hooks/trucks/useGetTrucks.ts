@@ -17,7 +17,8 @@ export default function useGetTrucks() {
 
     const fetchData = async () => {
         try {
-            const result = await getTrucks({...dateRangeParams, search: searchParams});
+            const params = {...dateRangeParams, search: searchParams}
+            const result = await getTrucks(params);
             cachedData = result; // update cache
             setData(result);
         } catch (err: unknown) {

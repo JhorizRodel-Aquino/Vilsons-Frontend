@@ -7,11 +7,11 @@ import MonthYearFilter from "../../../components/MonthYearFilter";
 import useMonthYearFilter from "../../../hooks/useMonthYearFilter";
 import ErrorModal from "../../../components/ErrorModal";
 import Loading from "../../../components/Loading";
-import useGetLaborExpenses from "../../../hooks/labor-expenses/useGetLaborExpenses";
 import formatDate from "../../../utils/formatDate";
+import useGetByMonthYear from "../../../hooks/useGetByMonthYear";
 
 export default function LaborExpensesTable() {
-    const { data, loading, error, closeError, setMonthYearParams } = useGetLaborExpenses();
+    const { data, loading, error, closeError, searchParams, setSearchParams, setMonthYearParams } = useGetByMonthYear('/api/labors');
     const { options, option, setOption, monthYear, setMonthYear, year, setYear } = useMonthYearFilter(setMonthYearParams);
 
     if (loading) return <Loading />;
@@ -48,7 +48,7 @@ export default function LaborExpensesTable() {
     return (
         <>
             <TableFilter>
-                {/* <SearchBar /> */}
+                <SearchBar search={searchParams} setSearch={setSearchParams} placeholder='Laborer name'/>
                 <MonthYearFilter options={options} option={option} setOption={setOption} monthYear={monthYear} year={year} setMonthYear={setMonthYear} setYear={setYear} />
             </TableFilter>
 

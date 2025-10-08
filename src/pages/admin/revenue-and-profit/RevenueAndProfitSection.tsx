@@ -4,13 +4,13 @@ import TableFilter from "../../../components/TableFilter"
 import MonthYearFilter from "../../../components/MonthYearFilter";
 import RevenueAndProfitTable from "./RevenueAndProfitTable";
 import type { RevenueAndProfit } from "./RevenueAndProfitTable";
-import useGetRevenueAndProfit from "../../../hooks/revenue-and-profit/useGetRevenueAndProfit";
 import Loading from "../../../components/Loading";
 import useMonthYearFilter from "../../../hooks/useMonthYearFilter";
 import ErrorModal from "../../../components/ErrorModal";
+import useGetByMonthYear from "../../../hooks/useGetByMonthYear";
 
 export default function RevenueAndProfitSection() {
-  const { data, loading, error, closeError, setMonthYearParams } = useGetRevenueAndProfit();
+  const { data, loading, error, closeError, setMonthYearParams } = useGetByMonthYear('/api/finances', true);
   const { options, option, setOption, monthYear, setMonthYear, year, setYear } = useMonthYearFilter(setMonthYearParams);
 
   if (loading) return <Loading />;
@@ -19,7 +19,7 @@ export default function RevenueAndProfitSection() {
   let revenueAndProfits: RevenueAndProfit[] = []
 
   if (financeItems) {
-    const { grossProfit, totalEquipmments, totalExpenses, totalLabor, totalMaterials, totalOperationals, totalOtherIncomes, totalOverheads, totalRevenue, totalTransactions } = financeItems;
+    const { grossProfit, totalEquipments, totalExpenses, totalLabor, totalMaterials, totalOperationals, totalOtherIncomes, totalOverheads, totalRevenue, totalTransactions } = financeItems;
     revenueAndProfits = [
       { category: "Revenue", amount: totalRevenue, depth: 0 },
       { category: "Service Revenue", amount: totalTransactions, depth: 1 },
@@ -27,7 +27,7 @@ export default function RevenueAndProfitSection() {
       { category: "Expenses", amount: totalExpenses, depth: 0 },
       { category: "Operational Expenses", amount: totalOperationals, depth: 1 },
       { category: "Material Expenses", amount: totalMaterials, depth: 2 },
-      { category: "Equipment Expenses", amount: totalEquipmments, depth: 2 },
+      { category: "Equipment Expenses", amount: totalEquipments, depth: 2 },
       { category: "Labor Expenses", amount: totalLabor, depth: 2 },
       { category: "Overhead Expenses", amount: totalOverheads, depth: 1 },
       { category: "Gross Profit", amount: grossProfit, depth: 0 }

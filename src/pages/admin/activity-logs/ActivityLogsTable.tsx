@@ -27,10 +27,10 @@ export default function ActivityLogsTable() {
 
     return (
         <>
-            <TableFilter>
-                {/* <SearchBar /> */}
-                {/* <DateRange /> */}
-            </TableFilter>
+            {/* <TableFilter>
+                <SearchBar search={searchParams} placeholder='Material name or job number' setSearch={setSearchParams}/>
+                <DateRange />
+            </TableFilter> */}
 
             <Table columns={activityLogColumns} rows={activityLogs} />
         </>

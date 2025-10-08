@@ -40,10 +40,10 @@ export default function UserTable() {
 
     return (
         <>
-            <TableFilter>
-                {/* <SearchBar /> */}
-                {/* <DateRange /> */}
-            </TableFilter>
+            {/* <TableFilter>
+                <SearchBar search={searchParams} placeholder='Material name or job number' setSearch={setSearchParams}/>
+                <DateRange />
+            </TableFilter> */}
 
             <Table columns={allUserColumns} rows={allUsers} />
         </>

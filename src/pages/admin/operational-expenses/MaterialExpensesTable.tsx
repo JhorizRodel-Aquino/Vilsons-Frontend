@@ -4,13 +4,13 @@ import SearchBar from "../../../components/SearchBar"
 import Table from "../../../components/table/Table"
 import formatPesoFromCents from '../../../utils/formatPesoFromCents';
 import MonthYearFilter from "../../../components/MonthYearFilter";
-import useGetMaterialExpenses from "../../../hooks/material-expenses/useGetMaterialExpenses";
 import useMonthYearFilter from "../../../hooks/useMonthYearFilter";
 import ErrorModal from "../../../components/ErrorModal";
 import Loading from "../../../components/Loading";
+import useGetByMonthYear from "../../../hooks/useGetByMonthYear";
 
 export default function MaterialExpensesTable() {
-    const { data, loading, error, closeError, setMonthYearParams } = useGetMaterialExpenses();
+    const { data, loading, error, closeError, searchParams, setSearchParams, setMonthYearParams } = useGetByMonthYear('/api/materials');
     const { options, option, setOption, monthYear, setMonthYear, year, setYear } = useMonthYearFilter(setMonthYearParams);
 
     if (loading) return <Loading />;
@@ -50,7 +50,7 @@ export default function MaterialExpensesTable() {
     return (
         <>
             <TableFilter>
-                {/* <SearchBar /> */}
+                <SearchBar search={searchParams} setSearch={setSearchParams} placeholder='Material name or job number'/>
                 <MonthYearFilter options={options} option={option} setOption={setOption} monthYear={monthYear} year={year} setMonthYear={setMonthYear} setYear={setYear} />
             </TableFilter>
 

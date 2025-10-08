@@ -4,14 +4,14 @@ import SearchBar from "../../../components/SearchBar"
 import Table from "../../../components/table/Table"
 import formatPesoFromCents from '../../../utils/formatPesoFromCents';
 import MonthYearFilter from "../../../components/MonthYearFilter";
-import useGetOverheadExpenses from "../../../hooks/overhead-expenses/useGetOverheadExpenses";
 import useMonthYearFilter from "../../../hooks/useMonthYearFilter";
 import ErrorModal from "../../../components/ErrorModal";
 import Loading from "../../../components/Loading";
 import formatDate from "../../../utils/formatDate";
+import useGetByMonthYear from "../../../hooks/useGetByMonthYear";
 
 export default function OverheadExpensesTable() {
-    const { data, loading, error, closeError, setMonthYearParams } = useGetOverheadExpenses();
+    const { data, loading, error, closeError, searchParams, setSearchParams, setMonthYearParams } = useGetByMonthYear('/api/overheads');
     const { options, option, setOption, monthYear, setMonthYear, year, setYear } = useMonthYearFilter(setMonthYearParams);
 
     if (loading) return <Loading />;
@@ -42,7 +42,7 @@ export default function OverheadExpensesTable() {
     return (
         <>
             <TableFilter>
-                {/* <SearchBar /> */}
+                <SearchBar search={searchParams} setSearch={setSearchParams} placeholder='Overhead description'/>
                 <MonthYearFilter options={options} option={option} setOption={setOption} monthYear={monthYear} year={year} setMonthYear={setMonthYear} setYear={setYear} />
             </TableFilter>
 

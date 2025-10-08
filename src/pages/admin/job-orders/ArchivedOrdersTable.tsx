@@ -38,11 +38,11 @@ export default function ArchivedOrdersTable() {
 
     return (
         <>
-            <TableFilter>
-                {/* <SearchBar /> */}
-                {/* <DateRange /> */}
+            {/* <TableFilter>
+                <SearchBar search={searchParams} placeholder='Material name or job number' setSearch={setSearchParams}/>
+                <DateRange />
             </TableFilter>
-            
+             */}
             <Table columns={archivedJobOrderColumns} rows={archivedJobOrders} />
         </>
     )
