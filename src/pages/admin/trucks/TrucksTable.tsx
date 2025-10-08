@@ -27,7 +27,7 @@ export default function TrucksTable() {
         { key: "make", label: "Make" },
         { key: "model", label: "Model" },
         { key: "owner", label: "Owner" },
-        { key: "dateAdded", label: "Date Added", render: (isoDate) => formatDate(isoDate as string) },
+        { key: "dateAdded", label: "Date Added", render: (isoDate) => formatDate(isoDate as string, 'date') },
     ];
 
     const trucks: Truck[] = truckItems.map(

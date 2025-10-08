@@ -4,46 +4,61 @@ import SearchBar from "../../../components/SearchBar"
 import Table from "../../../components/table/Table"
 import formatPesoFromCents from '../../../utils/formatPesoFromCents';
 import MonthYearFilter from "../../../components/MonthYearFilter";
+import Loading from "../../../components/Loading";
+import useMonthYearFilter from "../../../hooks/useMonthYearFilter";
+import ErrorModal from "../../../components/ErrorModal";
+import useGetByMonthYear from "../../../hooks/useGetByMonthYear";
+import formatDate from "../../../utils/formatDate";
 
 export default function TransactionsTable() {
-        type Transaction = { 
-        referenceNumber: string; 
-        jobNumber: string; 
-        senderName: string; 
+    const { data, loading, error, closeError, searchParams, setSearchParams, setMonthYearParams } = useGetByMonthYear('/api/transactions');
+    const { options, option, setOption, monthYear, setMonthYear, year, setYear } = useMonthYearFilter(setMonthYearParams);
+
+    if (loading) return <Loading />;
+
+    const transactionItems = data.data?.transactions || [];
+    const total = data.data?.totalTransactions || 0;
+
+    type Transaction = {
+        referenceNumber: string;
+        jobNumber: string;
+        senderName: string;
         datetime: string;
         paymentMode: string;
         amount: number
     };
 
     const transactionColumns: Column<Transaction>[] = [
-        {key: "referenceNumber", label: "Reference Number"},
-        {key: "jobNumber", label: "Job Number"},
-        {key: "senderName", label: "Sender Name"},
-        {key: "datetime", label: "Datetime"},
-        {key: "paymentMode", label: "Payment Mode"},
-        {key: "amount", label: "Amount", render: (value) => formatPesoFromCents(value as number)},
+        { key: "referenceNumber", label: "Reference Number" },
+        { key: "jobNumber", label: "Job Number" },
+        { key: "senderName", label: "Sender Name" },
+        { key: "datetime", label: "Datetime", render: (isoDate) => formatDate(isoDate as string) },
+        { key: "paymentMode", label: "Payment Mode" },
+        { key: "amount", label: "Amount", render: (value) => formatPesoFromCents(value as number) },
     ];
 
-    const transactions: Transaction[] = [
-        {referenceNumber: '12-435-00233', jobNumber: 'JO-25-233', senderName: 'Kinlie Venice', datetime: 'Jan 4, 2022 11:30 AM', paymentMode: 'BPI', amount: 10000000},
-        {referenceNumber: '12-435-00233', jobNumber: 'JO-25-233', senderName: 'Kinlie Venice', datetime: 'Jan 4, 2022 11:30 AM', paymentMode: 'BPI', amount: 10000000},
-        {referenceNumber: '12-435-00233', jobNumber: 'JO-25-233', senderName: 'Kinlie Venice', datetime: 'Jan 4, 2022 11:30 AM', paymentMode: 'BPI', amount: 10000000},
-        {referenceNumber: '12-435-00233', jobNumber: 'JO-25-233', senderName: 'Kinlie Venice', datetime: 'Jan 4, 2022 11:30 AM', paymentMode: 'BPI', amount: 10000000},
-        {referenceNumber: '12-435-00233', jobNumber: 'JO-25-233', senderName: 'Kinlie Venice', datetime: 'Jan 4, 2022 11:30 AM', paymentMode: 'BPI', amount: 10000000},
-        {referenceNumber: '12-435-00233', jobNumber: 'JO-25-233', senderName: 'Kinlie Venice', datetime: 'Jan 4, 2022 11:30 AM', paymentMode: 'BPI', amount: 10000000},
-        {referenceNumber: '12-435-00233', jobNumber: 'JO-25-233', senderName: 'Kinlie Venice', datetime: 'Jan 4, 2022 11:30 AM', paymentMode: 'BPI', amount: 10000000},
-        {referenceNumber: '12-435-00233', jobNumber: 'JO-25-233', senderName: 'Kinlie Venice', datetime: 'Jan 4, 2022 11:30 AM', paymentMode: 'BPI', amount: 10000000},
-        {referenceNumber: '12-435-00233', jobNumber: 'JO-25-233', senderName: 'Kinlie Venice', datetime: 'Jan 4, 2022 11:30 AM', paymentMode: 'BPI', amount: 10000000},
-    ];
+    const transactions: Transaction[] = transactionItems.map(
+        (item: Record<string, any>) => ({
+            referenceNumber: item.referenceNumber || 'no ref number',
+            jobNumber: item.jobOrderCode,
+            senderName: item.senderName,
+            datetime: item.createdAt,
+            paymentMode: item.mop,
+            amount: item.amount
+        })
+    );
+
 
     return (
         <>
-                      {/* <TableFilter>
-                <SearchBar search={searchParams} placeholder='Material name or job number' setSearch={setSearchParams}/>
-                <MonthYearFilter />
-            </TableFilter> */}
+            <TableFilter>
+                <SearchBar search={searchParams} setSearch={setSearchParams} placeholder='Reference#, Job#, or Sender' />
+                <MonthYearFilter options={options} option={option} setOption={setOption} monthYear={monthYear} year={year} setMonthYear={setMonthYear} setYear={setYear} />
+            </TableFilter>
 
-            <Table columns={transactionColumns} rows={transactions} total={10000000}/>
+            <Table columns={transactionColumns} rows={transactions} total={total} />
+
+            {error && <ErrorModal error={error!} closeError={closeError} />}
         </>
     )
 }

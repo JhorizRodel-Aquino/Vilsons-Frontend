@@ -1,4 +1,4 @@
-import type { ReactElement } from "react";
+import { useState, type ReactElement } from "react";
 import type { Column } from "../../../components/table/Table";
 import TableFilter from "../../../components/TableFilter"
 import SearchBar from "../../../components/SearchBar"
@@ -6,8 +6,18 @@ import DateRange from "../../../components/DateRange"
 import Table from "../../../components/table/Table"
 import formatPesoFromCents from '../../../utils/formatPesoFromCents';
 import Options from "../../../components/Options";
+import ConfirmModal from "../../../components/ConfirmModal";
+import Loading from "../../../components/Loading";
+import useGetByDateRange from "../../../hooks/useGetByDateRange";
+import ErrorModal from "../../../components/ErrorModal";
 
 export default function ArchivedOrdersTable() {
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
+    const { data, loading, error, closeError, searchParams, setSearchParams, dateRangeParams, setDateRangeParams } = useGetByDateRange('/api/job-orders/group/archived');
+    if (loading) return <Loading />;
+
+    const jobOrderItems = data.data?.jobOrders || [];
+
     type ArchivedJobOrder = {
         jobNumber: string;
         plateNumber: string;
@@ -26,24 +36,29 @@ export default function ArchivedOrdersTable() {
         { key: "options", label: "", render: (value) => value as React.ReactElement },
     ];
 
-    const archivedJobOrders: ArchivedJobOrder[] = [
-        { jobNumber: 'JO-25-233', plateNumber: 'ABD-322', contractor: 'Jhoriz Rodel', totalBill: 102000, balance: 30000, options: <Options onDelete={() => {}} /> },
-        { jobNumber: 'JO-25-233', plateNumber: 'ABD-322', contractor: 'Jhoriz Rodel', totalBill: 102000, balance: 30000, options: <Options onDelete={() => {}} /> },
-        { jobNumber: 'JO-25-233', plateNumber: 'ABD-322', contractor: 'Jhoriz Rodel', totalBill: 102000, balance: 30000, options: <Options onDelete={() => {}} /> },
-        { jobNumber: 'JO-25-233', plateNumber: 'ABD-322', contractor: 'Jhoriz Rodel', totalBill: 102000, balance: 30000, options: <Options onDelete={() => {}} /> },
-        { jobNumber: 'JO-25-233', plateNumber: 'ABD-322', contractor: 'Jhoriz Rodel', totalBill: 102000, balance: 30000, options: <Options onDelete={() => {}} /> },
-        { jobNumber: 'JO-25-233', plateNumber: 'ABD-322', contractor: 'Jhoriz Rodel', totalBill: 102000, balance: 30000, options: <Options onDelete={() => {}} /> },
-        { jobNumber: 'JO-25-233', plateNumber: 'ABD-322', contractor: 'Jhoriz Rodel', totalBill: 102000, balance: 30000, options: <Options onDelete={() => {}} /> },
-    ];
+    const archivedJobOrders: ArchivedJobOrder[] = jobOrderItems.map(
+        (item: Record<string, any>) => ({
+            jobNumber: item.jobOrderCode,
+            plateNumber: item.plateNumber,
+            contractor: item.contractorName,
+            totalBill: item.totalBill,
+            balance: item.balance,
+            options: <Options onDelete={() => { setShowDeleteModal(true) }} />
+        })
+    );
 
     return (
         <>
-            {/* <TableFilter>
-                <SearchBar search={searchParams} placeholder='Material name or job number' setSearch={setSearchParams}/>
-                <DateRange />
+            <TableFilter>
+                <SearchBar search={searchParams} setSearch={setSearchParams} placeholder="Job#, Plate#, or Contractor" />
+                <DateRange dateRange={dateRangeParams} setDateRange={setDateRangeParams} />
             </TableFilter>
-             */}
+
             <Table columns={archivedJobOrderColumns} rows={archivedJobOrders} />
+
+            {error && <ErrorModal error={error!} closeError={closeError} />}
+
+            {showDeleteModal && <ConfirmModal title="Delete Job Order" message="Are you sure you want to delete this job order?" setShowModal={setShowDeleteModal} onConfirm={() => { }} red={true} />}
         </>
     )
 }

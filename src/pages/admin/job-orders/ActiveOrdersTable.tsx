@@ -11,9 +11,16 @@ import formatPesoFromCents from '../../../utils/formatPesoFromCents';
 import Options from "../../../components/Options";
 import Icon from "../../../components/Icon";
 import ConfirmModal from "../../../components/ConfirmModal";
+import Loading from "../../../components/Loading";
+import useGetByDateRange from "../../../hooks/useGetByDateRange";
+import ErrorModal from "../../../components/ErrorModal";
 
-export default function ActiveOrdersTable({ setShowEditModal }: {setShowEditModal: (show: boolean) => void;} ) {
+export default function ActiveOrdersTable({ setShowEditModal }: { setShowEditModal: (show: boolean) => void; }) {
     const [showDeleteModal, setShowDeleteModal] = useState(false)
+    const { data, loading, error, closeError, searchParams, setSearchParams, dateRangeParams, setDateRangeParams } = useGetByDateRange('/api/job-orders/group/active');
+    if (loading) return <Loading />;
+
+    const jobOrderItems = data.data?.jobOrders || [];
 
     type ActiveJobOrder = {
         jobNumber: string;
@@ -35,58 +42,38 @@ export default function ActiveOrdersTable({ setShowEditModal }: {setShowEditModa
         { key: "options", label: "", render: (value) => value as React.ReactElement },
     ];
 
-    const activeJobOrders: ActiveJobOrder[] = [
-        { jobNumber: 'JO-25-233', status: 'completed', plateNumber: 'ABD-322', contractor: 'Jhoriz Rodel', totalBill: 102000, balance: 30000, 
-            options: 
-            <Options onEdit={() => {setShowEditModal(true)}} onDelete={() => {setShowDeleteModal(true)}}> 
-                <button><Icon name="edit" />Change Status</button>
-            </Options> },
-        { jobNumber: 'JO-25-233', status: 'completed', plateNumber: 'ABD-322', contractor: 'Jhoriz Rodel', totalBill: 102000, balance: 30000, 
-            options: 
-            <Options onEdit={() => {setShowEditModal(true)}} onDelete={() => {setShowDeleteModal(true)}}> 
-                <button>Change Status</button>
-            </Options> },
-        { jobNumber: 'JO-25-233', status: 'completed', plateNumber: 'ABD-322', contractor: 'Jhoriz Rodel', totalBill: 102000, balance: 30000, 
-            options: 
-            <Options onEdit={() => {setShowEditModal(true)}} onDelete={() => {setShowDeleteModal(true)}}> 
-                <button>Change Status</button>
-            </Options> },
-        { jobNumber: 'JO-25-233', status: 'completed', plateNumber: 'ABD-322', contractor: 'Jhoriz Rodel', totalBill: 102000, balance: 30000, 
-            options: 
-            <Options onEdit={() => {setShowEditModal(true)}} onDelete={() => {setShowDeleteModal(true)}}> 
-                <button>Change Status</button>
-            </Options> },
-        { jobNumber: 'JO-25-233', status: 'completed', plateNumber: 'ABD-322', contractor: 'Jhoriz Rodel', totalBill: 102000, balance: 30000, 
-            options: 
-            <Options onEdit={() => {setShowEditModal(true)}} onDelete={() => {setShowDeleteModal(true)}}> 
-                <button>Change Status</button>
-            </Options> },
-        { jobNumber: 'JO-25-233', status: 'completed', plateNumber: 'ABD-322', contractor: 'Jhoriz Rodel', totalBill: 102000, balance: 30000, 
-            options: 
-            <Options onEdit={() => {setShowEditModal(true)}} onDelete={() => {setShowDeleteModal(true)}}> 
-                <button>Change Status</button>
-            </Options> },
-        { jobNumber: 'JO-25-233', status: 'completed', plateNumber: 'ABD-322', contractor: 'Jhoriz Rodel', totalBill: 102000, balance: 30000, 
-            options: 
-            <Options onEdit={() => {setShowEditModal(true)}} onDelete={() => {setShowDeleteModal(true)}}> 
-                <button>Change Status</button>
-            </Options> },
-    ];
+    const activeJobOrders: ActiveJobOrder[] = jobOrderItems.map(
+        (item: Record<string, any>) => ({
+            jobNumber: item.jobOrderCode,
+            status: item.status,
+            plateNumber: item.plateNumber,
+            contractor: item.contractorName,
+            totalBill: item.totalBill,
+            balance: item.balance,
+            options:
+                <Options onEdit={() => { setShowEditModal(true) }} onDelete={() => { setShowDeleteModal(true) }}>
+                    <button><Icon name="edit" />Change Status</button>
+                </Options>
+        })
+    );
+
 
     return (
         <>
             <TableFilter>
-                {/* <SearchBar search={searchParams} placeholder='Material name or job number' setSearch={setSearchParams}/> */}
+                <SearchBar search={searchParams} setSearch={setSearchParams} placeholder="Job#, Plate#, or Contractor" />
 
                 <TableFilter.Group>
                     <StatusFilter />
-                    {/* <DateRange /> */}
+                    <DateRange dateRange={dateRangeParams} setDateRange={setDateRangeParams} />
                 </TableFilter.Group>
             </TableFilter>
 
             <Table columns={activeJobOrderColumns} rows={activeJobOrders} />
-            
-            {showDeleteModal && <ConfirmModal title="Delete Job Order" message="Are you sure you want to delete this job order?" setShowModal={setShowDeleteModal} onConfirm={() => {}} red={true}/>}
+
+            {error && <ErrorModal error={error!} closeError={closeError} />}
+
+            {showDeleteModal && <ConfirmModal title="Delete Job Order" message="Are you sure you want to delete this job order?" setShowModal={setShowDeleteModal} onConfirm={() => { }} red={true} />}
         </>
     )
 }

@@ -13,6 +13,7 @@ export default function JobOrdersActiveTabContent() {
                 </div>
             </SectionHeading>
 
+
             <ArchivedOrdersTable />
         </>
     )
