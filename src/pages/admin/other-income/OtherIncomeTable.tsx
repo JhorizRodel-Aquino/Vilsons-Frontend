@@ -43,7 +43,7 @@ export default function OtherIncomeTable() {
     return (
         <>
             <TableFilter>
-                <SearchBar />
+                {/* <SearchBar /> */}
                 <MonthYearFilter options={options} option={option} setOption={setOption} monthYear={monthYear} year={year} setMonthYear={setMonthYear} setYear={setYear} />
             </TableFilter>
 

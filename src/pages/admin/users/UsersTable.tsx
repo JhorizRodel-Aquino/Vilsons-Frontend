@@ -41,7 +41,7 @@ export default function UserTable() {
     return (
         <>
             <TableFilter>
-                <SearchBar />
+                {/* <SearchBar /> */}
                 {/* <DateRange /> */}
             </TableFilter>
 

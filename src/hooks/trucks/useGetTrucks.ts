@@ -5,20 +5,19 @@ import handleAxiosError from "../../utils/handleAxiosError";
 export type DateRangeParams = { startDate: string, endDate: string }
 
 let cachedData: any;
-let prevDateRangeParams: DateRangeParams | undefined;
 
 export default function useGetTrucks() {
     const [data, setData] = useState<Record<string, any>>(cachedData || {});
     const [loading, setLoading] = useState(!cachedData);
     const [error, setError] = useState<string | null>(null);
     const [dateRangeParams, setDateRangeParams] = useState<DateRangeParams>({startDate: '', endDate: ''});
+    const [searchParams, setSearchParams] = useState<string>('');
 
     const closeError = () => setError(null)
 
-    const fetchData = async (params: DateRangeParams = dateRangeParams) => {
-        setLoading(true);
+    const fetchData = async () => {
         try {
-            const result = await getTrucks(params);
+            const result = await getTrucks({...dateRangeParams, search: searchParams});
             cachedData = result; // update cache
             setData(result);
         } catch (err: unknown) {
@@ -30,20 +29,15 @@ export default function useGetTrucks() {
 
     // initial load
   useEffect(() => {
+    setLoading(true);
     if (!cachedData) fetchData();
     else setData(cachedData);
   }, []);
 
   // refetch when params change
   useEffect(() => {
-    const paramsChanged =
-      JSON.stringify(dateRangeParams) !== JSON.stringify(prevDateRangeParams);
+      fetchData();
+  }, [searchParams, dateRangeParams]);
 
-    if (paramsChanged && Object.keys(dateRangeParams).length > 0) {
-      prevDateRangeParams = dateRangeParams;
-      fetchData(dateRangeParams);
-    }
-  }, [dateRangeParams]);
-
-    return { data, loading, error, closeError, refetch: fetchData, dateRangeParams, setDateRangeParams };
+    return { data, loading, error, closeError, refetch: fetchData, searchParams, setSearchParams, dateRangeParams, setDateRangeParams };
 }

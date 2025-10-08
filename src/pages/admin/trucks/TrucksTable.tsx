@@ -9,8 +9,7 @@ import ErrorModal from "../../../components/ErrorModal";
 import formatDate from "../../../utils/formatDate";
 
 export default function TrucksTable() {
-    const { data, loading, error, closeError, dateRangeParams, setDateRangeParams } = useGetTrucks();
-
+    const { data, loading, error, closeError, searchParams, setSearchParams, dateRangeParams, setDateRangeParams } = useGetTrucks();
     if (loading) return <Loading />;
 
     const truckItems = data.data?.trucks || [];
@@ -45,7 +44,7 @@ export default function TrucksTable() {
     return (
         <>
             <TableFilter>
-                <SearchBar />
+                <SearchBar search={searchParams} setSearch={setSearchParams}/>
                 <DateRange dateRange={dateRangeParams} setDateRange={setDateRangeParams} />
             </TableFilter>
 

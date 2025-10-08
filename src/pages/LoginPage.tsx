@@ -25,8 +25,8 @@ export default function LoginPage() {
                     <div className='grid gap-[40px] w-[50%] max-w-7xl mx-auto'>
                         <img src="./logo.webp" alt="" className='mb-[10px] justify-self-center' />
                         <div className='grid gap-[20px]'>
-                            <Field.Text id='username' label='Username' value={loginData.username} onChange={(e) => { setLoginData(prev => ({ ...prev, username: e.target.value })) }} autoComplete="username" />
-                            <Field.Text id='password' label='Password' value={loginData.password} onChange={(e) => { setLoginData(prev => ({ ...prev, password: e.target.value })) }} autoComplete="current-password" />
+                            <Field.Text id='username' label='Username' value={loginData.username} onChange={(e) => { setLoginData(prev => ({ ...prev, username: e.target.value })) }} onKeyDown={onSubmit} autoComplete="username" />
+                            <Field.Text id='password' label='Password' value={loginData.password} onChange={(e) => { setLoginData(prev => ({ ...prev, password: e.target.value })) }} onKeyDown={onSubmit} autoComplete="current-password" />
                         </div>
                         <Button label={loading ? 'Logging in...' : `Login`} disabled={loading} onClick={onSubmit} />
                     </div>

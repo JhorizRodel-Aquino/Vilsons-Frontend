@@ -89,7 +89,7 @@ export default function RolesAndPermissionsSection() {
         </SectionHeading>
 
         <TableFilter>
-            <SearchBar />
+            {/* <SearchBar /> */}
             <Dropdown options={roles} value={role} setValue={setRole} />
         </TableFilter>
 

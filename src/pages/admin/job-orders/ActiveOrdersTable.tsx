@@ -76,7 +76,7 @@ export default function ActiveOrdersTable({ setShowEditModal }: {setShowEditModa
     return (
         <>
             <TableFilter>
-                <SearchBar />
+                {/* <SearchBar /> */}
 
                 <TableFilter.Group>
                     <StatusFilter />

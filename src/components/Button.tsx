@@ -1,6 +1,6 @@
 type ButtonProps = { 
   label: string;
-  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void; // ✅ better typing
+  onClick: () => void; // ✅ better typing
   variant?: 'primary' | 'gray' | 'outline' | 'red';
   size?: 'standard' | 'mini';
   disabled?: boolean;

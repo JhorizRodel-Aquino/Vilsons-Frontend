@@ -7,7 +7,7 @@ export default function Field() {
     )
 }
 
-Field.Text = function Text({ id, label, width = 'hug', placeholder = '', value, onChange, autoComplete }: { id?: string, label?: string, width?: 'hug' | 'full', placeholder?: string, value?: string, onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void; autoComplete?: string}) {
+Field.Text = function Text({ id, label, width = 'hug', placeholder = '', value, onChange, onKeyDown, autoComplete }: { id?: string, label?: string, width?: 'hug' | 'full', placeholder?: string, value?: string, onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void; onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void, autoComplete?: string }) {
     const fieldWidth = {
         hug: 'w-auto',
         full: 'w-full'
@@ -23,11 +23,15 @@ Field.Text = function Text({ id, label, width = 'hug', placeholder = '', value, 
         }
     };
 
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter" && onKeyDown) onKeyDown(e);
+    };
+
     return (
         <div className={`${fieldWidth}`}>
             {label && <label htmlFor={id}>{label}</label>}
             <InputBox className="flex justify-between">
-                <input id={id} name={label} type="text" placeholder={placeholder} className="input" value={value} onChange={onChange}  autoComplete={autoComplete} />
+                <input id={id} name={label} type="text" placeholder={placeholder} className="input" value={value} onChange={onChange} onKeyDown={handleKeyDown} autoComplete={autoComplete} />
                 {value && <button className="cursor-pointer text-sm mx-2" onClick={handleClear}>✕</button>}
             </InputBox>
         </div>

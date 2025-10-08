@@ -1,7 +1,8 @@
 import api from "../utils/axiosInstance";
 
-export const getTrucks = async ({ startDate, endDate }: { startDate?: string, endDate?: string }) => {
+export const getTrucks = async ({ search, startDate, endDate }: { search?: string, startDate?: string, endDate?: string }) => {
   const params = {
+      ...(search && { search }),
       ...(startDate && { startDate }),
       ...(endDate && { endDate }),
     };

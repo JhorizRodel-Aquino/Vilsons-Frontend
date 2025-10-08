@@ -39,7 +39,7 @@ export default function ArchivedOrdersTable() {
     return (
         <>
             <TableFilter>
-                <SearchBar />
+                {/* <SearchBar /> */}
                 {/* <DateRange /> */}
             </TableFilter>
             

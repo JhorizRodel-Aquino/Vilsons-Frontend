@@ -39,7 +39,7 @@ export default function TransactionsTable() {
     return (
         <>
                       <TableFilter>
-                <SearchBar />
+                {/* <SearchBar /> */}
                 {/* <MonthYearFilter /> */}
             </TableFilter>
 
