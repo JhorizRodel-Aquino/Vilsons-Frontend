@@ -9,10 +9,15 @@ import formatDate from "../../../utils/formatDate";
 import useMonthYearFilter from "../../../hooks/useMonthYearFilter";
 import ErrorModal from "../../../components/ErrorModal";
 import useGetByMonthYear from "../../../hooks/useGetByMonthYear";
+import { useEffect } from "react";
 
-export default function OtherIncomeTable() {
-    const { data, loading, error, closeError, searchParams, setSearchParams, setMonthYearParams } = useGetByMonthYear('/api/other-incomes');
+export default function OtherIncomeTable({ reloadFlag }: { reloadFlag: boolean }) {
+    const { data, loading, error, closeError, reload, searchParams, setSearchParams, setMonthYearParams } = useGetByMonthYear('/api/other-incomes');
     const { options, option, setOption, monthYear, setMonthYear, year, setYear } = useMonthYearFilter(setMonthYearParams);
+
+    useEffect(() => {
+        reload()
+    }, [reloadFlag])
 
     if (loading) return <Loading />;
 
@@ -26,7 +31,7 @@ export default function OtherIncomeTable() {
     };
 
     const otherIncomeColumns: Column<OtherIncome>[] = [
-        { key: "datetime", label: "Datetime", render: (isoDate) => formatDate(isoDate as string)},
+        { key: "datetime", label: "Datetime", render: (isoDate) => formatDate(isoDate as string) },
         { key: "description", label: "Description" },
         { key: "amount", label: "Amount", render: (value) => formatPesoFromCents(value as number) },
 
@@ -39,7 +44,6 @@ export default function OtherIncomeTable() {
             amount: item.amount
         })
     );
-
     return (
         <>
             <TableFilter>

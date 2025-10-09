@@ -1,6 +1,7 @@
 import axios from "axios";
+import { toast } from "react-hot-toast";
 
-export default function handleAxiosError(err: unknown): string {
+export default function handleAxiosError(err: unknown): string | null {
   if (axios.isAxiosError(err)) {
     if (err.code === "ERR_NETWORK") {
       return "Cannot connect to server.";
@@ -10,14 +11,13 @@ export default function handleAxiosError(err: unknown): string {
       const { status, data } = err.response;
 
       switch (status) {
-        case 400:
-          return "Bad request. Please check your input.";
         case 404:
           return "Resource not found.";
         case 500:
           return "Server error. Please try again later.";
         default:
-          return data?.message || "Something went wrong.";
+          toast.error(data?.message || "Something went wrong.")
+          return null;
       }
     }
 

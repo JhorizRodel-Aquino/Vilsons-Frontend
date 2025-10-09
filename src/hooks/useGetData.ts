@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getData } from "../services/apiService";
+import { get } from "../services/apiService";
 import handleAxiosError from "../utils/handleAxiosError";
 
 export type DateRangeParams = { startDate: string | '', endDate: string }
@@ -22,7 +22,7 @@ export default function useGetData(route: string, params?: {}) {
     const fetchData = async () => {
         try {
             // const params = { ...dateRangeParams, search: searchParams }
-            const result = await getData({ route, params });
+            const result = await get({ route, params });
             setData(result);
             return result
         } catch (err: unknown) {

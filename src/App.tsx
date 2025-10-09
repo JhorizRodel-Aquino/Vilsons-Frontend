@@ -24,7 +24,7 @@ import ContentLayout from './components/ContentLayout'
 import Header from './components/Header'
 import Main from './components/Main'
 import './App.css'
-
+import { Toaster } from "react-hot-toast";
 
 function MainLayout() {
   return (
@@ -43,12 +43,13 @@ function MainLayout() {
 
 function App() {
   return (
-    <Routes>
-      {/* Public routes */}
-      <Route path="/login" element={<LoginPage />} />
+    <>
+      <Routes>
+        {/* Public routes */}
+        <Route path="/login" element={<LoginPage />} />
 
-      {/* Admin routes */}
-      <Route path="/" element={<MainLayout />}> 
+        {/* Admin routes */}
+        <Route path="/" element={<MainLayout />}>
           {/* Main Pages */}
           <Route index element={<DashboardPage />} />
           <Route path='/dashboard' element={<DashboardPage />} />
@@ -70,12 +71,36 @@ function App() {
           <Route path="/job-orders/id" element={<JobOrderDetailsPage />} />
           <Route path="/contractor" element={<ContractorDetailsPage />} />
           <Route path="/trucks/id" element={<TruckDetailsPage />} />
-          
-      </Route>
 
-      {/* 404 fallback */}
-      <Route path="*" element={<NotFoundPage />} />
-    </Routes>
+        </Route>
+
+        {/* 404 fallback */}
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+
+
+      <Toaster
+        position="top-right"
+        reverseOrder={false}
+        toastOptions={{
+          style: {
+            fontSize: '0.95rem',
+          },
+          success: {
+            style: {
+              background: '#22C55E',
+              color: '#fff',
+            },
+          },
+          error: {
+            style: {
+              background: '#EF4444',
+              color: '#fff',
+            },
+          },
+        }}
+      />
+    </>
   );
 }
 

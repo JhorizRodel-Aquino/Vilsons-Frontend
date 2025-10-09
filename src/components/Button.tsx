@@ -1,12 +1,13 @@
-type ButtonProps = { 
+type ButtonProps = {
+  type?: "submit" | "reset" | "button";
   label: string;
-  onClick: () => void; // ✅ better typing
+  onClick?: () => void; // ✅ better typing
   variant?: 'primary' | 'gray' | 'outline' | 'red';
   size?: 'standard' | 'mini';
   disabled?: boolean;
 };
 
-function Button({ label, onClick, variant = 'primary', size = 'standard', disabled }: ButtonProps) {
+function Button({ type, label, onClick, variant = 'primary', size = 'standard', disabled }: ButtonProps) {
   const variants = {
     primary: "bg-primary text-light hover:bg-primary/80",
     gray: "bg-border text-darker hover:bg-border/70",
@@ -20,12 +21,13 @@ function Button({ label, onClick, variant = 'primary', size = 'standard', disabl
   }[size];
 
   return (
-    <button 
-        className={`btn ${variants} ${sizes}`} 
-        onClick={onClick}
-        disabled={disabled}
+    <button
+      type={type}
+      className={`btn ${variants} ${sizes}`}
+      onClick={onClick}
+      disabled={disabled}
     >
-            {label}
+      {label}
     </button>
   );
 }

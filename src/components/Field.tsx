@@ -7,7 +7,17 @@ export default function Field() {
     )
 }
 
-Field.Text = function Text({ id, label, width = 'hug', placeholder = '', value, onChange, onKeyDown, autoComplete }: { id?: string, label?: string, width?: 'hug' | 'full', placeholder?: string, value?: string, onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void; onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void, autoComplete?: string }) {
+type FieldText = {
+    id?: string,
+    label?: string,
+    width?: 'hug' | 'full',
+    placeholder?: string,
+    value?: string,
+    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void, autoComplete?: string
+}
+
+Field.Text = function Text({ id, label, width = 'hug', placeholder = '', value, onChange, onKeyDown, autoComplete }: FieldText) {
     const fieldWidth = {
         hug: 'w-auto',
         full: 'w-full'
@@ -31,7 +41,16 @@ Field.Text = function Text({ id, label, width = 'hug', placeholder = '', value, 
         <div className={`${fieldWidth}`}>
             {label && <label htmlFor={id}>{label}</label>}
             <InputBox className="flex justify-between">
-                <input id={id} name={label} type="text" placeholder={placeholder} className="input" value={value} onChange={onChange} onKeyDown={handleKeyDown} autoComplete={autoComplete} />
+                <input
+                    id={id}
+                    name={label}
+                    type="text"
+                    placeholder={placeholder}
+                    className="input" value={value}
+                    onChange={onChange}
+                    onKeyDown={handleKeyDown}
+                    autoComplete={autoComplete} 
+                />
                 {value && <button className="cursor-pointer text-sm mx-2" onClick={handleClear}>✕</button>}
             </InputBox>
         </div>
@@ -88,7 +107,17 @@ Field.Number = function Number({ id, label, width = 'hug', placeholder = '' }: {
     )
 }
 
-Field.Money = function Money({ id, label, width = 'hug' }: { id?: string, label?: string, width?: 'hug' | 'full', placeholder?: string }) {
+type FieldNumber = {
+    id?: string,
+    label?: string,
+    width?: 'hug' | 'full',
+    placeholder?: string,
+    value?: number,
+    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void,
+}
+
+Field.Money = function Money({ id, label, width = 'hug', placeholder = '', value, onChange }: FieldNumber) {
     const fieldWidth = {
         hug: 'w-auto',
         full: 'w-full'
@@ -100,7 +129,16 @@ Field.Money = function Money({ id, label, width = 'hug' }: { id?: string, label?
             <InputBox>
                 <div className="grid grid-cols-[auto_1fr] items-center gap-1 input w-auto">
                     <label htmlFor="search">₱</label>
-                    <input id={id} name={label} type="number" placeholder={'0.00'} min={0} className="input px-0" />
+                    <input
+                        id={id}
+                        name={label}
+                        type="number"
+                        placeholder={placeholder || '0.00'}
+                        min={0}
+                        className="input px-0"
+                        value={value}
+                        onChange={onChange}
+                    />
                 </div>
             </InputBox>
         </div>

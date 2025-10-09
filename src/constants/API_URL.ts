@@ -1,3 +1,3 @@
-const API_URL = "https://laser-pressing-entry-privacy.trycloudflare.com";
+const API_URL = "https://supervisors-roberts-pulling-presentations.trycloudflare.com";
 
 export default API_URL
