@@ -47,7 +47,7 @@ export default function Options({ children, className, onEdit, onDelete }: Optio
   });
 
  return (
-    <div className={className}>
+    <div className={`ml-0 ${className}`}>
       {/* Trigger Button */}
       <button ref={refs.setReference} {...getReferenceProps()}>
         <Icon name="options" />

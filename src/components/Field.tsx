@@ -1,9 +1,12 @@
-import type { ReactNode } from "react"
+import { useState, type ReactNode } from "react"
 import InputBox from "./InputBox"
+import { NumericFormat, type NumberFormatValues } from "react-number-format";
 
 export default function Field() {
     return (
-        <></>
+        <>
+
+        </>
     )
 }
 
@@ -49,7 +52,7 @@ Field.Text = function Text({ id, label, width = 'hug', placeholder = '', value, 
                     className="input" value={value}
                     onChange={onChange}
                     onKeyDown={handleKeyDown}
-                    autoComplete={autoComplete} 
+                    autoComplete={autoComplete}
                 />
                 {value && <button className="cursor-pointer text-sm mx-2" onClick={handleClear}>✕</button>}
             </InputBox>
@@ -112,12 +115,44 @@ type FieldNumber = {
     label?: string,
     width?: 'hug' | 'full',
     placeholder?: string,
-    value?: number,
-    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    value?: number | null,
+    onChange?: (values: NumberFormatValues) => void;
     onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void,
 }
 
+// Field.Money = function Money({ id, label, width = 'hug', placeholder = '', value, onChange }: FieldNumber) {
+//     const fieldWidth = {
+//         hug: 'w-auto',
+//         full: 'w-full'
+//     }[width]
+
+//     return (
+//         <div className={`${fieldWidth}`}>
+//             {label && <label htmlFor={label}>{label}</label>}
+//             <InputBox>
+//                 <div className="grid grid-cols-[auto_1fr] items-center gap-1 input w-auto">
+//                     <label htmlFor="search">₱</label>
+//                     <input
+//                         id={id}
+//                         name={label}
+//                         type="number"
+//                         placeholder={placeholder || '0.00'}
+//                         min={0}
+//                         className="input px-0"
+//                         value={value}
+//                         onChange={onChange}
+//                     />
+//                 </div>
+//             </InputBox>
+//         </div>
+
+
+//     )
+// }
+
 Field.Money = function Money({ id, label, width = 'hug', placeholder = '', value, onChange }: FieldNumber) {
+    // const [amount, setAmount] = useState<number | null>(null);
+
     const fieldWidth = {
         hug: 'w-auto',
         full: 'w-full'
@@ -129,20 +164,21 @@ Field.Money = function Money({ id, label, width = 'hug', placeholder = '', value
             <InputBox>
                 <div className="grid grid-cols-[auto_1fr] items-center gap-1 input w-auto">
                     <label htmlFor="search">₱</label>
-                    <input
+                    <NumericFormat
                         id={id}
-                        name={label}
-                        type="number"
-                        placeholder={placeholder || '0.00'}
-                        min={0}
-                        className="input px-0"
+                        thousandSeparator=","
+                        decimalSeparator="."
+                        decimalScale={2}
+                        fixedDecimalScale
+                        allowNegative={false}
+                        placeholder={placeholder || "0.00"}
+                        className="input px-0 text-right "
                         value={value}
-                        onChange={onChange}
+                        onValueChange={onChange}
                     />
                 </div>
-            </InputBox>
-        </div>
-
+            </InputBox >
+        </div >
 
     )
 }

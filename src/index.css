@@ -40,7 +40,7 @@
 
   h1 {
     @apply text-3xl font-semibold;
-  }  
+  }
 
   thead {
     @apply sticky top-0 bg-light shadow-[0_1px_0_var(--color-border)];
@@ -57,16 +57,20 @@
   td {
     @apply text-base py-[15px] px-2;
   }
-  
+
   hr {
     @apply border-border;
   }
 
   table {
-    @apply 
-      border-collapse w-full [&_th:last-child]:w-0 [&_th:last-child]:whitespace-nowrap [&_td:last-child]:w-0 [&_td:last-child]:whitespace-nowrap 
-      /* divide-y divide-border */
+    @apply border-collapse w-full [&_th:last-child]:w-0 [&_th:last-child]:whitespace-nowrap [&_td:last-child]:w-0 [&_td:last-child]:whitespace-nowrap
+    /* divide-y divide-border */
     ;
+  }
+
+  table:has(th:nth-child(3)) th:nth-last-child(2),
+  table:has(th:nth-child(3)) td:nth-last-child(2) {
+    @apply w-0 whitespace-nowrap;
   }
 
   input[type='text'] {
@@ -74,21 +78,7 @@
   }
 
   input[type='checkbox'] {
-    @apply 
-      appearance-none 
-      w-5 h-5 
-      rounded 
-      border 
-      border-dark
-      bg-gray
-      checked:bg-gray
-      checked:border-primary
-      checked:after:content-['✔']  
-      checked:after:text-primary
-      checked:after:text-sm 
-      checked:after:leading-4 
-      checked:after:text-center
-      flex items-center justify-center;
+    @apply appearance-none w-5 h-5 rounded border border-dark bg-gray checked:bg-gray checked:border-primary checked:after:content-['✔'] checked:after:text-primary checked:after:text-sm checked:after:leading-4 checked:after:text-center flex items-center justify-center;
   }
 }
 
@@ -107,8 +97,9 @@
 
   .table-container {
     @apply mx-[20px];
-    scrollbar-width: thin;        /* makes it thinner */
-    scrollbar-color: rgba(0, 0, 0, 0.3) transparent; 
+    scrollbar-width: thin;
+    /* makes it thinner */
+    scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
     /* For Firefox */
   }
 
@@ -121,20 +112,25 @@
   }
 
   .table-container::-webkit-scrollbar {
-    width: 6px;       /* scrollbar width */
-    height: 6px;      /* scrollbar height for horizontal scroll */
+    width: 6px;
+    /* scrollbar width */
+    height: 6px;
+    /* scrollbar height for horizontal scroll */
   }
 
   .table-container::-webkit-scrollbar-track {
-    background: transparent; /* track background */
+    background: transparent;
+    /* track background */
   }
 
   .table-container::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 0, 0, 0.3); /* thumb color */
-    border-radius: 10px;                   /* rounded */
+    background-color: rgba(0, 0, 0, 0.3);
+    /* thumb color */
+    border-radius: 10px;
+    /* rounded */
   }
 
-  
+
   .shadow-top {
     @apply shadow-[0_-1px_0_var(--color-border)];
   }
@@ -180,16 +176,16 @@
 
   .modal {
     @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[40%] max-w-[1100px] max-h-[80dvh] overflow-hidden flex flex-col z-50;
-  }  
-  
+  }
+
   .backdrop {
     @apply h-full w-full z-10 bg-darkest/20 backdrop-blur-[1px] fixed left-0 top-0;
   }
-  
+
   .fields {
     @apply overflow-y-auto flex-1;
     scrollbar-width: thin;
-    scrollbar-color: rgba(0, 0, 0, 0.3) transparent; 
+    scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
   }
 
 }
@@ -212,26 +208,32 @@
   }
 
   .thin-scrollbar {
-    scrollbar-width: thin;        /* makes it thinner */
-    scrollbar-color: rgba(0, 0, 0, 0.3) transparent; 
+    scrollbar-width: thin;
+    /* makes it thinner */
+    scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
     /* For Firefox */
   }
 
   .thin-scrollbar::-webkit-scrollbar {
-    width: 6px;       /* scrollbar width */
-    height: 6px;      /* scrollbar height for horizontal scroll */
+    width: 6px;
+    /* scrollbar width */
+    height: 6px;
+    /* scrollbar height for horizontal scroll */
   }
 
   .thin-scrollbar::-webkit-scrollbar-track {
-    background: transparent; /* track background */
+    background: transparent;
+    /* track background */
   }
 
   .thin-scrollbar::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 0, 0, 0.3); /* thumb color */
-    border-radius: 10px;                   /* rounded */
+    background-color: rgba(0, 0, 0, 0.3);
+    /* thumb color */
+    border-radius: 10px;
+    /* rounded */
   }
 
-  .hide-spinner::-webkit-inner-spin-button, 
+  .hide-spinner::-webkit-inner-spin-button,
   .hide-spinner::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
@@ -240,7 +242,7 @@
 
   .hide-spinner {
     -moz-appearance: textfield;
-     /* For Firefox */
+    /* For Firefox */
   }
 
   .dark-calendar::-webkit-calendar-picker-indicator {
@@ -268,15 +270,20 @@
 
   /* Hide native select dropdown arrow */
   .hide-select-icon {
-    -webkit-appearance: none; /* Safari/Chrome */
-    -moz-appearance: none;    /* Firefox */
-    appearance: none;         /* Standard */
-    background: none;         /* Remove default background */
+    -webkit-appearance: none;
+    /* Safari/Chrome */
+    -moz-appearance: none;
+    /* Firefox */
+    appearance: none;
+    /* Standard */
+    background: none;
+    /* Remove default background */
   }
 
   /* Optional: remove extra padding on the right */
   .hide-select-icon::-ms-expand {
-    display: none; /* IE/Edge */
+    display: none;
+    /* IE/Edge */
   }
 }
 

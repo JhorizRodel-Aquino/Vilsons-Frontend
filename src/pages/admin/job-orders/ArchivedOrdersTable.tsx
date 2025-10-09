@@ -58,7 +58,7 @@ export default function ArchivedOrdersTable() {
 
             {error && <ErrorModal error={error!} closeError={closeError} />}
 
-            {showDeleteModal && <ConfirmModal title="Delete Job Order" message="Are you sure you want to delete this job order?" setShowModal={setShowDeleteModal} onConfirm={() => { }} red={true} />}
+            {showDeleteModal && <ConfirmModal title="Delete Job Order" message="Are you sure you want to delete this job order?" onClose={() => {setShowDeleteModal(false)}} onConfirm={() => { }} red={true} />}
         </>
     )
 }

@@ -1,16 +1,15 @@
 import { useState } from "react";
 import Button from "../../../components/Button";
-import Selection from "../../../components/Selection";
+import Selection, { type SelectionOptions } from "../../../components/Selection";
 import Field from "../../../components/Field";
-import decodeToken from "../../../utils/decodeToken";
-import usePostData from "../../../hooks/usePostData";
 import ErrorModal from "../../../components/ErrorModal";
 import validateAndSanitize, { type ValidationSchema } from "../../../utils/validateAndSanitize";
+import usePostPutData from "../../../hooks/usePostPutData";
 
-type FormData = {
+export type FormData = {
     description: string,
-    amount: number,
-    branchId: string
+    amount: number | null,
+    branchId?: string
 }
 
 const formSchema: ValidationSchema = {
@@ -19,17 +18,23 @@ const formSchema: ValidationSchema = {
     branchId: { required: true }
 };
 
-export default function OtherIncomeModal({ setShowModal, onSuccess }: { setShowModal: (show: boolean) => void, onSuccess: () => void }) {
-    const decoded = decodeToken()
-    const branches = decoded!.UserInfo!.branches;
-    const branchOptions = branches.map(branchItem => ({ value: branchItem.branchId, label: branchItem.branchName }));
-    const [formData, setFormData] = useState<FormData>({ description: '', amount: 0, branchId: branchOptions[0].value })
-    const { loading, error, closeError, postData } = usePostData('/api/other-incomes')
+type OtherIncomeModalProps = { 
+    branchOptions?: SelectionOptions[];
+    setShowModal: (action: 'create' | 'edit' | null) => void, 
+    onSuccess: () => void ,
+    action: 'create' | 'edit', 
+    presetData: FormData;
+    id?: string;
+}
+
+export default function OtherIncomeModal({ branchOptions, setShowModal, onSuccess, action, presetData, id }: OtherIncomeModalProps) {
+    const [formData, setFormData] = useState<FormData>(presetData)
+    const { loading, error, closeError, postData, putData } = usePostPutData('/api/other-incomes')
 
     console.log(formData)
 
     const closeModal = () => {
-        setShowModal(false)
+        setShowModal(null)
     }
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -39,7 +44,7 @@ export default function OtherIncomeModal({ setShowModal, onSuccess }: { setShowM
 
         if (!isValid) return;
 
-        const success = await postData(sanitizedData);
+        const success = action === 'create' ? await postData(sanitizedData) : await putData(id, sanitizedData)
         if (success) {
             onSuccess(); // trigger reload in parent
             setFormData({ ...formData, description: "", amount: 0 }); // reset form
@@ -52,7 +57,8 @@ export default function OtherIncomeModal({ setShowModal, onSuccess }: { setShowM
             <form onSubmit={handleSubmit} className="card modal gap-[20px]">
                 <div className="text-xl flex justify-between items-center">
                     <h2 className="font-bold">Add  Income</h2>
-                    <button className="cursor-pointer" onClick={closeModal}>✕</button>
+                    {/* <button className="cursor-pointer" onClick={closeModal}>✕</button> */}
+                    <Button.X onClick={closeModal} disabled={loading} />
                 </div>
 
                 <fieldset className="card">
@@ -68,7 +74,9 @@ export default function OtherIncomeModal({ setShowModal, onSuccess }: { setShowM
                                 id="amount"
                                 label="Amount"
                                 value={formData.amount}
-                                onChange={(e) => setFormData({ ...formData, amount: +e.target.value })}
+                                onChange={(values) => {
+                                    setFormData({ ...formData, amount: values.floatValue ?? null });
+                                }}
                             />
                             <div>
                                 Branch
@@ -78,14 +86,19 @@ export default function OtherIncomeModal({ setShowModal, onSuccess }: { setShowM
                                     onChange={(e) => setFormData({ ...formData, branchId: e.target.value })}
                                 />
                             </div>
+                            <Field />
                         </div>
 
                     </div>
                 </fieldset>
 
                 <div className="flex justify-end items-center gap-[20px]">
-                    <Button variant="gray" label="Cancel" onClick={closeModal} />
-                    <Button type="submit" variant="primary" label={loading ? "Adding..." : "Add Income"} disabled={loading} />
+                    <Button variant="gray" label="Cancel" onClick={closeModal} disabled={loading} />
+                    {action === 'create' 
+                        ? <Button type="submit" variant="primary" label={loading ? "Adding..." : "Add Income"} disabled={loading} /> 
+                        : <Button type="submit" variant="primary" label={loading ? "Saving..." : "Save"} disabled={loading} /> 
+                    }
+                    
                 </div>
             </form>
 

@@ -1,8 +1,10 @@
 import Icon from "./Icon";
 import InputBox from "./InputBox";
 
+export type SelectionOptions = {value: string, label: string}
+
 type SelectionProps = {
-  options: {value: string, label: string}[];
+  options?: SelectionOptions[];
   value?: string; // 👈 controlled value
   onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   className?: string;
@@ -19,7 +21,7 @@ export default function Selection({ options, value, onChange, className }: Selec
           onChange={onChange}
           className="hide-select-icon w-full pr-8 input capitalize"
         >
-          {options.map((option, i) => (
+          {options?.map((option, i) => (
             <option key={i} value={option.value} className="capitalize">
               {option.label}
             </option>

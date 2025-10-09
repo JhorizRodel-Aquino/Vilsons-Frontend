@@ -7,7 +7,7 @@ type ButtonProps = {
   disabled?: boolean;
 };
 
-function Button({ type, label, onClick, variant = 'primary', size = 'standard', disabled }: ButtonProps) {
+export default function Button({ type, label, onClick, variant = 'primary', size = 'standard', disabled }: ButtonProps) {
   const variants = {
     primary: "bg-primary text-light hover:bg-primary/80",
     gray: "bg-border text-darker hover:bg-border/70",
@@ -23,7 +23,7 @@ function Button({ type, label, onClick, variant = 'primary', size = 'standard', 
   return (
     <button
       type={type}
-      className={`btn ${variants} ${sizes}`}
+      className={`btn ${variants} ${sizes} ${disabled ? "opacity-50 cursor-not-allowed pointer-events-none" : ""}`}
       onClick={onClick}
       disabled={disabled}
     >
@@ -32,4 +32,13 @@ function Button({ type, label, onClick, variant = 'primary', size = 'standard', 
   );
 }
 
-export default Button;
+type ButtonXProps = {
+  onClick?: () => void;
+  disabled?: boolean
+}
+
+Button.X = function X({ onClick, disabled }: ButtonXProps) {
+  return (
+    <button className={`cursor-pointer ${disabled ? "opacity-50 cursor-not-allowed pointer-events-none" : ""}`} onClick={onClick} disabled={disabled}>✕</button>
+  )
+};
