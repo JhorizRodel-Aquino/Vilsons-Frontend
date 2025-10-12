@@ -102,7 +102,7 @@ export default function TransactionsTable({ setPresetData, reloadFlag, setShowMo
                 <MonthYearFilter options={options} option={option} setOption={setOption} monthYear={monthYear} year={year} setMonthYear={setMonthYear} setYear={setYear} />
             </TableFilter>
 
-            <Table columns={transactionColumns} rows={transactions} total={total} />
+            <Table columns={transactionColumns} rows={transactions} total={total} withOptions={true} />
 
             {(error || deleteError) ?
                 <ErrorModal error={(error || deleteError)!} closeError={error ? closeError : closeDeleteError} />

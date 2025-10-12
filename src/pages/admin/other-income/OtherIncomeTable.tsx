@@ -100,7 +100,7 @@ export default function OtherIncomeTable({ setPresetData, reloadFlag, setShowMod
                 <MonthYearFilter options={options} option={option} setOption={setOption} monthYear={monthYear} year={year} setMonthYear={setMonthYear} setYear={setYear} />
             </TableFilter>
 
-            <Table columns={otherIncomeColumns} rows={otherIncomes} total={total} />
+            <Table columns={otherIncomeColumns} rows={otherIncomes} total={total} withOptions={true} />
 
             {(error || deleteError) ? 
                 <ErrorModal error={(error || deleteError)!} closeError={error ? closeError : closeDeleteError} /> 
@@ -114,9 +114,6 @@ export default function OtherIncomeTable({ setPresetData, reloadFlag, setShowMod
                     onProgressLabel={deleteLoading ? 'Deleting...' : ''}
                 />
             }
-           
-
-            
         </>
     )
 }

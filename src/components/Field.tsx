@@ -49,7 +49,8 @@ Field.Text = function Text({ id, label, width = 'hug', placeholder = '', value, 
                     name={label}
                     type="text"
                     placeholder={placeholder}
-                    className="input" value={value}
+                    className="input"
+                    value={value}
                     onChange={onChange}
                     onKeyDown={handleKeyDown}
                     autoComplete={autoComplete}
@@ -94,7 +95,17 @@ Field.Email = function Email({ id, label, width = 'hug', placeholder = '' }: { i
     )
 }
 
-Field.Number = function Number({ id, label, width = 'hug', placeholder = '' }: { id?: string, label?: string, width?: 'hug' | 'full', placeholder?: string }) {
+type FieldNumber = {
+    id?: string,
+    label?: string,
+    width?: 'hug' | 'full',
+    placeholder?: string,
+    value?: number,
+    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void, autoComplete?: string
+}
+
+Field.Number = function Number({ id, label, width = 'hug', placeholder = '', value, onChange }: FieldNumber) {
     const fieldWidth = {
         hug: 'w-auto',
         full: 'w-full'
@@ -104,13 +115,21 @@ Field.Number = function Number({ id, label, width = 'hug', placeholder = '' }: {
         <div className={`${fieldWidth}`}>
             {label && <label htmlFor={label}>{label}</label>}
             <InputBox>
-                <input id={id} name={label} type="number" placeholder={placeholder} min={0} className="input" />
+                <input
+                    id={id}
+                    name={label}
+                    type="number"
+                    placeholder={placeholder}
+                    min={0}
+                    className="input"
+                    value={value}
+                    onChange={onChange}/>
             </InputBox>
         </div>
     )
 }
 
-type FieldNumber = {
+type FieldMoney = {
     id?: string,
     label?: string,
     width?: 'hug' | 'full',
@@ -150,7 +169,7 @@ type FieldNumber = {
 //     )
 // }
 
-Field.Money = function Money({ id, label, width = 'hug', placeholder = '', value, onChange }: FieldNumber) {
+Field.Money = function Money({ id, label, width = 'hug', placeholder = '', value, onChange }: FieldMoney) {
     // const [amount, setAmount] = useState<number | null>(null);
 
     const fieldWidth = {

@@ -47,7 +47,7 @@ export default function OtherIncomeModal({ branchOptions, setShowModal, onSucces
         const success = action === 'create' ? await postData(validatedData) : await putData(id, validatedData)
         if (success) {
             onSuccess(); // trigger reload in parent
-            setFormData({ ...formData, description: "", amount: 0 }); // reset form
+            setFormData({ description: "", amount: 0 }); // reset form
             closeModal()
         }
     };
@@ -88,7 +88,6 @@ export default function OtherIncomeModal({ branchOptions, setShowModal, onSucces
                                             onChange={(e) => setFormData({ ...formData, branchId: e.target.value })}
                                         />
                                     </div>
-                                    <Field />
                                 </div>
 
                             </div>

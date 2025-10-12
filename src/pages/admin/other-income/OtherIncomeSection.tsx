@@ -5,13 +5,11 @@ import Details from "../../../components/Details"
 import Button from "../../../components/Button";
 import OtherIncomeTable from "./OtherIncomeTable";
 import OtherIncomeModal, { type FormData } from "./OtherIncomeModal";
-import decodeToken from "../../../utils/decodeToken";
+import getBranches from "../../../utils/branchOptions";
 
 
 export default function OtherIncomeSection() {
-    const decoded = decodeToken()
-    const branches = decoded?.UserInfo?.branches;
-    const branchOptions = branches?.map(branchItem => ({ value: branchItem.branchId, label: branchItem.branchName }));
+    const branchOptions = getBranches()
     const [selectedId, setSelectedId] = useState<string>('');
     const [presetData, setPresetData] = useState<FormData>({ description: '', amount: null, branchId: branchOptions && branchOptions[0].value });
     const [reloadFlag, setReloadFlag] = useState(false);
@@ -23,7 +21,7 @@ export default function OtherIncomeSection() {
         <>
             <SectionHeading>
                 <Details subtitle={'All Other Income'} modifiedDate="Aug 9, 2025" />
-                <Button label={'Add Income'} onClick={() => {setPresetData({ description: '', amount: null, branchId: branchOptions && branchOptions[0].value }); setShowModal('create')}} variant="primary" />
+                <Button label={'Add Transaction'} onClick={() => {setPresetData({ description: '', amount: null, branchId: branchOptions && branchOptions[0].value }); setShowModal('create')}} variant="primary" />
             </SectionHeading>
 
             <OtherIncomeTable reloadFlag={reloadFlag} setPresetData={setPresetData} selectedId={selectedId} setSelectedId={setSelectedId} setShowModal={setShowModal} />

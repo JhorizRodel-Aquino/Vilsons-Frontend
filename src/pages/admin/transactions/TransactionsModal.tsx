@@ -6,11 +6,11 @@ import ErrorModal from "../../../components/ErrorModal";
 import validateAndSanitize, { type ValidationSchema } from "../../../utils/validateAndSanitize";
 
 export type FormData = {
-    referenceNumber?: string,
-    jobOrderCode?: string,
-    senderName?: string
-    amount?: number | null,
-    mop?: string,
+    referenceNumber: string,
+    jobOrderCode: string,
+    senderName: string
+    amount: number | null,
+    mop: string,
 }
 
 const formSchema: ValidationSchema = {
@@ -97,7 +97,7 @@ export default function TransactionModal({ setShowModal, onSuccess, action, pres
                                     label="Amount"
                                     value={formData.amount}
                                     onChange={(values) => {
-                                        setFormData({ ...formData, amount: values.floatValue });
+                                        setFormData({ ...formData, amount: values.floatValue ?? null });
                                     }}
                                 />
 

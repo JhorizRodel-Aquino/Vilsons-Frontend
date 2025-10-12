@@ -1,23 +1,30 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import SectionHeading from "../../../components/SectionHeading"
 import Details from "../../../components/Details"
 import Button from "../../../components/Button";
 import EquipmentExpensesTable from "./EquipmentExpensesTable";
-import EquipmentModal from "./EquipmentModal";
+import EquipmentModal, { type FormData } from "./EquipmentModal";
+import getBranches from "../../../utils/branchOptions";
 
 export default function EquipmentExpensesSection() {
-    const [showCreateModal, setShowCreateModal] = useState(false)
+     const branchOptions = getBranches()
+        const [selectedId, setSelectedId] = useState<string>('');
+        const [presetData, setPresetData] = useState<FormData>({ equipment: "", quantity: 1, amount: null, branchId: branchOptions && branchOptions[0].value });
+        const [reloadFlag, setReloadFlag] = useState(false);
+        const [showModal, setShowModal] = useState<'create' | 'edit' | null>(null)
 
+            const reload = useCallback(() => setReloadFlag(prev => !prev), []);
+        
     return (
         <>
             <SectionHeading>
                 <Details subtitle={'All Equipment Expenses'} modifiedDate="Aug 9, 2025" />
-                <Button label={'Add Equipment'} onClick={() => setShowCreateModal(true)} variant="primary" />
+                <Button label={'Add Equipment'} onClick={() => {setPresetData({ equipment: "", quantity: 1, amount: null, branchId: branchOptions && branchOptions[0].value }); setShowModal('create')}} variant="primary" />
             </SectionHeading>
 
-            <EquipmentExpensesTable />
+            <EquipmentExpensesTable reloadFlag={reloadFlag} setPresetData={setPresetData} selectedId={selectedId} setSelectedId={setSelectedId} setShowModal={setShowModal} />
 
-            {showCreateModal && <EquipmentModal setShowModal={setShowCreateModal}/>}
+            {showModal && <EquipmentModal branchOptions={branchOptions} setShowModal={setShowModal} onSuccess={reload} action={showModal} id={selectedId} presetData={presetData} />}
         </>
     )
 }

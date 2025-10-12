@@ -19,13 +19,14 @@ type TableProps<T> = {
   rows: T[];
   total?: number;
   className?: string;
+  withOptions?: boolean
 };
 
-export default function Table<T>({ columns, rows, total, className }: TableProps<T>) {
+export default function Table<T>({ columns, rows, total, className, withOptions = false }: TableProps<T>) {
   return (
     <div className={`table-section`}>
       <div className={`table-container main ${className || ''}`}>
-        <table>
+        <table className={`${withOptions && 'withOptions'}`}>
           <thead>
             <tr>
               {columns.map((col, i) => (
