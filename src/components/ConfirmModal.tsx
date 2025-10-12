@@ -18,7 +18,7 @@ export default function ConfirmModal({ title, message, onClose, onConfirm, red, 
 
     return (
         <>
-            <article className="card modal gap-[20px]">
+            <article className="card modal gap-[20px] z-40">
                 <div className="text-xl flex justify-between items-center">
                     {title && <h3 className="font-bold">{title}</h3>}
                     <Button.X onClick={onClose} disabled={disabledButtons} />

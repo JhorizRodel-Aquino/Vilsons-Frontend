@@ -102,9 +102,9 @@ export default function OtherIncomeTable({ setPresetData, reloadFlag, setShowMod
 
             <Table columns={otherIncomeColumns} rows={otherIncomes} total={total} />
 
-            {error && <ErrorModal error={error!} closeError={closeError} />}
-
-            {showDeleteModal && 
+            {(error || deleteError) ? 
+                <ErrorModal error={(error || deleteError)!} closeError={error ? closeError : closeDeleteError} /> 
+                : showDeleteModal && 
                 <ConfirmModal 
                     title="Delete Job Order" 
                     message="Are you sure you want to delete this job order?" 
@@ -114,6 +114,9 @@ export default function OtherIncomeTable({ setPresetData, reloadFlag, setShowMod
                     onProgressLabel={deleteLoading ? 'Deleting...' : ''}
                 />
             }
+           
+
+            
         </>
     )
 }

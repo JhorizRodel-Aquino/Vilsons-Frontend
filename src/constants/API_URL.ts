@@ -1,3 +1,3 @@
-const API_URL = "https://advantages-smooth-struct-realistic.trycloudflare.com";
+const API_URL = "https://magnificent-relationship-fabric-counting.trycloudflare.com";
 
 export default API_URL

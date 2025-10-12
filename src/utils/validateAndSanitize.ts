@@ -15,7 +15,7 @@ export type ValidationRule = {
 export type ValidationSchema = Record<string, ValidationRule>;
 
 export interface ValidationResult {
-  sanitizedData: Record<string, any>;
+  validatedData: Record<string, any>;
   isValid: boolean;
 }
 
@@ -28,7 +28,7 @@ export default function validateAndSanitize(
   schema: ValidationSchema
 ): ValidationResult {
   const errors: Record<string, string | null> = {};
-  const sanitizedData: Record<string, any> = {};
+  const validatedData: Record<string, any> = {};
 
   for (const key in data) {
     let value = data[key];
@@ -41,7 +41,7 @@ export default function validateAndSanitize(
 
     const rules = schema[key];
     if (!rules) {
-      sanitizedData[key] = value;
+      validatedData[key] = value;
       continue;
     }
 
@@ -63,7 +63,7 @@ export default function validateAndSanitize(
         continue;
       }
 
-      sanitizedData[key] = Math.round(numValue * 100); // PHP → cents
+      validatedData[key] = Math.round(numValue * 100); // PHP → cents
       errors[key] = null;
       continue;
     }
@@ -86,7 +86,7 @@ export default function validateAndSanitize(
         continue;
       }
 
-      sanitizedData[key] = numValue;
+      validatedData[key] = numValue;
       errors[key] = null;
       continue;
     }
@@ -116,7 +116,7 @@ export default function validateAndSanitize(
       }
     }
 
-    sanitizedData[key] = value;
+    validatedData[key] = value;
     errors[key] = null;
   }
 
@@ -129,5 +129,5 @@ export default function validateAndSanitize(
       });
   }
 
-  return { sanitizedData, isValid };
+  return { validatedData, isValid };
 }

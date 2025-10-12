@@ -28,7 +28,7 @@ export default function OtherIncomeSection() {
 
             <OtherIncomeTable reloadFlag={reloadFlag} setPresetData={setPresetData} selectedId={selectedId} setSelectedId={setSelectedId} setShowModal={setShowModal} />
 
-            {showModal && <OtherIncomeModal branchOptions={branchOptions} setShowModal={setShowModal} onSuccess={reload} action={showModal} id={selectedId} presetData={presetData}  />}
+            {showModal && <OtherIncomeModal branchOptions={branchOptions} setShowModal={setShowModal} onSuccess={reload} action={showModal} id={selectedId} presetData={presetData} />}
         </>
     )
 }
