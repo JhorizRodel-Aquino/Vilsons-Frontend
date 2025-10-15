@@ -13,19 +13,6 @@ import Selection from "../../../components/Selection";
 import { get } from "../../../services/apiService";
 import type { SelectedContractor, SelectedEmployee } from "./LaborExpensesSection";
 
-// export type FormData = {
-//     name: string;
-//     branchId?: string;
-//     amount: number | null;
-// }
-
-// const formSchema: ValidationSchema = {
-//     name: { required: true },
-//     branchId: { required: true },
-//     amount: { required: true, type: "money" },
-// };
-
-
 export type FormDataContractor = {
     userId: string;
     amount: number | null;

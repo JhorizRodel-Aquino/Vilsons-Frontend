@@ -70,6 +70,48 @@ Field.Text = function Text({ id, label, width = 'hug', placeholder = '', value, 
     )
 }
 
+Field.Password = function Password({ id, label, width = 'hug', placeholder = '', value, onChange, onKeyDown, autoComplete, list, readonly = false }: FieldText) {
+    const fieldWidth = {
+        hug: 'w-auto',
+        full: 'w-full'
+    }[width]
+
+    const handleClear = () => {
+        if (onChange) {
+            const fakeEvent = {
+                target: { value: "" },
+            } as React.ChangeEvent<HTMLInputElement>;
+            onChange(fakeEvent);
+        }
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter" && onKeyDown) onKeyDown(e);
+    };
+
+    return (
+        <div className={`${fieldWidth}`}>
+            {label && <label htmlFor={id}>{label}</label>}
+            <InputBox className="flex justify-between">
+                <input
+                    id={id}
+                    name={label}
+                    type="password"
+                    placeholder={placeholder}
+                    className="input"
+                    value={value}
+                    list={list}
+                    onChange={onChange}
+                    onKeyDown={handleKeyDown}
+                    autoComplete={autoComplete}
+                    readOnly={readonly}
+                />
+                {value && !readonly && <button className="cursor-pointer text-sm mx-2" onClick={handleClear}>✕</button>}
+            </InputBox>
+        </div>
+    )
+}
+
 Field.TextArea = function Text({ id, label, width = 'hug', placeholder = '', child }: { id?: string, label?: string, width?: 'hug' | 'full', placeholder?: string, child?: ReactNode }) {
     const fieldWidth = {
         hug: 'w-auto',
@@ -88,21 +130,64 @@ Field.TextArea = function Text({ id, label, width = 'hug', placeholder = '', chi
     )
 }
 
-Field.Email = function Email({ id, label, width = 'hug', placeholder = '' }: { id?: string, label?: string, width?: 'hug' | 'full', placeholder?: string }) {
+Field.Email = function Text({ id, label, width = 'hug', placeholder = '', value, onChange, onKeyDown, autoComplete, list, readonly = false }: FieldText) {
     const fieldWidth = {
         hug: 'w-auto',
         full: 'w-full'
     }[width]
 
+    const handleClear = () => {
+        if (onChange) {
+            // simulate clearing input by sending an empty string
+            const fakeEvent = {
+                target: { value: "" },
+            } as React.ChangeEvent<HTMLInputElement>;
+            onChange(fakeEvent);
+        }
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter" && onKeyDown) onKeyDown(e);
+    };
+
     return (
         <div className={`${fieldWidth}`}>
-            {label && <label htmlFor={label}>{label}</label>}
-            <InputBox>
-                <input id={id} name={label} type="email" placeholder={placeholder} className="input" />
+            {label && <label htmlFor={id}>{label}</label>}
+            <InputBox className="flex justify-between">
+                <input
+                    id={id}
+                    name={label}
+                    type="email"
+                    placeholder={placeholder}
+                    className="input"
+                    value={value}
+                    list={list}
+                    onChange={onChange}
+                    onKeyDown={handleKeyDown}
+                    autoComplete={autoComplete}
+                    readOnly={readonly}
+                />
+                {value && !readonly && <button className="cursor-pointer text-sm mx-2" onClick={handleClear}>✕</button>}
             </InputBox>
         </div>
     )
 }
+
+// Field.Email = function Email({ id, label, width = 'hug', placeholder = '' }: { id?: string, label?: string, width?: 'hug' | 'full', placeholder?: string }) {
+//     const fieldWidth = {
+//         hug: 'w-auto',
+//         full: 'w-full'
+//     }[width]
+
+//     return (
+//         <div className={`${fieldWidth}`}>
+//             {label && <label htmlFor={label}>{label}</label>}
+//             <InputBox>
+//                 <input id={id} name={label} type="email" placeholder={placeholder} className="input" />
+//             </InputBox>
+//         </div>
+//     )
+// }
 
 type FieldNumber = {
     id?: string,
@@ -112,9 +197,10 @@ type FieldNumber = {
     value?: number,
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
     onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void, autoComplete?: string
+    noSpinner?: boolean;
 }
 
-Field.Number = function Number({ id, label, width = 'hug', placeholder = '', value, onChange }: FieldNumber) {
+Field.Number = function Number({ id, label, width = 'hug', placeholder = '', value, onChange, noSpinner = false }: FieldNumber) {
     const fieldWidth = {
         hug: 'w-auto',
         full: 'w-full'
@@ -130,7 +216,7 @@ Field.Number = function Number({ id, label, width = 'hug', placeholder = '', val
                     type="number"
                     placeholder={placeholder}
                     min={0}
-                    className="input"
+                    className={`input ${noSpinner && 'hide-spinner'}`}
                     value={value}
                     onChange={onChange} />
             </InputBox>
