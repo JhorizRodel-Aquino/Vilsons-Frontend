@@ -9,53 +9,146 @@ import ErrorModal from "../../../components/ErrorModal";
 import Loading from "../../../components/Loading";
 import formatDate from "../../../utils/formatDate";
 import useGetByMonthYear from "../../../hooks/useGetByMonthYear";
+import useDeleteData from "../../../hooks/useDeleteData";
+import { type FormDataContractor, type FormDataEmployee, type PayComponents } from "./LaborModal";
+import { useEffect, useState, type ReactElement } from "react";
+import Options from "../../../components/Options";
+import ConfirmModal from "../../../components/ConfirmModal";
+import type { SelectedContractor, SelectedEmployee } from "./LaborExpensesSection";
+import { get } from "../../../services/apiService";
 
-export default function LaborExpensesTable() {
-    const { data, loading, error, closeError, searchParams, setSearchParams, setMonthYearParams } = useGetByMonthYear('/api/labors');
+type LaborExpense = {
+    name: string;
+    branch: string;
+    laborType: string;
+    salaryType: string;
+    datetime: string;
+    amount: number;
+    options: ReactElement;
+};
+
+const laborExpenseColumns: Column<LaborExpense>[] = [
+    { key: "name", label: "Name" },
+    { key: "branch", label: "Branch" },
+    { key: "laborType", label: "Labor Type" },
+    { key: "salaryType", label: "Salary Type" },
+    { key: "datetime", label: "Datetime", render: (isoDate) => formatDate(isoDate as string) },
+    { key: "amount", label: "Amount", render: (value) => formatPesoFromCents(value as number) },
+    { key: "options", label: "", render: (value) => value as React.ReactElement },
+];
+
+type LaborTableProps = {
+    setPresetDataContractor: (presets: FormDataContractor) => void,
+    setPresetDataEmployee: (presets: FormDataEmployee) => void,
+    reloadFlag: boolean,
+    setShowModal: (action: 'create' | 'edit' | null) => void;
+    selectedId: string;
+    setSelectedId: (id: string) => void;
+    activeTab: string;
+    setActiveTab: (tab: string) => void;
+    presetDataContractor: FormDataContractor;
+    presetDataEmployee: FormDataEmployee;
+    setSelectedContractor: (selected: SelectedContractor) => void;
+    setSelectedEmployee: (selected: SelectedEmployee) => void;
+}
+
+export default function LaborExpensesTable({ setPresetDataContractor, setPresetDataEmployee, reloadFlag, setShowModal, selectedId, setSelectedId, activeTab, setActiveTab, presetDataContractor, presetDataEmployee, setSelectedContractor, setSelectedEmployee }: LaborTableProps) {
+    const [laborType, setLaborType] = useState<"contractor" | "employee" >("contractor");
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
+    const { data, loading, error, closeError, reload, searchParams, setSearchParams, setMonthYearParams } = useGetByMonthYear('/api/labors');
     const { options, option, setOption, monthYear, setMonthYear, year, setYear } = useMonthYearFilter(setMonthYearParams);
+    const {
+        loading: deleteLoading,
+        error: deleteError,
+        closeError: closeDeleteError,
+        deleteData,
+    } = useDeleteData('/api');
+
+    const handleEdit = async (item: any, laborType: "contractor" | "employee") => {
+        setSelectedId(item.id)
+        if (laborType === "contractor") {
+            setActiveTab(laborType);
+
+            const contractor = (await get({ route: `/api/contractors/${item.contractorId}` })).data
+            console.log(contractor.user.fullName)
+            setPresetDataContractor({ userId: item.userId, amount: item.amount / 100, type: item.salaryType, branchId: item.branchId } as FormDataContractor)
+            setSelectedContractor({ name: contractor.user.fullName, username: contractor?.user?.username, id: item.userId, balance: contractor?.jobOrderSummary?.totalBalance } as SelectedContractor)
+        } else {
+            setActiveTab(laborType);
+
+            const employee = (await get({ route: `/api/employees/${item.employeeId}` })).data
+            console.log(employee)
+            // console.log(item.payComponents)
+            const payComponents = item.payComponents.map((comp: PayComponents) => ({...comp, amount: comp.amount / 100}))
+            setPresetDataEmployee({ userId: item.userId, payComponents: payComponents, branchId: item.branchId } as FormDataEmployee)
+            setSelectedEmployee({ name: employee.user.fullName, username: employee.user.username, id: item.userId } as SelectedEmployee)
+        }
+
+        setShowModal('edit');
+    }
+
+    const handleDelete = async () => {
+        if (!selectedId) return
+        const success = laborType === "contractor" ? await deleteData(`contractor-pays/${selectedId}`) : await deleteData(`employee-pays/${selectedId}`) ;
+        if (success) {
+            reload();
+            setShowDeleteModal(false)
+        }
+    }
+
+    useEffect(() => {
+        // console.log("selected", setSelectedContractor)
+    }, [setSelectedContractor])
+
+    useEffect(() => {
+        reload()
+    }, [reloadFlag])
+
 
     if (loading) return <Loading />;
 
     const laborExpenseItems = data.data?.laborPays || [];
     const total = data.data?.totalAmount || 0;
 
-    type LaborExpense = {
-        name: string;
-        laborType: string;
-        salaryType: string;
-        datetime: string;
-        amount: number;
-    };
-
-    const laborExpenseColumns: Column<LaborExpense>[] = [
-        { key: "name", label: "Name" },
-        { key: "laborType", label: "Labor Type" },
-        { key: "salaryType", label: "Salary Type" },
-        { key: "datetime", label: "Datetime", render: (isoDate) => formatDate(isoDate as string) },
-        { key: "amount", label: "Amount", render: (value) => formatPesoFromCents(value as number) },
-    ];
-
     const laborExpenses: LaborExpense[] = laborExpenseItems.map(
         (item: Record<string, any>) => ({
             name: item.fullName,
+            branch: item.branch.branchName,
             laborType: item.type,
             salaryType: item.salaryType,
             datetime: item.createdAt,
             amount: item.amount,
+            options:
+                <Options
+                    onEdit={() => 
+                        handleEdit(item, item.type)
+                    }
+                    onDelete={() => { setLaborType(item.type); setSelectedId(item.id); setShowDeleteModal(true) }}
+                />
         })
     );
 
     return (
         <>
             <TableFilter>
-                <SearchBar search={searchParams} setSearch={setSearchParams} placeholder='Laborer name'/>
+                <SearchBar search={searchParams} setSearch={setSearchParams} placeholder='Laborer name' />
                 <MonthYearFilter options={options} option={option} setOption={setOption} monthYear={monthYear} year={year} setMonthYear={setMonthYear} setYear={setYear} />
             </TableFilter>
 
-            <Table columns={laborExpenseColumns} rows={laborExpenses} total={total} />
+            <Table columns={laborExpenseColumns} rows={laborExpenses} total={total} withOptions={true} />
 
-
-            {error && <ErrorModal error={error!} closeError={closeError} />}
+            {(error || deleteError) ?
+                <ErrorModal error={(error || deleteError)!} closeError={error ? closeError : closeDeleteError} />
+                : showDeleteModal &&
+                <ConfirmModal
+                    title="Delete Labor"
+                    message="Are you sure you want to delete this labor?"
+                    onClose={() => { setShowDeleteModal(false) }}
+                    onConfirm={handleDelete} red={true}
+                    disabledButtons={deleteLoading}
+                    onProgressLabel={deleteLoading ? 'Deleting...' : ''}
+                />
+            }
         </>
     )
 }

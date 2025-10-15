@@ -11,7 +11,7 @@ export default function UserModal({ setShowModal }: { setShowModal: (show: boole
             <article className="card modal gap-[20px]">
                 <div className="text-xl flex justify-between items-center">
                     <h2 className="font-bold">Add User</h2>
-                    <button className="cursor-pointer" onClick={closeModal}>✕</button>
+                    <button type="button" className="cursor-pointer" onClick={closeModal}>✕</button>
                 </div>
 
                 <fieldset className="card">

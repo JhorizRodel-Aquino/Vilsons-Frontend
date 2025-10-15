@@ -66,11 +66,10 @@ function App() {
           <Route path='/my-account' element={<MyAccountPage />} />
 
           {/* Details Pages */}
-          <Route path="/customer" element={<CustomerDetailsPage />} />
-          <Route path="/contractor" element={<ContractorDetailsPage />} />
-          <Route path="/job-orders/id" element={<JobOrderDetailsPage />} />
-          <Route path="/contractor" element={<ContractorDetailsPage />} />
-          <Route path="/trucks/id" element={<TruckDetailsPage />} />
+          <Route path="/customers/:id" element={<CustomerDetailsPage />} />
+          <Route path="/contractors/:id" element={<ContractorDetailsPage />} />
+          <Route path="/job-orders/:id" element={<JobOrderDetailsPage />} />
+          <Route path="/trucks/:id" element={<TruckDetailsPage />} />
 
         </Route>
 

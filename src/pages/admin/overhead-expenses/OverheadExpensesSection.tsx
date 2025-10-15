@@ -1,24 +1,31 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import SectionHeading from "../../../components/SectionHeading"
 import Details from "../../../components/Details"
 import Button from "../../../components/Button";
 import OverheadExpensesTable from "./OverheadExpensesTable";
-import OverheadModal from "./OverheadModal";
+import OverheadModal, { type FormData } from "./OverheadModal";
+import getBranches from "../../../utils/branchOptions";
 
 
 export default function OverheadExpensesSection() {
-    const [showCreateModal, setShowCreateModal] = useState(false)
+    const branchOptions = getBranches()
+    const [selectedId, setSelectedId] = useState<string>('');
+    const [presetData, setPresetData] = useState<FormData>({ description: "", amount: null, branchId: branchOptions && branchOptions[0].value });
+    const [reloadFlag, setReloadFlag] = useState(false);
+    const [showModal, setShowModal] = useState<'create' | 'edit' | null>(null)
+
+    const reload = useCallback(() => setReloadFlag(prev => !prev), []);
 
     return (
         <>
             <SectionHeading>
                 <Details subtitle={'All Overhead Expenses'} modifiedDate="Aug 9, 2025" />
-                <Button label={'Add Bill'} onClick={() => setShowCreateModal(true)} variant="primary" />
+                <Button label={'Add Overhead'} onClick={() => { setPresetData({ description: "", amount: null, branchId: branchOptions && branchOptions[0].value }); setShowModal('create') }} variant="primary" />
             </SectionHeading>
 
-            <OverheadExpensesTable />
+            <OverheadExpensesTable reloadFlag={reloadFlag} setPresetData={setPresetData} selectedId={selectedId} setSelectedId={setSelectedId} setShowModal={setShowModal} />
 
-            {showCreateModal && <OverheadModal setShowModal={setShowCreateModal}/>}
-        </> 
+            {showModal && <OverheadModal branchOptions={branchOptions} setShowModal={setShowModal} onSuccess={reload} action={showModal} id={selectedId} presetData={presetData} />}
+        </>
     )
 }

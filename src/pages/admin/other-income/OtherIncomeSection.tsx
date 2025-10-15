@@ -21,7 +21,7 @@ export default function OtherIncomeSection() {
         <>
             <SectionHeading>
                 <Details subtitle={'All Other Income'} modifiedDate="Aug 9, 2025" />
-                <Button label={'Add Transaction'} onClick={() => {setPresetData({ description: '', amount: null, branchId: branchOptions && branchOptions[0].value }); setShowModal('create')}} variant="primary" />
+                <Button label={'Add Other Income'} onClick={() => {setPresetData({ description: '', amount: null, branchId: branchOptions && branchOptions[0].value }); setShowModal('create')}} variant="primary" />
             </SectionHeading>
 
             <OtherIncomeTable reloadFlag={reloadFlag} setPresetData={setPresetData} selectedId={selectedId} setSelectedId={setSelectedId} setShowModal={setShowModal} />

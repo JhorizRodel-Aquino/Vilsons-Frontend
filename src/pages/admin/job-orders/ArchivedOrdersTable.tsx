@@ -10,6 +10,7 @@ import ConfirmModal from "../../../components/ConfirmModal";
 import Loading from "../../../components/Loading";
 import useGetByDateRange from "../../../hooks/useGetByDateRange";
 import ErrorModal from "../../../components/ErrorModal";
+import { Link } from "react-router";
 
 export default function ArchivedOrdersTable() {
     const [showDeleteModal, setShowDeleteModal] = useState(false)
@@ -21,7 +22,7 @@ export default function ArchivedOrdersTable() {
     type ArchivedJobOrder = {
         jobNumber: string;
         plateNumber: string;
-        contractor: string;
+        contractor: ReactElement;
         totalBill: number;
         balance: number;
         options: ReactElement
@@ -30,7 +31,7 @@ export default function ArchivedOrdersTable() {
     const archivedJobOrderColumns: Column<ArchivedJobOrder>[] = [
         { key: "jobNumber", label: "Job Number" },
         { key: "plateNumber", label: "Plate Number" },
-        { key: "contractor", label: "Contractor" },
+        { key: "contractor", label: "Contractor", render: (value) => value as React.ReactElement },
         { key: "totalBill", label: "Total Bill", render: (value) => formatPesoFromCents(value as number) },
         { key: "balance", label: "Balance", render: (value) => formatPesoFromCents(value as number) },
         { key: "options", label: "", render: (value) => value as React.ReactElement },
@@ -40,7 +41,7 @@ export default function ArchivedOrdersTable() {
         (item: Record<string, any>) => ({
             jobNumber: item.jobOrderCode,
             plateNumber: item.plateNumber,
-            contractor: item.contractorName,
+            contractor: <Link to={`/contractors/${item.contractorId}`}>{item.contractorName}</Link>,
             totalBill: item.totalBill,
             balance: item.balance,
             options: <Options onDelete={() => { setShowDeleteModal(true) }} />

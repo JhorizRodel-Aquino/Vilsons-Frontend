@@ -13,7 +13,7 @@ export type FormData = {
 }
 
 const formSchema: ValidationSchema = {
-    description: { required: true},
+    description: { required: true },
     amount: { required: true, type: "money" },
     branchId: { required: true }
 };
@@ -59,9 +59,17 @@ export default function OtherIncomeModal({ branchOptions, setShowModal, onSucces
                     <form onSubmit={handleSubmit} className="card modal gap-[20px]">
                         <div className="text-xl flex justify-between items-center">
                             <h2 className="font-bold">Add  Income</h2>
-                            {/* <button className="cursor-pointer" onClick={closeModal}>✕</button> */}
                             <Button.X onClick={closeModal} disabled={loading} />
                         </div>
+
+                        <fieldset>
+                            Branch
+                            <Selection
+                                 options={branchOptions}
+                                    value={formData.branchId}
+                                    onChange={(e) => setFormData({ ...formData, branchId: e.target.value })}
+                            />
+                        </fieldset>
 
                         <fieldset className="card">
                             <div className="grid gap-x-10 gap-y-[20px]">
@@ -80,14 +88,6 @@ export default function OtherIncomeModal({ branchOptions, setShowModal, onSucces
                                             setFormData({ ...formData, amount: values.floatValue ?? null });
                                         }}
                                     />
-                                    <div>
-                                        Branch
-                                        <Selection
-                                            options={branchOptions}
-                                            value={formData.branchId}
-                                            onChange={(e) => setFormData({ ...formData, branchId: e.target.value })}
-                                        />
-                                    </div>
                                 </div>
 
                             </div>

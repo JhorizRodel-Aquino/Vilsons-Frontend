@@ -28,7 +28,7 @@ export default function JobOrderModal({ setShowModal }: { setShowModal: (show: b
             <article className="card modal gap-[20px]">
                 <div className="text-xl flex justify-between items-center">
                     <h2 className="font-bold">Create  Job Order</h2>
-                    <button className="cursor-pointer" onClick={closeModal}>✕</button>
+                    <button type="button" className="cursor-pointer" onClick={closeModal}>✕</button>
                 </div>
                 
                 <div className="fields grid gap-[20px]">

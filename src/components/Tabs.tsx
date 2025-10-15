@@ -15,7 +15,7 @@ export default function Tabs({ tabs, activeTab, setActiveTab }: TabsProps) {
         const activeButton = tabRefs.current[activeIndex];
 
         if (activeButton) {
-           setUnderlineStyle({
+            setUnderlineStyle({
                 width: activeButton.offsetWidth,
                 left: activeButton.offsetLeft,
             });
@@ -24,10 +24,11 @@ export default function Tabs({ tabs, activeTab, setActiveTab }: TabsProps) {
 
     return (
         <nav className="relative ext-base text-darker">
-            <ul className="flex gap-[10px] t"> 
+            <ul className="flex gap-[10px] t">
                 {tabs.map((tab, i) => (
                     <li key={i}>
                         <button
+                            type="button"
                             ref={(el: HTMLButtonElement | null) => { tabRefs.current[i] = el }}
                             className={`cursor-pointer capitalize ${activeTab === tab ? 'active font-bold' : ''}`}
                             onClick={() => {
@@ -40,8 +41,8 @@ export default function Tabs({ tabs, activeTab, setActiveTab }: TabsProps) {
                     </li>
                 ))}
             </ul>
-            <span 
-                className={`absolute bottom-0 left-0 h-1 bg-primary rounded-full duration-200`}                 
+            <span
+                className={`absolute bottom-0 left-0 h-1 bg-primary rounded-full duration-200`}
                 style={{
                     width: `${underlineStyle.width}px`,
                     left: `${underlineStyle.left}px`,

@@ -4,6 +4,7 @@ import SidebarLink from './SidebarLink';
 import { sidebarItems } from './sidebarConfig';
 import SidebarItem from './SidebarItem';
 import type { NavItem } from './sidebarConfig';
+import logo from '../../assets/logo.webp'
 
 
 function Sidebar() {
@@ -48,7 +49,7 @@ function Sidebar() {
             <div className='grid gap-2'>
                 <div className='logo sticky top-0 bg-light py-3 flex justify-start z-10'>
                     <NavLink to='/' >
-                        <img src='logo.webp' alt='' />
+                        <img src={logo} alt='' />
                     </NavLink>
                 </div>
                 <nav className='grid gap-2 py-3'>

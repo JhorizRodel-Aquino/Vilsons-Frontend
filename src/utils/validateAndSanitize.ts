@@ -5,11 +5,13 @@ export type ValidationRule = {
   required?: boolean;
   minLength?: number;
   maxLength?: number;
-  min?: number; // 👈 for numeric min
-  max?: number; // 👈 for numeric max
+  min?: number;
+  max?: number;
   pattern?: RegExp;
-  type?: "money" | "number"; // 👈 now supports number & money
-  custom?: (value: any) => string | null; // return error message or null
+  type?: "money" | "number";
+  custom?: (value: any) => string | null;
+  children?: ValidationSchema;
+  label?: string; // 👈 optional friendly label for toasts
 };
 
 export type ValidationSchema = Record<string, ValidationRule>;
@@ -20,8 +22,7 @@ export interface ValidationResult {
 }
 
 /**
- * 🧼 Sanitize + Validate input data based on schema.
- * Returns sanitized data, errors, and isValid flag.
+ * 🧼 Sanitize + Validate input data (supports nested arrays + label names)
  */
 export default function validateAndSanitize(
   data: Record<string, any>,
@@ -32,14 +33,14 @@ export default function validateAndSanitize(
 
   for (const key in data) {
     let value = data[key];
+    const rules = schema[key];
+    const label = rules?.label || formatToTitleCase(key);
 
-    // Basic sanitation
+    // Sanitize strings
     if (typeof value === "string") {
-      value = value.trim().replace(/\s+/g, " "); // collapse spaces
-      value = value.replace(/[<>]/g, ""); // prevent HTML injection
+      value = value.trim().replace(/\s+/g, " ").replace(/[<>]/g, "");
     }
 
-    const rules = schema[key];
     if (!rules) {
       validatedData[key] = value;
       continue;
@@ -47,23 +48,64 @@ export default function validateAndSanitize(
 
     // --- Required check ---
     if (rules.required && (value === "" || value === null || value === undefined)) {
-      errors[key] = `${formatToTitleCase(key)} field is required.`;
+      errors[key] = `${label} is required.`;
+      continue;
+    }
+
+    // --- Array / Nested children support ---
+    if (Array.isArray(value) && rules.children) {
+      const validatedArray: any[] = [];
+      let hasArrayError = false;
+      let arrayErrorMessages: string[] = [];
+
+      for (const [index, item] of value.entries()) {
+        const { validatedData: childData, isValid } = validateAndSanitize(item, rules.children);
+
+        if (!isValid) {
+          hasArrayError = true;
+          arrayErrorMessages.push(`${label} #${index + 1} has invalid data.`);
+          // Optionally: push null or the original item to maintain array structure
+          validatedArray.push(null); // or item to preserve structure
+        } else {
+          validatedArray.push(childData);
+        }
+      }
+
+      validatedData[key] = validatedArray;
+
+      // Only set to null if NO errors were found in the entire array
+      if (hasArrayError) {
+        // Use the first error message, or join all if you want to show multiple
+        errors[key] = arrayErrorMessages[0];
+      } else {
+        errors[key] = null;
+      }
       continue;
     }
 
     // --- Money type ---
     if (rules.type === "money") {
-      const numValue = parseFloat(String(value).replace(/[₱,]/g, "")); // handle ₱ or commas
+      const numValue = parseFloat(String(value).replace(/[₱,]/g, ""));
       if (isNaN(numValue)) {
-        errors[key] = `${formatToTitleCase(key)} is invalid amount.`;
-        continue;
-      }
-      if (numValue <= 0) {
-        errors[key] = `${formatToTitleCase(key)} must be greater than zero.`;
+        errors[key] = `${label} is an invalid amount.`;
         continue;
       }
 
-      validatedData[key] = Math.round(numValue * 100); // PHP → cents
+      // ✅ Default min = 0 if not specified
+      const minValue = rules.min ?? 0;
+      const maxValue = rules.max;
+
+      if (numValue <= minValue) {
+        errors[key] = `${label} must be greater than ${minValue}.`;
+        continue;
+      }
+
+      if (maxValue !== undefined && numValue > maxValue) {
+        errors[key] = `${label} must not exceed ${maxValue}.`;
+        continue;
+      }
+
+      validatedData[key] = Math.round(numValue * 100);
       errors[key] = null;
       continue;
     }
@@ -72,17 +114,21 @@ export default function validateAndSanitize(
     if (rules.type === "number") {
       const numValue = Number(value);
       if (isNaN(numValue)) {
-        errors[key] = `${formatToTitleCase(key)} is invalid number.`;
+        errors[key] = `${label} must be a valid number.`;
         continue;
       }
 
-      if (rules.min !== undefined && numValue < rules.min) {
-        errors[key] = `${formatToTitleCase(key)} must be at least ${rules.min}.`;
+      // ✅ Default min = 0 if not specified
+      const minValue = rules.min ?? 0;
+      const maxValue = rules.max;
+
+      if (numValue < minValue) {
+        errors[key] = `${label} must be at least ${minValue}.`;
         continue;
       }
 
-      if (rules.max !== undefined && numValue > rules.max) {
-        errors[key] = `${formatToTitleCase(key)} must not exceed ${rules.max}.`;
+      if (maxValue !== undefined && numValue > maxValue) {
+        errors[key] = `${label} must not exceed ${maxValue}.`;
         continue;
       }
 
@@ -93,17 +139,17 @@ export default function validateAndSanitize(
 
     // --- String validation ---
     if (rules.minLength && typeof value === "string" && value.length < rules.minLength) {
-      errors[key] = `Must be at least ${rules.minLength} characters.`;
+      errors[key] = `${label} must be at least ${rules.minLength} characters.`;
       continue;
     }
 
     if (rules.maxLength && typeof value === "string" && value.length > rules.maxLength) {
-      errors[key] = `Must not exceed ${rules.maxLength} characters.`;
+      errors[key] = `${label} must not exceed ${rules.maxLength} characters.`;
       continue;
     }
 
     if (rules.pattern && !rules.pattern.test(value)) {
-      errors[key] = "Invalid format.";
+      errors[key] = `${label} has an invalid format.`;
       continue;
     }
 
@@ -120,13 +166,14 @@ export default function validateAndSanitize(
     errors[key] = null;
   }
 
-  const errorsArr = Object.values(errors)
+  const errorsArr = Object.values(errors);
+  console.log("error", errors)
   const isValid = errorsArr.every((err) => err === null);
-    
+
   if (!isValid) {
-      errorsArr.forEach(err => {
-          err && toastWarning(err);
-      });
+    errorsArr.forEach((err) => {
+      if (err) toastWarning(err);
+    });
   }
 
   return { validatedData, isValid };

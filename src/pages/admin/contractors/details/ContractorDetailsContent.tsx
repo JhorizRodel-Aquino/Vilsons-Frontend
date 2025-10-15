@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Detail from "../../../../components/Detail"
 import formatPesoFromCents from "../../../../utils/formatPesoFromCents";
 import ActiveOrdersTable from "./ActiveOrdersTable";
@@ -6,16 +6,26 @@ import ArchivedOrdersTable from "./ArchivedOrdersTable";
 
 
 
-export default function ContractorDetailsContent() {
+export default function ContractorDetailsContent({ data }: { data: Record<string, any> }) {
     const tabs = ['active', 'archived'];
     const [activeTab, setActiveTab] = useState(tabs[0]);
+
+    let jobOrders = data?.jobOrders;
+    let orderSummary = data?.jobOrderSummary;
+    let info = data?.user;
+    useEffect(() => {
+        jobOrders = data?.jobOrders;
+        orderSummary = data?.jobOrderSummary;
+        info = data?.user;
+    }, [data])
+
 
     return (
         <>
             <div className="grid gap-[20px] grid-cols-[3fr_1fr] overflow-y-hidden thin-scrollbar">
                 <section className="grid card p-0 overflow-y-auto thin-scrollbar">
-                    {activeTab === tabs[0] && <ActiveOrdersTable />}
-                    {activeTab === tabs[1] && <ArchivedOrdersTable />}
+                    {activeTab === tabs[0] && <ActiveOrdersTable data={jobOrders?.active}/>}
+                    {activeTab === tabs[1] && <ArchivedOrdersTable data={jobOrders?.archived}/>}
                 </section>
 
                 <div className="grid gap-[20px] content-start overflow-y-auto thin-scrollbar">
@@ -23,17 +33,17 @@ export default function ContractorDetailsContent() {
                         <button className={`p-[10px] ${activeTab === tabs[0] && 'bg-light-primary border-primary rounded-[10px]'}`}
                             onClick={() => setActiveTab(tabs[0])}
                         >
-                            <Detail label='Active Orders' value={23} align="center" variant="flipped" highlight={activeTab === tabs[0]} />
+                            <Detail label='Active Orders' value={orderSummary?.activeCount} align="center" variant="flipped" highlight={activeTab === tabs[0]} />
                         </button>
                         <button className={`p-[10px] ${activeTab === tabs[1] && 'bg-light-primary border-primary rounded-[10px]'}`}
                             onClick={() => setActiveTab(tabs[1])}
                         >
-                            <Detail label='Archived Orders' value={23} align="center" variant="flipped" highlight={activeTab === tabs[1]} />
+                            <Detail label='Archived Orders' value={orderSummary?.archivedCount} align="center" variant="flipped" highlight={activeTab === tabs[1]} />
                         </button>
                     </section>
 
                     <section className="card">
-                        <Detail label='Total Balance' value={formatPesoFromCents(10000)} align="center" variant="flipped" />
+                        <Detail label='Total Balance' value={formatPesoFromCents(orderSummary?.totalBalance)} align="center" variant="flipped" />
                     </section>
 
                     {/* <section className="card">
@@ -43,8 +53,8 @@ export default function ContractorDetailsContent() {
                     <section className="card w-full">
                         <h2 className="font-bold text-primary mb-5">Contact Information</h2>
                         <div className="grid gap-5">
-                            <Detail label='Email Address' value={'james@gmail.com'} />
-                            <Detail label='Phone Number' value={'0932434253'} />
+                            <Detail label='Email Address' value={info?.email} />
+                            <Detail label='Phone Number' value={info?.phone} />
                         </div>
                     </section>
 
@@ -58,7 +68,6 @@ export default function ContractorDetailsContent() {
                 </div>
 
             </div>
-
         </>
 
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Detail from "../../../../components/Detail"
 import formatPesoFromCents from "../../../../utils/formatPesoFromCents";
 import ActiveOrdersTable from "./ActiveOrdersTable";
@@ -7,41 +7,45 @@ import TrucksTable from "./TrucksTable";
 
 
 
-export default function CustomerDetailsContent() {
+export default function CustomerDetailsContent({ data }: { data: Record<string, any> }) {
     const tabs = ['active', 'archived', 'trucks'];
     const [activeTab, setActiveTab] = useState(tabs[0]);
+
+    const jobOrders = data?.jobOrders;
+    const orderSummary = data?.jobOrderSummary;
+    const info = data?.user;
 
     return (
         <>
             <div className="grid gap-[20px] grid-cols-[3fr_1fr] overflow-y-hidden thin-scrollbar">
                 <section className="grid card p-0 overflow-y-auto thin-scrollbar">
-                    {activeTab === tabs[0] && <ActiveOrdersTable />}
-                    {activeTab === tabs[1] && <ArchivedOrdersTable />}
-                    {activeTab === tabs[2] && <TrucksTable />}
+                    {activeTab === tabs[0] && <ActiveOrdersTable data={jobOrders?.active}/>}
+                    {activeTab === tabs[1] && <ArchivedOrdersTable data={jobOrders?.archived} />}
+                    {activeTab === tabs[2] && <TrucksTable data={data?.trucks}/>}
                 </section>
-                
+
                 <div className="grid gap-[20px] content-start overflow-y-auto thin-scrollbar">
                     <section className="card grid grid-cols-2 p-0">
-                        <button className={`p-[10px] ${activeTab === tabs[0] && 'bg-light-primary border-primary rounded-[10px]'}`} 
+                        <button className={`p-[10px] ${activeTab === tabs[0] && 'bg-light-primary border-primary rounded-[10px]'}`}
                             onClick={() => setActiveTab(tabs[0])}
                         >
-                            <Detail label='Active Orders' value={23} align="center" variant="flipped" highlight={activeTab === tabs[0]}/>
+                            <Detail label='Active Orders' value={orderSummary?.activeCount} align="center" variant="flipped" highlight={activeTab === tabs[0]} />
                         </button>
-                        <button className={`p-[10px] ${activeTab === tabs[1] && 'bg-light-primary border-primary rounded-[10px]'}`} 
+                        <button className={`p-[10px] ${activeTab === tabs[1] && 'bg-light-primary border-primary rounded-[10px]'}`}
                             onClick={() => setActiveTab(tabs[1])}>
-                                <Detail label='Archived Orders' value={23} align="center" variant="flipped" highlight={activeTab === tabs[1]}/>
+                            <Detail label='Archived Orders' value={orderSummary?.archivedCount} align="center" variant="flipped" highlight={activeTab === tabs[1]} />
                         </button>
                     </section>
 
                     <section className="card">
-                        <Detail label='Total Balance' value={formatPesoFromCents(10000)} align="center" variant="flipped" />
+                        <Detail label='Total Balance' value={formatPesoFromCents(orderSummary?.totalBalance)} align="center" variant="flipped" />
                     </section>
 
                     <section className="card grid p-0">
-                        <button className={`p-[10px] ${activeTab === tabs[2] && 'bg-light-primary border-primary rounded-[10px] p-[10px]'}`} 
+                        <button className={`p-[10px] ${activeTab === tabs[2] && 'bg-light-primary border-primary rounded-[10px] p-[10px]'}`}
                             onClick={() => setActiveTab(tabs[2])}
                         >
-                            <Detail label='Trucks Owned' value={4} align="center" variant="flipped" highlight={activeTab === tabs[2]}/>
+                            <Detail label='Trucks Owned' value={data?.trucks?.length} align="center" variant="flipped" highlight={activeTab === tabs[2]} />
                         </button>
                     </section>
 
@@ -52,11 +56,11 @@ export default function CustomerDetailsContent() {
                     <section className="card w-full">
                         <h2 className="font-bold text-primary mb-5">Contact Information</h2>
                         <div className="grid gap-5">
-                            <Detail label='Email Address' value={'james@gmail.com'} />
-                            <Detail label='Phone Number' value={'0932434253'} />
+                            <Detail label='Email Address' value={info?.email} />
+                            <Detail label='Phone Number' value={info?.phone} />
                         </div>
                     </section>
-                    
+
                     {/* 
                     <section className="card w-full">
                         <h2 className="font-bold text-primary mb-5">Additional Information</h2>
@@ -66,11 +70,11 @@ export default function CustomerDetailsContent() {
                         </div>
                     </section> */}
                 </div>
-           
+
             </div>
 
         </>
 
-        
+
     )
 }

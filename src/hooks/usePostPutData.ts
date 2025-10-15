@@ -9,9 +9,9 @@ export default function usePostPutData(route: string) {
 
     const closeError = () => setError(null)
 
-    const postData = async (formData: {}) => {
+    const postData = async (formData: {}, specify: string = "") => {
         try {
-            const result = await post({ route, formData });
+            const result = await post({ route: `${route}/${specify}`, formData });
             console.log('result:', result)
             toast.success(result.message || 'Successful')
             return result

@@ -21,7 +21,6 @@ type EquipmentExpense = {
     amount: number;
     totalAmount: number;
     options: ReactElement;
-
 };
 
 const equipmentExpenseColumns: Column<EquipmentExpense>[] = [
@@ -42,7 +41,6 @@ type EquipmentTableProps = {
     setSelectedId: (id: string) => void;
 }
 
-
 export default function EquipmentExpensesTable({ setPresetData, reloadFlag, setShowModal, selectedId, setSelectedId }: EquipmentTableProps) {
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const { data, loading, error, closeError, reload, searchParams, setSearchParams, setMonthYearParams } = useGetByMonthYear('/api/equipments');
@@ -56,7 +54,7 @@ export default function EquipmentExpensesTable({ setPresetData, reloadFlag, setS
 
     const handleEdit = async (item: any) => {
         setSelectedId(item.id)
-        setPresetData({ equipment: item.equipmentName, quantity: item.quantity, amount: item.price/100, branchId: item.branchId } as FormData)
+        setPresetData({ equipment: item.equipmentName, quantity: item.quantity, amount: item.price / 100, branchId: item.branchId } as FormData)
         setShowModal('edit');
     }
 

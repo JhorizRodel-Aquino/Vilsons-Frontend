@@ -56,7 +56,7 @@ export default function TransactionsTable({ setPresetData, reloadFlag, setShowMo
 
     const handleEdit = async (item: any) => {
         setSelectedId(item.id)
-        setPresetData({ referenceNumber: item.referenceNumber, jobOrderCode: item.jobOrderCode, senderName: item.senderName, amount: item.amount, mop: item.mop } as FormData)
+        setPresetData({ referenceNumber: item.referenceNumber, jobOrderCode: item.jobOrderCode, senderName: item.senderName, amount: item.amount / 100, mop: item.mop } as FormData)
         setShowModal('edit');
     }
 

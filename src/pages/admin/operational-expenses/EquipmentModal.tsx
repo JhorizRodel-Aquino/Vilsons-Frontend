@@ -51,11 +51,10 @@ export default function EquipmentModal({ branchOptions, setShowModal, onSuccess,
         const success = action === 'create' ? await postData(formattedData) : await putData(id, formattedData)
         if (success) {
             onSuccess(); // trigger reload in parent
-            setFormData({ equipment: "", quantity: 1,  amount: null }); // reset form
+            setFormData({ equipment: "", quantity: 1, amount: null }); // reset form
             closeModal()
         }
     };
-
 
     return (
         <>
@@ -64,8 +63,17 @@ export default function EquipmentModal({ branchOptions, setShowModal, onSuccess,
                     <form onSubmit={handleSubmit} className="card modal gap-[20px]">
                         <div className="text-xl flex justify-between items-center">
                             <h2 className="font-bold">Add Equipment</h2>
-                            <button className="cursor-pointer" onClick={closeModal}>✕</button>
+                            <Button.X onClick={closeModal} disabled={loading} />
                         </div>
+
+                        <fieldset className="flex items-center gap-2">
+                                Branch
+                                <Selection
+                                    options={branchOptions}
+                                    value={formData.branchId}
+                                    onChange={(e) => setFormData({ ...formData, branchId: e.target.value })}
+                                />
+                        </fieldset>
 
                         <fieldset className="card">
                             <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-x-10 gap-y-[20px]">
@@ -94,14 +102,6 @@ export default function EquipmentModal({ branchOptions, setShowModal, onSuccess,
                                         setFormData({ ...formData, amount: values.floatValue ?? null });
                                     }}
                                 />
-<div>
-                                        Branch
-                                        <Selection
-                                            options={branchOptions}
-                                            value={formData.branchId}
-                                            onChange={(e) => setFormData({ ...formData, branchId: e.target.value })}
-                                        />
-                                    </div>
                             </div>
                         </fieldset>
 

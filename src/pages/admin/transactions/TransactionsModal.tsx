@@ -15,10 +15,10 @@ export type FormData = {
 
 const formSchema: ValidationSchema = {
     referenceNumber: {},
-    jobOrderCode: { required: true },
+    jobOrderCode: { required: true, label: "Job Number" },
     senderName: { required: true },
-    amount: { required: true },
-    mop: { required: true }
+    amount: { required: true, type: "money" },
+    mop: { required: true, label: "Mode of Payment" }
 };
 
 type TransactionsModalProps = {
@@ -62,7 +62,7 @@ export default function TransactionModal({ setShowModal, onSuccess, action, pres
                     <form onSubmit={handleSubmit} className="card modal gap-[20px]">
                         <div className="text-xl flex justify-between items-center">
                             <h2 className="font-bold">Add Transaction</h2>
-                            <button className="cursor-pointer" onClick={closeModal}>✕</button>
+                            <Button.X onClick={closeModal} disabled={loading} />
                         </div>
 
                         <fieldset className="card">

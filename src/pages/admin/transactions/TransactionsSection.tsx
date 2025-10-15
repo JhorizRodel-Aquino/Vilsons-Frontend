@@ -17,7 +17,7 @@ export default function TransactionsSection() {
         <>
             <SectionHeading>
                 <Details subtitle={'All Transactions'} modifiedDate="Aug 9, 2025" />
-                <Button label={'Add Income'} onClick={() => {setPresetData({ referenceNumber: '', jobOrderCode: '', senderName: '', amount: null, mop: '' }); setShowModal('create')}} variant="primary" />
+                <Button label={'Add Transaction'} onClick={() => {setPresetData({ referenceNumber: '', jobOrderCode: '', senderName: '', amount: null, mop: '' }); setShowModal('create')}} variant="primary" />
             </SectionHeading>
 
             <TransactionsTable reloadFlag={reloadFlag} setPresetData={setPresetData} selectedId={selectedId} setSelectedId={setSelectedId} setShowModal={setShowModal}/>

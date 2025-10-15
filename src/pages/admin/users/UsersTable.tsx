@@ -40,7 +40,7 @@ export default function UserTable() {
     const allUsers: AllUser[] = userItems.map(
         (item: Record<string, any>) => ({
             name: item.fullName,
-            username: item.userName,
+            username: item.username,
             roles: item.roles,
             datetime: item.createdAt,
         })
