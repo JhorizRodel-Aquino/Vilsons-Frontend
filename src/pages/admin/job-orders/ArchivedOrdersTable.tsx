@@ -12,13 +12,6 @@ import useGetByDateRange from "../../../hooks/useGetByDateRange";
 import ErrorModal from "../../../components/ErrorModal";
 import { Link } from "react-router";
 
-export default function ArchivedOrdersTable() {
-    const [showDeleteModal, setShowDeleteModal] = useState(false)
-    const { data, loading, error, closeError, searchParams, setSearchParams, dateRangeParams, setDateRangeParams } = useGetByDateRange('/api/job-orders/group/archived');
-    if (loading) return <Loading />;
-
-    const jobOrderItems = data.data?.jobOrders || [];
-
     type ArchivedJobOrder = {
         jobNumber: string;
         plateNumber: string;
@@ -36,6 +29,15 @@ export default function ArchivedOrdersTable() {
         { key: "balance", label: "Balance", render: (value) => formatPesoFromCents(value as number) },
         { key: "options", label: "", render: (value) => value as React.ReactElement },
     ];
+    
+export default function ArchivedOrdersTable() {
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
+    const { data, loading, error, closeError, searchParams, setSearchParams, dateRangeParams, setDateRangeParams } = useGetByDateRange('/api/job-orders/group/archived');
+    if (loading) return <Loading />;
+
+    const jobOrderItems = data.data?.jobOrders || [];
+
+
 
     const archivedJobOrders: ArchivedJobOrder[] = jobOrderItems.map(
         (item: Record<string, any>) => ({
@@ -55,7 +57,7 @@ export default function ArchivedOrdersTable() {
                 <DateRange dateRange={dateRangeParams} setDateRange={setDateRangeParams} />
             </TableFilter>
 
-            <Table columns={archivedJobOrderColumns} rows={archivedJobOrders} />
+            <Table columns={archivedJobOrderColumns} rows={archivedJobOrders} withOptions={true}/>
 
             {error && <ErrorModal error={error!} closeError={closeError} />}
 

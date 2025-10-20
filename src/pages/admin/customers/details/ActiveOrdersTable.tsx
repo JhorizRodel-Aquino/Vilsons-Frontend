@@ -1,5 +1,3 @@
-import type { ReactElement } from "react";
-import Options from "../../../../components/Options";
 import StatusIndicator from "../../../../components/StatusIndicator";
 import Table from "../../../../components/table/Table";
 import type { Column } from "../../../../components/table/Table";
@@ -12,7 +10,6 @@ type ActiveOrder = {
     status: string;
     totalBill: number;
     balance: number;
-    options: ReactElement;
 };
 
 const activeOrderColumns: Column<ActiveOrder>[] = [
@@ -21,7 +18,6 @@ const activeOrderColumns: Column<ActiveOrder>[] = [
     { key: "status", label: "Status", render: (value) => <StatusIndicator status={value as Status} /> },
     { key: "totalBill", label: "Total Bill", render: (value) => formatPesoFromCents(value as number) },
     { key: "balance", label: "Customer Balance", render: (value) => formatPesoFromCents(value as number) },
-    { key: "options", label: "", render: (value) => value as React.ReactElement },
 ];
 
 export default function ActiveOrdersTable({ data }: { data: [] }) {
@@ -35,11 +31,6 @@ export default function ActiveOrdersTable({ data }: { data: [] }) {
             status: item.status,
             totalBill: item.totalBill,
             balance: item.balance,
-            options:
-                <Options
-                // onEdit={() => handleEdit(item)}
-                // onDelete={() => { setSelectedId(item.id); setShowDeleteModal(true) }}
-                />
         })
     );
 

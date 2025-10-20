@@ -1,4 +1,3 @@
-import Options from "../../../../components/Options";
 import Table from "../../../../components/table/Table";
 import type { Column } from "../../../../components/table/Table";
 import formatPesoFromCents from "../../../../utils/formatPesoFromCents";
@@ -29,10 +28,6 @@ export default function ArchivedOrdersTable({ data }: { data: [] }) {
             totalBill: item.totalBill,
             contractorCommission: item.contractorCommission,
             shopCommission: item.shopCommission,
-            options:
-                <Options
-                // onDelete={() => { setSelectedId(item.id); setShowDeleteModal(true) }}
-                />
         })
     );
 

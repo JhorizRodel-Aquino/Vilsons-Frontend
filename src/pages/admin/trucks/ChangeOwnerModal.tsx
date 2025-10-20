@@ -4,7 +4,7 @@ import Field from "../../../components/Field";
 import validateAndSanitize, { type ValidationSchema } from "../../../utils/validateAndSanitize";
 import ErrorModal from "../../../components/ErrorModal";
 import usePostPutData from "../../../hooks/usePostPutData";
-import { get } from "../../../services/apiService";
+import useFieldList from "../../../hooks/useFieldList";
 // import type { SelectedCustomer } from "./TrucksSection";
 
 export type FormData = {
@@ -25,38 +25,42 @@ type ChangeOwnerModalProps = {
     truckId: string;
     // selectedCustomer: SelectedCustomer
     // setSelectedCustomer: (selected: SelectedCustomer) => void;
+    selectedTruck: { plate: string };
 }
 
-export default function ChangeOwnerModal({ setShowModal, onSuccess, truckId }: ChangeOwnerModalProps) {
-    const [selectedCustomer, setSelectedCustomer] = useState({ name: "", username: "", id: "" });
-    const [customerOptions, setCustomerOptions] = useState<Record<string, any>[]>([]);
-    const [customerSearch, setCustomerSearch] = useState('')
+export default function ChangeOwnerModal({ setShowModal, onSuccess, truckId, selectedTruck }: ChangeOwnerModalProps) {
     const isSelectingRef = useRef(false);
-
     const [formData, setFormData] = useState<FormData>({ truckId: truckId, customerId: "" })
     const { loading, error, closeError, putData } = usePostPutData('/api/trucks/ownership')
 
-    useEffect(() => {
-        const populateUserOptions = async () => {
-            const customersList = (await get({ route: `/api/customers?search=${customerSearch}` })).data.customers
-            setCustomerOptions(customersList)
-        }
-
-        populateUserOptions()
-    }, [customerSearch])
-
-    useEffect(() => {
-        console.log("selected", selectedCustomer)
-        console.log("forms", formData)
-
-        setFormData({ ...formData, customerId: selectedCustomer.id })
-    }, [selectedCustomer])
+    const {
+        selected: selectedCustomer,
+        setSelected: setSelectedCustomer,
+        options: customerOptions,
+        setOptions: setCustomerOptions,
+        search: customerSearch,
+        setSearch: setCustomerSearch
+    } = useFieldList("customers", "/api/customers?search=", null)
 
     console.log(formData)
 
     const closeModal = () => {
         setShowModal(null)
+        setCustomerOptions([])
     }
+
+    const handleSelectCustomer = (customer: any) => {
+        setSelectedCustomer({
+            id: customer.user.customerId,
+            name: customer.user.fullName,
+            username: customer.user.username,
+        });
+        setCustomerSearch(customer.user.fullName); // show name in input
+    };
+
+    useEffect(() => {
+        setFormData({ ...formData, customerId: selectedCustomer?.id })
+    }, [selectedCustomer])
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -69,6 +73,7 @@ export default function ChangeOwnerModal({ setShowModal, onSuccess, truckId }: C
             onSuccess();
             setFormData({ truckId: "", customerId: "" });
             closeModal();
+            setCustomerOptions([])
         }
     };
 
@@ -78,39 +83,52 @@ export default function ChangeOwnerModal({ setShowModal, onSuccess, truckId }: C
                 <>
                     <form onSubmit={handleSubmit} className="card modal gap-[20px]">
                         <div className="text-xl flex justify-between items-center">
-                            <h2 className="font-bold">Add Equipment</h2>
+                            <h2 className="font-bold">Change Owner</h2>
                             <Button.X onClick={closeModal} disabled={loading} />
                         </div>
 
+                        <fieldset>
+                            <Field.Text
+                                id="plate"
+                                label="Truck Plate Number"
+                                value={selectedTruck.plate}
+                                readonly={true}
+                            />
+                        </fieldset>
+
                         <fieldset className="card grid gap-[20px]">
+                            <h4 className="text-lg font-bold">Transfer To</h4>
+
                             <Field.List
                                 id="customerSelection"
-                                placeholder="Select Customer"
+                                placeholder="Select Customer Owner"
+                                validated={!!selectedCustomer}
                                 value={customerSearch}
-                                onChange={(e) => {
-                                    setCustomerSearch(e.target.value);
+                                supportingInfo={`${selectedCustomer ? `@${selectedCustomer?.username}` : ''}`}
+                                onBlur={() => {
+                                    // if input text doesn't match selected name, clear the selection
+                                    if (!selectedCustomer || customerSearch !== selectedCustomer.name) {
+                                        setSelectedCustomer(null);
+                                    }
                                 }}
+                                onChange={(e) => setCustomerSearch(e.target.value)}
                             >
                                 {customerOptions.map((customer, i) => (
                                     <div
                                         key={i}
                                         onMouseDown={() => {
                                             isSelectingRef.current = true;
-                                        }}
-                                        onClick={() => {
-                                            if (isSelectingRef.current) {
-                                                setSelectedCustomer({ name: customer.user.fullName, username: customer.user.username, id: customer.user.userId })
-                                            }
+                                            handleSelectCustomer(customer)
                                             isSelectingRef.current = false;
-                                        }
-                                        }
+                                        }}
                                     >
                                         <span>{customer.user.fullName}</span>
+                                        <p className="text-sm text-darker">@{customer.user.username}</p>
                                     </div>
                                 ))}
                             </Field.List>
 
-                            <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-x-10 gap-y-[20px]">
+                            {/* <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-x-10 gap-y-[20px]">
                                 <Field.Text
                                     id="contractorName"
                                     label="Contractor Name"
@@ -124,7 +142,7 @@ export default function ChangeOwnerModal({ setShowModal, onSuccess, truckId }: C
                                     value={selectedCustomer.username}
                                     readonly={true}
                                 />
-                            </div>
+                            </div> */}
                         </fieldset>
 
                         <div className="flex justify-end items-center gap-[20px]">

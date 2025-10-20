@@ -86,6 +86,7 @@ export default function validateAndSanitize(
     // --- Money type ---
     if (rules.type === "money") {
       const numValue = parseFloat(String(value).replace(/[₱,]/g, ""));
+      if (!rules.required && (value === "" || value === null || value === undefined)) continue;
       if (isNaN(numValue)) {
         errors[key] = `${label} is an invalid amount.`;
         continue;

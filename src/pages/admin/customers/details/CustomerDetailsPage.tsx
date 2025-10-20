@@ -15,7 +15,6 @@ export default function CustomerDetailsPage() {
 
     console.log(customerData) 
 
-
     if (loading) return <Loading />
 
     return (

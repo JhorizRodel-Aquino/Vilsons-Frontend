@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, type ReactNode } from "react"
+import React, { useEffect, useRef, type ChangeEventHandler, type ReactNode } from "react"
 import InputBox from "./InputBox"
 import { NumericFormat, type NumberFormatValues } from "react-number-format";
 import { useFloating, offset, flip, shift, useClick, useDismiss, useRole, FloatingFocusManager, useInteractions } from "@floating-ui/react";
@@ -22,7 +22,7 @@ type FieldText = {
     value?: string,
     list?: string,
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void, 
+    onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void,
     autoComplete?: string
     readonly?: boolean;
 }
@@ -112,7 +112,7 @@ Field.Password = function Password({ id, label, width = 'hug', placeholder = '',
     )
 }
 
-Field.TextArea = function Text({ id, label, width = 'hug', placeholder = '', child }: { id?: string, label?: string, width?: 'hug' | 'full', placeholder?: string, child?: ReactNode }) {
+Field.TextArea = function Text({ id, label, width = 'hug', placeholder = '', child, value, onChange }: { id?: string, label?: string, width?: 'hug' | 'full', placeholder?: string, child?: ReactNode, value?: string, onChange?: ChangeEventHandler<HTMLTextAreaElement> }) {
     const fieldWidth = {
         hug: 'w-auto',
         full: 'w-full'
@@ -122,7 +122,7 @@ Field.TextArea = function Text({ id, label, width = 'hug', placeholder = '', chi
         <div className={`${fieldWidth}`}>
             {label && <label htmlFor={label}>{label}</label>}
             <InputBox>
-                <textarea id={id} name={label} placeholder={placeholder} className="input w-full resize-none thin-scrollbar" rows={5} >
+                <textarea id={id} value={value} onChange={onChange} name={label} placeholder={placeholder} className="input w-full resize-none thin-scrollbar" rows={5} >
                     {child}
                 </textarea>
             </InputBox>
@@ -194,13 +194,14 @@ type FieldNumber = {
     label?: string,
     width?: 'hug' | 'full',
     placeholder?: string,
-    value?: number,
+    value?: number | string,
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
     onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void, autoComplete?: string
     noSpinner?: boolean;
+    min?: number
 }
 
-Field.Number = function Number({ id, label, width = 'hug', placeholder = '', value, onChange, noSpinner = false }: FieldNumber) {
+Field.Number = function Number({ id, label, width = 'hug', placeholder = '', value, onChange, noSpinner = false, min}: FieldNumber) {
     const fieldWidth = {
         hug: 'w-auto',
         full: 'w-full'
@@ -215,10 +216,10 @@ Field.Number = function Number({ id, label, width = 'hug', placeholder = '', val
                     name={label}
                     type="number"
                     placeholder={placeholder}
-                    min={0}
+                    min={min || 0}
                     className={`input ${noSpinner && 'hide-spinner'}`}
-                    value={value}
-                    onChange={onChange} />
+                    value={value || ""}
+                    onChange={onChange || console.log} />
             </InputBox>
         </div>
     )
@@ -276,9 +277,13 @@ type FieldList = {
     value?: string;
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
     onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+    onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
     autoComplete?: string;
     children?: ReactNode;
     className?: string
+    validated?: boolean;
+    supportingInfo?: string;
+    readOnly?: boolean;
 };
 
 // Field.List = function List({
@@ -412,109 +417,128 @@ type FieldList = {
 // };
 
 Field.List = function List({
-  id,
-  label,
-  width = "hug",
-  placeholder = "",
-  value,
-  onChange,
-  onKeyDown,
-  children,
-  className
+    id,
+    label,
+    width = "hug",
+    placeholder = "",
+    value,
+    onChange,
+    onKeyDown,
+    onBlur,
+    children,
+    className,
+    validated = false,
+    supportingInfo,
+    readOnly = false
 }: FieldList) {
-  const [open, setOpen] = useState(false);
-  const inputRef = useRef<HTMLInputElement | null>(null);
+    const [open, setOpen] = useState(false);
+    const inputRef = useRef<HTMLInputElement | null>(null);
 
-  const fieldWidth = {
-    hug: "w-auto",
-    full: "w-full",
-  }[width];
+    const fieldWidth = {
+        hug: "w-auto",
+        full: "w-full",
+    }[width];
 
-  const handleClear = () => {
-    if (onChange) {
-      const fakeEvent = {
-        target: { value: "" },
-      } as React.ChangeEvent<HTMLInputElement>;
-      onChange(fakeEvent);
-    }
-  };
+    const handleClear = () => {
+        if (onChange) {
+            const fakeEvent = {
+                target: { value: "" },
+            } as React.ChangeEvent<HTMLInputElement>;
+            onChange(fakeEvent);
+        }
+    };
 
-  const handleSelect = (child: React.ReactNode) => {
-    let extractedValue = "";
+    const handleSelect = (child: React.ReactNode) => {
+        let extractedValue = "";
 
-    if (React.isValidElement(child)) {
-      const element = child as React.ReactElement<any>;
-      const span = React.Children.toArray(element.props.children).find(
-        (nested): nested is React.ReactElement<any> =>
-          React.isValidElement(nested) && nested.type === "span"
-      );
+        if (React.isValidElement(child)) {
+            const element = child as React.ReactElement<any>;
+            const span = React.Children.toArray(element.props.children).find(
+                (nested): nested is React.ReactElement<any> =>
+                    React.isValidElement(nested) && nested.type === "span"
+            );
 
-      if (span && typeof span.props.children === "string") {
-        extractedValue = span.props.children;
-      } else if (typeof element.props.children === "string") {
-        extractedValue = element.props.children;
-      }
-    }
+            if (span && typeof span.props.children === "string") {
+                extractedValue = span.props.children;
+            } else if (typeof element.props.children === "string") {
+                extractedValue = element.props.children;
+            }
+        }
 
-    if (onChange) {
-      const fakeEvent = {
-        target: { value: extractedValue },
-      } as React.ChangeEvent<HTMLInputElement>;
-      onChange(fakeEvent);
-    }
+        if (onChange) {
+            const fakeEvent = {
+                target: { value: extractedValue },
+            } as React.ChangeEvent<HTMLInputElement>;
+            onChange(fakeEvent);
+        }
 
-    // Lose focus → closes dropdown
-    inputRef.current?.blur();
-    setOpen(false);
-  };
+        // Lose focus → closes dropdown
+        inputRef.current?.blur();
+        setOpen(false);
+    };
 
-  return (
-    <div className={`${fieldWidth} relative ${className}`}>
-      {label && <label htmlFor={id}>{label}</label>}
+    return (
+        <div>
+            <div className={`${fieldWidth} relative ${className} overflow-visible`}>
+                {label && <label htmlFor={id}>{label}</label>}
 
-      <InputBox className="flex justify-between">
-        <input
-          ref={inputRef}
-          id={id}
-          type="text"
-          placeholder={placeholder}
-          className="input"
-          value={value}
-          onChange={onChange}
-          onKeyDown={onKeyDown}
-          onFocus={() => setOpen(true)} // open on focus
-          onBlur={() => setOpen(false)} // close when blurred
-          name={"no-autofill-" + Math.random().toString(36).substring(2, 15)} // 👈 unique each time
-        />
-        {value && (
-          <button
-            type="button"
-            className="cursor-pointer text-sm mx-2 text-gray-500 hover:text-gray-700"
-            onClick={handleClear}
-          >
-            ✕
-          </button>
-        )}
-      </InputBox>
+                <InputBox className={`flex justify-between ${validated ? 'font-medium text-darkest border-b-2 border-green over'
+                    : 'border-b border-yellow'}`}>
+                    <div className="flex items-center w-full">
+                        {/* <span className={`rounded-full w-2 h-2 ml-[8px] ${validated ? 'bg-green' : 'bg-yellow'}`}></span> */}
+                        <input
+                            ref={inputRef}
+                            id={id}
+                            type="text"
+                            readOnly={readOnly}
+                            placeholder={placeholder}
+                            value={value}
+                            className={`input ${validated ? 'text-darker'
+                                : 'text-gray-400'}`}
+                            onChange={onChange}
+                            onKeyDown={onKeyDown}
+                            onFocus={() => setOpen(true)} // open on focus
+                            onBlur={(e) => {
+                                onBlur && onBlur(e);
+                                setOpen(false) // close when blurred
+                            }} // close when blurred
+                            name={"no-autofill-" + Math.random().toString(36).substring(2, 15)} // 👈 unique each time
+                        />
+                    </div>
+                    {(value && !readOnly) && (
+                        <button
+                            type="button"
+                            className="cursor-pointer text-sm mx-2 text-gray-500 hover:text-gray-700"
+                            onClick={handleClear}
+                        >
+                            ✕
+                        </button>
+                    )}
+                </InputBox>
 
-      {open && (
-        <ul
-          className="absolute top-full left-0 bg-white rounded-md shadow-md z-30 w-full max-h-[180px] overflow-y-auto thin-scrollbar"
-        >
-          {React.Children.map(children, (child, i) => (
-            <li
-              key={i}
-              className="cursor-pointer hover:bg-gray p-2"
-              onMouseDown={(e) => e.preventDefault()} // prevents blur before click
-              onClick={() => handleSelect(child)}
-            >
-              {child}
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
-  );
+                {(open && !readOnly) && (
+                    <ul
+                        className="absolute top-full left-0 bg-white rounded-md shadow-md z-50 w-full max-h-[180px] overflow-y-auto thin-scrollbar"
+                    >
+                        {React.Children.map(children, (child, i) => (
+                            <li
+                                key={i}
+                                className="cursor-pointer hover:bg-gray p-2"
+                                onMouseDown={(e) => e.preventDefault()} // prevents blur before click
+                                onClick={() => handleSelect(child)}
+                            >
+                                {child}
+                            </li>
+                        ))}
+                    </ul>
+                )}
+                {/* supporting info */}
+            </div>
+            {supportingInfo && (
+                <p className="input text-sm text-darker mt-1 italic">{supportingInfo}</p>
+            )}
+        </div>
+    );
 }
 // Field.List = function List({
 //   id,

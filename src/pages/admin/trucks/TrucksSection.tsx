@@ -14,6 +14,7 @@ export type SelectedCustomer = {
 
 export default function TrucksSection() {
     const [selectedId, setSelectedId] = useState<string>('');
+    const [selectedTruck, setSelectedTruck] = useState<{plate: string}>({plate: ''});
     const [presetData, setPresetData] = useState<FormData>({ plate: "", make: "", model: "" });
     const [reloadFlag, setReloadFlag] = useState(false);
     const [showModal, setShowModal] = useState<'create' | 'edit' | 'change' | null>(null)
@@ -26,10 +27,10 @@ export default function TrucksSection() {
                 <Details subtitle={'All Trucks'} modifiedDate="Aug 9, 2025" />
             </SectionHeading>
 
-            <TrucksTable reloadFlag={reloadFlag} setPresetData={setPresetData} selectedId={selectedId} setSelectedId={setSelectedId} setShowModal={setShowModal} />
+            <TrucksTable reloadFlag={reloadFlag} setPresetData={setPresetData} selectedId={selectedId} setSelectedId={setSelectedId} setShowModal={setShowModal} setSelectedTruck={setSelectedTruck} />
 
             {(showModal === "create" || showModal === "edit") && <TrucksModal setShowModal={setShowModal} onSuccess={reload} action={showModal} id={selectedId} presetData={presetData} />}
-            {showModal === "change" && <ChangeOwnerModal setShowModal={setShowModal} onSuccess={reload} truckId={selectedId} />}
+            {showModal === "change" && <ChangeOwnerModal setShowModal={setShowModal} onSuccess={reload} truckId={selectedId} selectedTruck={selectedTruck} />}
         </>
     )
 }

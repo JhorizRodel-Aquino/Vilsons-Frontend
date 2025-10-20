@@ -77,11 +77,11 @@ export default function LaborExpensesTable({ setPresetDataContractor, setPresetD
             setActiveTab(laborType);
 
             const employee = (await get({ route: `/api/employees/${item.employeeId}` })).data
-            console.log(employee)
+            console.log("employee", employee)
             // console.log(item.payComponents)
             const payComponents = item.payComponents.map((comp: PayComponents) => ({...comp, amount: comp.amount / 100}))
             setPresetDataEmployee({ userId: item.userId, payComponents: payComponents, branchId: item.branchId } as FormDataEmployee)
-            setSelectedEmployee({ name: employee.user.fullName, username: employee.user.username, id: item.userId } as SelectedEmployee)
+            setSelectedEmployee({ name: employee.user.fullName, username: employee.user.username, id: item.userId, payComponents: payComponents } as SelectedEmployee)
         }
 
         setShowModal('edit');

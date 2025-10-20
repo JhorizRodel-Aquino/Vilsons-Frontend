@@ -43,7 +43,7 @@ function DashboardPage() {
                         <JobOrderCard status={'pending'} value={5} />
                         <JobOrderCard status={'ongoing'} value={5} />
                         <JobOrderCard status={'completed'} value={5} />
-                        <JobOrderCard status={'for release'} value={5} />
+                        <JobOrderCard status={'forRelease'} value={5} />
                     </div>
                 </section>
 
@@ -78,7 +78,7 @@ function DashboardPage() {
                             />
                             <RecentJobOrderCard
                                 jobNumber='25-003'
-                                status={'for release'}
+                                status={'forRelease'}
                                 plate={'ZTT-795'}
                                 contractor={'KV Services'}
                                 datetime={'Jan 4, 2022 11:30 AM'}

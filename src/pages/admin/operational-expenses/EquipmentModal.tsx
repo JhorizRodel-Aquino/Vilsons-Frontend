@@ -66,7 +66,7 @@ export default function EquipmentModal({ branchOptions, setShowModal, onSuccess,
                             <Button.X onClick={closeModal} disabled={loading} />
                         </div>
 
-                        <fieldset className="flex items-center gap-2">
+                        <fieldset>
                                 Branch
                                 <Selection
                                     options={branchOptions}

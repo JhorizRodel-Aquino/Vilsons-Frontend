@@ -1,5 +1,3 @@
-import type { ReactElement } from "react";
-import Options from "../../../../components/Options";
 import Table from "../../../../components/table/Table";
 import type { Column } from "../../../../components/table/Table";
 import formatPesoFromCents from "../../../../utils/formatPesoFromCents";
@@ -9,7 +7,6 @@ type ArchivedOrder = {
     plateNumber: string;
     totalBill: number;
     balance: number;
-    options: ReactElement;
 };
 
 const archivedOrderColumns: Column<ArchivedOrder>[] = [
@@ -17,7 +14,6 @@ const archivedOrderColumns: Column<ArchivedOrder>[] = [
     { key: "plateNumber", label: "Plate Number" },
     { key: "totalBill", label: "Total Bill", render: (value) => formatPesoFromCents(value as number) },
     { key: "balance", label: "Customer Balance", render: (value) => formatPesoFromCents(value as number) },
-    { key: "options", label: "", render: (value) => value as React.ReactElement },
 ];
 
 export default function ArchivedOrdersTable({ data }: { data: [] }) {
@@ -30,11 +26,6 @@ export default function ArchivedOrdersTable({ data }: { data: [] }) {
             plateNumber: item.plate,
             totalBill: item.totalBill,
             balance: item.balance,
-            options:
-                <Options
-                // onEdit={() => handleEdit(item)}
-                // onDelete={() => { setSelectedId(item.id); setShowDeleteModal(true) }}
-                />
         })
     );
 

@@ -1,4 +1,4 @@
-export type Status = 'pending' | 'ongoing' | 'completed' | 'for release';
+export type Status = 'pending' | 'ongoing' | 'completed' | 'forRelease';
 
 export const statusItems: Record<Status, {
   label: string,
@@ -24,7 +24,7 @@ export const statusItems: Record<Status, {
     color: 'green',
     iconName: 'check'
   },
-  'for release': {
+  forRelease: {
     label: 'For Release',
     desc: 'Ready for customer pickup',
     color: 'blue',

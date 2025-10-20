@@ -25,7 +25,7 @@ type Truck = {
 };
 
 const truckColumns: Column<Truck>[] = [
-    { key: "plateNumber", label: "Plate Number" },
+    { key: "plateNumber", label: "Plate Number", render: (value) => value as React.ReactElement },
     { key: "make", label: "Make" },
     { key: "model", label: "Model" },
     { key: "owner", label: "Owner", render: (value) => value as React.ReactElement },
@@ -39,10 +39,11 @@ type TrucksTableProps = {
     setShowModal: (action: 'create' | 'edit' | "change" | null) => void;
     selectedId: string;
     setSelectedId: (id: string) => void;
+    setSelectedTruck: (truck: {plate: string}) => void;
 }
 
 
-export default function TrucksTable({ setPresetData, reloadFlag, setShowModal, selectedId, setSelectedId }: TrucksTableProps) {
+export default function TrucksTable({ setPresetData, reloadFlag, setShowModal, selectedId, setSelectedId, setSelectedTruck }: TrucksTableProps) {
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const { data, loading, error, closeError, reload, searchParams, setSearchParams, dateRangeParams, setDateRangeParams } = useGetByDateRange('/api/trucks');
     const {
@@ -77,7 +78,7 @@ export default function TrucksTable({ setPresetData, reloadFlag, setShowModal, s
 
     const trucks: Truck[] = truckItems.map(
         (item: Record<string, any>) => ({
-            plateNumber: item.plate,
+            plateNumber: <Link to={`/trucks/${item.id}`}>{item.plate}</Link>,
             make: item.make,
             model: item.model,
             owner: <Link to={`/customers/${item.customerId}`}>{item.customerFullName}</Link>,
@@ -85,9 +86,20 @@ export default function TrucksTable({ setPresetData, reloadFlag, setShowModal, s
             options:
                 <Options
                     onEdit={() => handleEdit(item)}
-                    onDelete={() => { setSelectedId(item.id); setShowDeleteModal(true) }}
+                    onDelete={() => {
+                        setSelectedId(item.id);
+                        setShowDeleteModal(true)
+                    }}
                 >
-                    <button onClick={() => { setSelectedId(item.id); setShowModal("change") }}><Icon name="users" />Change Owner</button>
+                    <button
+                        onClick={() => {
+                            setSelectedId(item.id);
+                            setSelectedTruck({plate: item.plate});
+                            setShowModal("change")
+                        }}
+                    >
+                        <Icon name="users" />Change Owner
+                    </button>
                 </Options>
 
         })

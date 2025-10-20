@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { get } from "../services/apiService";
 import handleAxiosError from "../utils/handleAxiosError";
 
-export type DateRangeParams = { startDate: string | '', endDate: string }
+export type DateRangeParams = { startDate: string | '', endDate: string | '' }
 
 // let cachedData: any;
 

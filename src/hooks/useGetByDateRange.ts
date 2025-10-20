@@ -19,14 +19,15 @@ export default function useGetByDateRange(route: string) {
     const routeState = routeCache[route];
     const [dateRangeParams, setDateRangeParams] = useState<DateRangeParams>(routeState.prevDateRangeParams);
     const [searchParams, setSearchParams] = useState<string>('');
+    const [statusParams, setStatusParams] = useState<string>('');
 
-    const params = { ...dateRangeParams, search: searchParams }
+    const params = { ...dateRangeParams, search: searchParams, status: statusParams }
     const { data, loading, error, closeError, refetch, reload } = useGetData(route, params)
 
     // refetch date range params change
     useEffect(() => {
         refetch();
-    }, [dateRangeParams]);
+    }, [dateRangeParams, statusParams]);
 
     // refetch search params change
     useEffect(() => {
@@ -39,5 +40,5 @@ export default function useGetByDateRange(route: string) {
         }
     }, [searchParams]);
 
-    return { data, loading, error, closeError, refetch, reload, searchParams, setSearchParams, dateRangeParams, setDateRangeParams };
+    return { data, loading, error, closeError, refetch, reload, searchParams, setSearchParams, dateRangeParams, setDateRangeParams, statusParams, setStatusParams };
 }

@@ -119,10 +119,10 @@ export default function LaborModal({ branchOptions, setShowModal, onSuccess, act
     }, [selectedEmployee])
 
 
-    useEffect(() => {
-        // console.log(newComponents)
-        setFormDataEmployee({ ...formDataEmployee, payComponents: [...formDataEmployee.payComponents, ...newComponents] })
-    }, [newComponents])
+    // useEffect(() => {
+    //     // console.log(newComponents)
+    //     setFormDataEmployee({ ...formDataEmployee, payComponents: [...formDataEmployee.payComponents, ...newComponents] })
+    // }, [newComponents])
 
 
 
@@ -148,7 +148,7 @@ export default function LaborModal({ branchOptions, setShowModal, onSuccess, act
 
             success = action === 'create' ? await postData(validatedData, 'contractor-pays') : await putData(`contractor-pays/${id}`, validatedData)
         } else {
-            const { validatedData, isValid } = validateAndSanitize(formDataEmployee, formSchemaEmployee);
+            const { validatedData, isValid } = validateAndSanitize({ ...formDataEmployee, payComponents: [...formDataEmployee.payComponents, ...newComponents] }, formSchemaEmployee);
             console.log(validatedData)
             console.log(isValid)
             if (!isValid) return;
@@ -188,6 +188,8 @@ export default function LaborModal({ branchOptions, setShowModal, onSuccess, act
                             {activeTab === tabs[0] &&
                                 <div className="grid gap-[20px]">
                                     <fieldset className="card grid gap-[20px]">
+                                        <h4 className="text-lg font-bold">Contractor</h4>
+
                                         {action !== "edit" &&
                                             <Field.List
                                                 id="contractorSelection"
@@ -215,6 +217,7 @@ export default function LaborModal({ branchOptions, setShowModal, onSuccess, act
                                                         }}
                                                     >
                                                         <span>{contractor.user.fullName}</span>
+                                                        <p className="text-sm text-darker">@{contractor.user.username}</p>
                                                     </div>
                                                 ))}
                                             </Field.List>
@@ -223,13 +226,13 @@ export default function LaborModal({ branchOptions, setShowModal, onSuccess, act
                                         <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-x-10 gap-y-[20px]">
                                             <Field.Text
                                                 id="contractorName"
-                                                label="Contractor Name"
+                                                label="Name"
                                                 value={selectedContractor.name}
                                                 readonly={true}
                                             />
 
                                             <Field.Text
-                                                id="username"
+                                                id="contractorUsername"
                                                 label="Username"
                                                 value={selectedContractor.username}
                                                 readonly={true}
@@ -266,15 +269,17 @@ export default function LaborModal({ branchOptions, setShowModal, onSuccess, act
                                             />
                                         </div>
 
-                                        <div className="card">
-                                            <h4 className="text-lg font-bold mb-3">Summary</h4>
-                                            <div className="grid gap-1">
-                                                <Detail
-                                                    className="font-medium"
-                                                    label={formDataContractor.type === "regular" ? "Regular Pay" : "Advance Pay"}
-                                                    value={formatPesoFromCents(formDataContractor.amount ? formDataContractor.amount * 100 : 0)}
-                                                    variant="adjacent" align="between" />
-                                            </div>
+
+                                    </fieldset>
+
+                                    <fieldset className="card">
+                                        <h4 className="text-lg font-bold mb-3">Summary</h4>
+                                        <div className="grid gap-1">
+                                            <Detail
+                                                className="font-medium"
+                                                label={formDataContractor.type === "regular" ? "Regular Pay" : "Advance Pay"}
+                                                value={formatPesoFromCents(formDataContractor.amount ? formDataContractor.amount * 100 : 0)}
+                                                variant="adjacent" align="between" />
                                         </div>
                                     </fieldset>
                                 </div>
@@ -283,6 +288,8 @@ export default function LaborModal({ branchOptions, setShowModal, onSuccess, act
                             {activeTab === tabs[1] &&
                                 <div className="grid gap-[20px]">
                                     <fieldset className="card grid gap-[20px]">
+                                        <h4 className="text-lg font-bold">Employee</h4>
+
                                         {action !== "edit" &&
                                             <Field.List
                                                 id="employeeSelection"
@@ -307,6 +314,7 @@ export default function LaborModal({ branchOptions, setShowModal, onSuccess, act
                                                         }
                                                     >
                                                         <span>{employee.user.fullName}</span>
+                                                        <p className="text-sm text-darker">@{employee.user.username}</p>
                                                     </div>
                                                 ))}
                                             </Field.List>
@@ -315,13 +323,13 @@ export default function LaborModal({ branchOptions, setShowModal, onSuccess, act
                                         <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-x-10 gap-y-[20px]">
                                             <Field.Text
                                                 id="employeeName"
-                                                label="Employee Name"
+                                                label="Name"
                                                 value={selectedEmployee.name}
                                                 readonly={true}
                                             />
 
                                             <Field.Text
-                                                id="username"
+                                                id="employeeUsername"
                                                 label="Username"
                                                 value={selectedEmployee.username}
                                                 readonly={true}
@@ -400,15 +408,13 @@ export default function LaborModal({ branchOptions, setShowModal, onSuccess, act
                                                 </>
                                             }
                                         </div>
-
-                                        <div className="card">
-                                            <h4 className="text-lg font-bold mb-3">Summary</h4>
-                                            <Detail className="font-medium" label='Total Salary' value={formatPesoFromCents(formDataEmployee.payComponents
-                                                ?.reduce((sum, comp) => sum + (Number(comp.amount * 100) || 0), 0))} variant="adjacent" align="between" />
-                                        </div>
                                     </fieldset>
 
-
+                                    <fieldset className="card">
+                                        <h4 className="text-lg font-bold mb-3">Summary</h4>
+                                        <Detail className="font-medium" label='Total Salary' value={formatPesoFromCents([...formDataEmployee.payComponents, ...newComponents]
+                                            ?.reduce((sum, comp) => sum + (Number(comp.amount * 100) || 0), 0))} variant="adjacent" align="between" />
+                                    </fieldset>
                                 </div>
                             }
                         </div>
