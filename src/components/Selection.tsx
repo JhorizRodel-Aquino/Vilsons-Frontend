@@ -8,10 +8,11 @@ type SelectionProps = {
   value?: string; // 👈 controlled value
   onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   className?: string;
-  placeholder?: string
+  placeholder?: string;
+  capitalize?: boolean
 };
 
-export default function Selection({ options, value, onChange, className, placeholder }: SelectionProps) {
+export default function Selection({ options, value, onChange, className, placeholder, capitalize = true }: SelectionProps) {
   return (
     <InputBox className={className || ""}>
       <div className="relative">
@@ -20,7 +21,7 @@ export default function Selection({ options, value, onChange, className, placeho
           id="status"
           value={value} // 👈 controlled
           onChange={onChange}
-          className="hide-select-icon w-full pr-8 input capitalize"
+          className={`hide-select-icon w-full pr-8 input ${capitalize && 'capitalize'}`}
         >
           {placeholder &&           
             <option value="" disabled hidden>
@@ -28,7 +29,7 @@ export default function Selection({ options, value, onChange, className, placeho
             </option>
           }
           {options?.map((option, i) => (
-            <option key={i} value={option.value} className="capitalize">
+            <option key={i} value={option.value} className={`${capitalize && 'capitalize'}`}>
               {option.label}
             </option>
           ))}
