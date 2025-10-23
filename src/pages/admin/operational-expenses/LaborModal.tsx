@@ -10,19 +10,14 @@ import type { ValidationSchema } from "../../../utils/validateAndSanitize";
 import validateAndSanitize from "../../../utils/validateAndSanitize";
 import ErrorModal from "../../../components/ErrorModal";
 import Selection from "../../../components/Selection";
-import { get } from "../../../services/apiService";
-import type { SelectedContractor, SelectedEmployee } from "./LaborExpensesSection";
+import useFieldList from "../../../hooks/useFieldList";
 
-export type FormDataContractor = {
-    userId: string;
-    amount: number | null;
+
+export type FormData = {
+    userId?: string;
+    amount?: number | null;
     type?: string;
-    branchId?: string;
-}
-
-export type FormDataEmployee = {
-    userId: string;
-    payComponents: PayComponents[];
+    payComponents?: PayComponents[];
     branchId?: string;
 }
 
@@ -57,74 +52,65 @@ type LaborModalProps = {
     setShowModal: (action: 'create' | 'edit' | null) => void,
     onSuccess: () => void,
     action: 'create' | 'edit',
-    presetDataContractor: FormDataContractor;
-    presetDataEmployee: FormDataEmployee;
+    presetData: FormData;
     id?: string;
     tabs: string[];
     activeTab: string;
     setActiveTab: (tab: string) => void;
-    selectedContractor: SelectedContractor
-    setSelectedContractor: (selected: SelectedContractor) => void;
-    selectedEmployee: SelectedEmployee
-    setSelectedEmployee: (selected: SelectedEmployee) => void;
+    preSelectedContractor: Record<string, any> | null;
+    preSelectedEmployee: Record<string, any> | null;
 }
 
 
-export default function LaborModal({ branchOptions, setShowModal, onSuccess, action, presetDataContractor, presetDataEmployee, id, tabs, activeTab, setActiveTab, selectedContractor, setSelectedContractor, selectedEmployee, setSelectedEmployee }: LaborModalProps) {
+export default function LaborModal({ branchOptions, setShowModal, onSuccess, action, presetData, id, tabs, activeTab, setActiveTab, preSelectedContractor, preSelectedEmployee }: LaborModalProps) {
     const typeOptions: SelectionOptions[] = [{ value: "regular", label: "regular" }, { value: "advance", label: "advance" }]
-
-    const [contractorOptions, setContractorOptions] = useState<Record<string, any>[]>([]);
-    const [contractorSearch, setContractorSearch] = useState('')
-    const [employeeOptions, setEmployeeOptions] = useState<Record<string, any>[]>([]);
-    const [employeeSearch, setEmployeeSearch] = useState('')
     const isSelectingRef = useRef(false);
 
     const [newComponents, setNewComponents] = useState<PayComponents[]>([])
 
-    const [formDataContractor, setFormDataContractor] = useState<FormDataContractor>(presetDataContractor)
-    const [formDataEmployee, setFormDataEmployee] = useState<FormDataEmployee>(presetDataEmployee)
+    const [formData, setFormData] = useState<FormData>(presetData)
     const { loading, error, closeError, postData, putData } = usePostPutData('/api')
+
+    const {
+        selected: selectedContractor,
+        setSelected: setSelectedContractor,
+        options: contractorOptions,
+        setOptions: setContractorOptions,
+        search: contractorSearch,
+        setSearch: setContractorSearch
+    } = useFieldList("contractors", "/api/contractors?search=", null)
+
+    const {
+        selected: selectedEmployee,
+        setSelected: setSelectedEmployee,
+        options: employeeOptions,
+        setOptions: setEmployeeOptions,
+        search: employeeSearch,
+        setSearch: setEmployeeSearch
+    } = useFieldList("employees", "/api/employees?search=", null)
+
+    useEffect(() => {
+        if (action === "edit") {
+            setSelectedContractor(preSelectedContractor);
+            setContractorSearch(preSelectedContractor?.name);
+
+            setSelectedEmployee(preSelectedEmployee);
+            setEmployeeSearch(preSelectedEmployee?.name);
+        }
+    }, [preSelectedContractor, preSelectedEmployee])
+
+    useEffect(() => {
+        setFormData({ ...formData, userId: selectedContractor?.id })
+    }, [selectedContractor])
+
+    useEffect(() => {
+        setFormData({ ...formData, userId: selectedEmployee?.id, payComponents: selectedEmployee?.payComponents })
+    }, [selectedEmployee])
+
 
     const addComponent = () => {
         setNewComponents([...newComponents, { componentId: `new-component-${newComponents.length + 1}`, componentName: `New Component ${newComponents.length + 1}`, amount: 0 }])
     }
-
-
-    useEffect(() => {
-        const populateUserOptions = async () => {
-            if (activeTab === "contractor") {
-                const contractorsList = (await get({ route: `/api/contractors?search=${contractorSearch}` })).data.contractors
-                setContractorOptions(contractorsList)
-            } else {
-                const employeesList = (await get({ route: `/api/employees?search=${employeeSearch}` })).data.employees
-                setEmployeeOptions(employeesList)
-            }
-
-        }
-        populateUserOptions()
-    }, [activeTab, contractorSearch, employeeSearch])
-
-    useEffect(() => {
-        // console.log(selectedContractor)
-        // console.log(formDataContractor)
-        setFormDataContractor({ ...formDataContractor, userId: selectedContractor.id })
-    }, [selectedContractor])
-
-    useEffect(() => {
-        console.log("selected", selectedEmployee)
-        // console.log(formDataEmployee)
-        console.log("forms", formDataEmployee)
-
-        setFormDataEmployee({ ...formDataEmployee, userId: selectedEmployee.id, payComponents: selectedEmployee.payComponents })
-    }, [selectedEmployee])
-
-
-    // useEffect(() => {
-    //     // console.log(newComponents)
-    //     setFormDataEmployee({ ...formDataEmployee, payComponents: [...formDataEmployee.payComponents, ...newComponents] })
-    // }, [newComponents])
-
-
 
     const closeModal = () => {
         setShowModal(null)
@@ -132,8 +118,6 @@ export default function LaborModal({ branchOptions, setShowModal, onSuccess, act
         setEmployeeOptions([])
         setSelectedContractor({ name: '', username: '', id: '', balance: 0 })
         setSelectedEmployee({ name: '', username: '', id: '', payComponents: [] })
-        setFormDataContractor({ userId: '', amount: null, branchId: branchOptions && branchOptions[0].value })
-        setFormDataEmployee({ userId: '', branchId: branchOptions && branchOptions[0].value, payComponents: [] })
     }
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -142,13 +126,13 @@ export default function LaborModal({ branchOptions, setShowModal, onSuccess, act
         let success: any;
 
         if (laborType === "contractor") {
-            const { validatedData, isValid } = validateAndSanitize(formDataContractor, formSchemaContractor);
+            const { validatedData, isValid } = validateAndSanitize(formData, formSchemaContractor);
 
             if (!isValid) return;
 
             success = action === 'create' ? await postData(validatedData, 'contractor-pays') : await putData(`contractor-pays/${id}`, validatedData)
         } else {
-            const { validatedData, isValid } = validateAndSanitize({ ...formDataEmployee, payComponents: [...formDataEmployee.payComponents, ...newComponents] }, formSchemaEmployee);
+            const { validatedData, isValid } = validateAndSanitize({ ...formData, payComponents: [...(formData.payComponents ? formData.payComponents : []), ...newComponents] }, formSchemaEmployee);
             console.log(validatedData)
             console.log(isValid)
             if (!isValid) return;
@@ -158,9 +142,29 @@ export default function LaborModal({ branchOptions, setShowModal, onSuccess, act
 
         if (success) {
             onSuccess();
-            laborType === "contractor" ? setFormDataContractor({ userId: '', amount: null, type: "regular" }) : {};
+            setFormData({ userId: '', branchId: branchOptions && branchOptions[0].value, payComponents: [] })
             closeModal();
         }
+    };
+
+    const handleSelectContractor = (contractor: any) => {
+        setSelectedContractor({
+            name: contractor.user.fullName,
+            username: contractor.user.username,
+            id: contractor.user.userId,
+            balance: contractor.jobOrderSummary.totalBalance,
+        });
+        setContractorSearch(contractor.user.fullName); // show name in input
+    };
+
+    const handleSelectEmployee = (employee: any) => {
+        setSelectedEmployee({
+            name: employee.user.fullName,
+            username: employee.user.username,
+            id: employee.user.userId, payComponents:
+                employee.payComponents.map((comp: PayComponents) => ({ ...comp, amount: comp.amount / 100 }))
+        })
+        setEmployeeSearch(employee.user.fullName); // show name in input
     };
 
     return (
@@ -177,8 +181,8 @@ export default function LaborModal({ branchOptions, setShowModal, onSuccess, act
                             Branch
                             <Selection
                                 options={branchOptions}
-                                value={formDataContractor.branchId}
-                                onChange={(e) => setFormDataContractor({ ...formDataContractor, branchId: e.target.value })}
+                                value={formData.branchId}
+                                onChange={(e) => setFormData({ ...formData, branchId: e.target.value })}
                             />
                         </fieldset>
 
@@ -194,25 +198,32 @@ export default function LaborModal({ branchOptions, setShowModal, onSuccess, act
                                             <Field.List
                                                 id="contractorSelection"
                                                 placeholder="Select Contractor"
+                                                validated={!!selectedContractor}
                                                 value={contractorSearch}
-                                                onChange={(e) => {
-                                                    setContractorSearch(e.target.value);
+                                                supportingInfo={selectedContractor ? `@${selectedContractor.username}` : ""}
+                                                onChange={(e) => setContractorSearch(e.target.value)}
+                                                onBlur={() => {
+                                                    if (isSelectingRef.current) return;
+                                                    if (!selectedContractor || contractorSearch !== selectedContractor.name) setSelectedContractor(null);
                                                 }}
                                             >
                                                 {contractorOptions.map((contractor, i) => (
-                                                    <div key={i}
+                                                    <div
+                                                        key={i}
                                                         onMouseDown={() => {
                                                             isSelectingRef.current = true;
                                                         }}
-                                                        onClick={() => {
-                                                            if (isSelectingRef.current) {
-                                                                setSelectedContractor({
-                                                                    name: contractor.user.fullName,
-                                                                    username: contractor.user.username,
-                                                                    id: contractor.user.userId,
-                                                                    balance: contractor.jobOrderSummary.totalBalance,
-                                                                });
+                                                        onMouseUp={() => {
+                                                            handleSelectContractor(contractor);
+                                                            setTimeout(() => {
                                                                 isSelectingRef.current = false;
+                                                            }, 0);
+                                                        }}
+                                                        onMouseLeave={() => {
+                                                            if (isSelectingRef.current) {
+                                                                setTimeout(() => {
+                                                                    isSelectingRef.current = false;
+                                                                }, 0);
                                                             }
                                                         }}
                                                     >
@@ -227,14 +238,14 @@ export default function LaborModal({ branchOptions, setShowModal, onSuccess, act
                                             <Field.Text
                                                 id="contractorName"
                                                 label="Name"
-                                                value={selectedContractor.name}
+                                                value={selectedContractor?.name ?? ""}
                                                 readonly={true}
                                             />
 
                                             <Field.Text
                                                 id="contractorUsername"
                                                 label="Username"
-                                                value={selectedContractor.username}
+                                                value={selectedContractor?.name ?? ""}
                                                 readonly={true}
                                             />
                                         </div>
@@ -246,7 +257,7 @@ export default function LaborModal({ branchOptions, setShowModal, onSuccess, act
                                         <Detail
                                             className="font-medium"
                                             label="Contractor Balance"
-                                            value={formatPesoFromCents(selectedContractor.balance)}
+                                            value={formatPesoFromCents(selectedContractor?.balance)}
                                             variant="adjacent" align="between" />
 
                                         <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-x-10 gap-y-[20px]">
@@ -254,17 +265,17 @@ export default function LaborModal({ branchOptions, setShowModal, onSuccess, act
                                                 Salary Type
                                                 <Selection
                                                     options={typeOptions}
-                                                    value={formDataContractor.type}
-                                                    onChange={(e) => setFormDataContractor({ ...formDataContractor, type: e.target.value })}
+                                                    value={formData?.type}
+                                                    onChange={(e) => setFormData({ ...formData, type: e.target.value })}
                                                 />
                                             </div>
 
                                             <Field.Money
                                                 id="amount"
                                                 label="Amount"
-                                                value={formDataContractor.amount}
+                                                value={formData.amount}
                                                 onChange={(values) => {
-                                                    setFormDataContractor({ ...formDataContractor, amount: values.floatValue ?? null });
+                                                    setFormData({ ...formData, amount: values.floatValue ?? null });
                                                 }}
                                             />
                                         </div>
@@ -277,8 +288,8 @@ export default function LaborModal({ branchOptions, setShowModal, onSuccess, act
                                         <div className="grid gap-1">
                                             <Detail
                                                 className="font-medium"
-                                                label={formDataContractor.type === "regular" ? "Regular Pay" : "Advance Pay"}
-                                                value={formatPesoFromCents(formDataContractor.amount ? formDataContractor.amount * 100 : 0)}
+                                                label={formData.type === "regular" ? "Regular Pay" : "Advance Pay"}
+                                                value={formatPesoFromCents(formData.amount ? formData.amount * 100 : 0)}
                                                 variant="adjacent" align="between" />
                                         </div>
                                     </fieldset>
@@ -294,24 +305,42 @@ export default function LaborModal({ branchOptions, setShowModal, onSuccess, act
                                             <Field.List
                                                 id="employeeSelection"
                                                 placeholder="Select Employee"
+                                                validated={!!selectedEmployee}
                                                 value={employeeSearch}
-                                                onChange={(e) => {
-                                                    setEmployeeSearch(e.target.value);
+                                                supportingInfo={selectedEmployee ? `@${selectedEmployee.username}` : ""}
+                                                onChange={(e) => setEmployeeSearch(e.target.value)}
+                                                onBlur={() => {
+                                                    // if we're in the middle of selecting (mouse down on an option), ignore the blur
+                                                    if (isSelectingRef.current) return;
+                                                    if (!selectedEmployee || employeeSearch !== selectedEmployee.name) setSelectedEmployee(null);
                                                 }}
                                             >
                                                 {employeeOptions.map((employee, i) => (
                                                     <div
                                                         key={i}
+                                                        // mark that a selection is in progress before blur fires
                                                         onMouseDown={() => {
                                                             isSelectingRef.current = true;
                                                         }}
-                                                        onClick={() => {
+                                                        // when mouse is released, actually pick the employee and restore the flag
+                                                        onMouseUp={() => {
+                                                            // call your existing handler (make sure it sets employee search, not contractor search)
+                                                            handleSelectEmployee(employee);
+                                                            // small delay to make sure onBlur (if it fires) sees the flag; then reset
+                                                            // (you can usually just set false here, but timeout ensures DOM event ordering won't race)
+                                                            setTimeout(() => {
+                                                                isSelectingRef.current = false;
+                                                            }, 0);
+                                                        }}
+                                                        // optional: in case mouse leaves the option before mouseup
+                                                        onMouseLeave={() => {
+                                                            // if mouse leaves while holding, reset the flag
                                                             if (isSelectingRef.current) {
-                                                                setSelectedEmployee({ name: employee.user.fullName, username: employee.user.username, id: employee.user.userId, payComponents: employee.payComponents.map((comp: PayComponents) => ({ ...comp, amount: comp.amount / 100 })) })
+                                                                setTimeout(() => {
+                                                                    isSelectingRef.current = false;
+                                                                }, 0);
                                                             }
-                                                            isSelectingRef.current = false;
-                                                        }
-                                                        }
+                                                        }}
                                                     >
                                                         <span>{employee.user.fullName}</span>
                                                         <p className="text-sm text-darker">@{employee.user.username}</p>
@@ -324,14 +353,14 @@ export default function LaborModal({ branchOptions, setShowModal, onSuccess, act
                                             <Field.Text
                                                 id="employeeName"
                                                 label="Name"
-                                                value={selectedEmployee.name}
+                                                value={selectedEmployee?.name ?? ""}
                                                 readonly={true}
                                             />
 
                                             <Field.Text
                                                 id="employeeUsername"
                                                 label="Username"
-                                                value={selectedEmployee.username}
+                                                value={selectedEmployee?.name ?? ""}
                                                 readonly={true}
                                             />
                                         </div>
@@ -340,7 +369,7 @@ export default function LaborModal({ branchOptions, setShowModal, onSuccess, act
                                     <fieldset className="card grid gap-[20px]">
                                         <div className="flex justify-between">
                                             <h4 className="text-lg font-bold">Salary Components</h4>
-                                            {selectedEmployee.id && (
+                                            {selectedEmployee?.id && (
                                                 <Button
                                                     label="Add Component"
                                                     variant="outline"
@@ -353,21 +382,21 @@ export default function LaborModal({ branchOptions, setShowModal, onSuccess, act
                                         <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-x-10 gap-y-[20px]">
                                             {
                                                 <>
-                                                    {formDataEmployee?.payComponents?.map((component, i) => (
+                                                    {formData?.payComponents?.map((component, i) => (
                                                         <Field.Money
                                                             key={i}
                                                             id={component.componentName}
                                                             label={component.componentName}
                                                             value={component.amount}
                                                             onChange={(values) => {
-                                                                const updatedPayComponents = formDataEmployee?.payComponents?.map((comp) =>
+                                                                const updatedPayComponents = formData?.payComponents?.map((comp) =>
                                                                     comp.componentName === component.componentName
                                                                         ? { ...comp, amount: values.floatValue ?? 0 }
                                                                         : comp
                                                                 );
 
-                                                                setFormDataEmployee({
-                                                                    ...formDataEmployee,
+                                                                setFormData({
+                                                                    ...formData,
                                                                     payComponents: updatedPayComponents,
                                                                 });
                                                             }}
@@ -412,7 +441,7 @@ export default function LaborModal({ branchOptions, setShowModal, onSuccess, act
 
                                     <fieldset className="card">
                                         <h4 className="text-lg font-bold mb-3">Summary</h4>
-                                        <Detail className="font-medium" label='Total Salary' value={formatPesoFromCents([...formDataEmployee.payComponents, ...newComponents]
+                                        <Detail className="font-medium" label='Total Salary' value={formatPesoFromCents([...(formData.payComponents ? formData.payComponents : []), ...newComponents]
                                             ?.reduce((sum, comp) => sum + (Number(comp.amount * 100) || 0), 0))} variant="adjacent" align="between" />
                                     </fieldset>
                                 </div>

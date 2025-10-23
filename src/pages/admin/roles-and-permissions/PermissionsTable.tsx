@@ -1,7 +1,6 @@
 import { Fragment } from "react/jsx-runtime";
 import RolesAndPermissionsTableData from "./RolesAndPermissionTableData";
 import Icon from "../../../components/Icon";
-import { useEffect } from "react";
 
 export type Permission = {
     permission: string;
@@ -23,7 +22,6 @@ export default function PermissionsTable({
     setRolePermissions,
     action,
     setShowModal,
-    resetPermissions = false
 }: {
     rolePermissions: Record<string, ModulePermissions[]> | null;
     setRolePermissions: React.Dispatch<
@@ -31,7 +29,6 @@ export default function PermissionsTable({
     >;
     action: "create" | "edit" | null,
     setShowModal: (action: "create" | "edit" | null) => void,
-    resetPermissions?: boolean
 }) {
 
 
@@ -98,8 +95,7 @@ export default function PermissionsTable({
                     <thead className="border-b">
                         <tr>
                             <th className="flex items-center gap-2">Permission
-                                {/* <button type="button" className="cursor-pointer" onClick={() => setEdit(!edit)}><Icon name="edit" color="primary"/></button> */}
-                                {!action && <button type="button" className="cursor-pointer" onClick={() => setShowModal("edit")}><Icon name="edit" color="primary" /></button>}
+                                <button type="button" className="cursor-pointer" onClick={() => setShowModal("edit")}><Icon name="edit" color="primary" /></button>
                             </th>
                             <th>Approval</th>
                         </tr>

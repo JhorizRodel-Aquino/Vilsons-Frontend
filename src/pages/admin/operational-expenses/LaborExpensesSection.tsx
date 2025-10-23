@@ -3,7 +3,7 @@ import SectionHeading from "../../../components/SectionHeading"
 import Details from "../../../components/Details"
 import Button from "../../../components/Button";
 import LaborExpensesTable from "./LaborExpensesTable"
-import LaborModal, { type FormDataContractor, type FormDataEmployee, type PayComponents } from "./LaborModal";
+import LaborModal, { type FormData, type PayComponents } from "./LaborModal";
 import getBranches from "../../../utils/branchOptions";
 
 export type SelectedContractor = {
@@ -25,12 +25,13 @@ export default function LaborExpensesSection() {
     const [activeTab, setActiveTab] = useState(tabs[0]);
     const branchOptions = getBranches()
     const [selectedId, setSelectedId] = useState<string>('');
-    const [presetDataContractor, setPresetDataContractor] = useState<FormDataContractor>({ userId: '', amount: null, branchId: branchOptions && branchOptions[0].value });
-    const [presetDataEmployee, setPresetDataEmployee] = useState<FormDataEmployee>({ userId: '', branchId: branchOptions && branchOptions[0].value, payComponents: [] });
+
+    const [preSelectedContractor, setPreSelectedContractor] = useState<Record<string, any> | null>(null);
+    const [preSelectedEmployee, setPreSelectedEmployee] = useState<Record<string, any> | null>(null);
+    
+    const [presetData, setPresetData] = useState<FormData>({ userId: '', branchId: branchOptions && branchOptions[0].value, payComponents: [] });
     const [reloadFlag, setReloadFlag] = useState(false);
     const [showModal, setShowModal] = useState<'create' | 'edit' | null>(null)
-    const [selectedContractor, setSelectedContractor] = useState<SelectedContractor>({ name: '', username: '', id: '', balance: 0 })
-    const [selectedEmployee, setSelectedEmployee] = useState<SelectedEmployee>({ name: '', username: '', id: '', payComponents: [] })
 
     const reload = useCallback(() => setReloadFlag(prev => !prev), []);
 
@@ -41,16 +42,15 @@ export default function LaborExpensesSection() {
                 <Button
                     label={'Pay Laborer'}
                     onClick={() => {
-                        setPresetDataContractor({ userId: '', amount: null, type: "regular", branchId: branchOptions && branchOptions[0].value });
-                        setPresetDataEmployee({ userId: '', branchId: branchOptions && branchOptions[0].value, payComponents: [] })
+                        setPresetData({ userId: '', branchId: branchOptions && branchOptions[0].value, payComponents: [] })
                         setShowModal('create')
                     }}
                     variant="primary" />
             </SectionHeading>
 
-            <LaborExpensesTable reloadFlag={reloadFlag} presetDataContractor={presetDataContractor} setPresetDataContractor={setPresetDataContractor} presetDataEmployee={presetDataEmployee} setPresetDataEmployee={setPresetDataEmployee} selectedId={selectedId} setSelectedId={setSelectedId} setShowModal={setShowModal} activeTab={activeTab} setActiveTab={setActiveTab} setSelectedContractor={setSelectedContractor} setSelectedEmployee={setSelectedEmployee} />
+            <LaborExpensesTable reloadFlag={reloadFlag} setPresetData={setPresetData} presetData={presetData} selectedId={selectedId} setSelectedId={setSelectedId} setShowModal={setShowModal} setActiveTab={setActiveTab} setPreSelectedContractor={setPreSelectedContractor} setPreSelectedEmployee={setPreSelectedEmployee} />
 
-            {showModal && <LaborModal branchOptions={branchOptions} setShowModal={setShowModal} onSuccess={reload} action={showModal} id={selectedId} presetDataContractor={presetDataContractor} presetDataEmployee={presetDataEmployee} tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} selectedContractor={selectedContractor} setSelectedContractor={setSelectedContractor} selectedEmployee={selectedEmployee} setSelectedEmployee={setSelectedEmployee} />}
+            {showModal && <LaborModal branchOptions={branchOptions} setShowModal={setShowModal} onSuccess={reload} action={showModal} id={selectedId} presetData={presetData} tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} preSelectedContractor={preSelectedContractor} preSelectedEmployee={preSelectedEmployee} />}
         </>
     )
 }

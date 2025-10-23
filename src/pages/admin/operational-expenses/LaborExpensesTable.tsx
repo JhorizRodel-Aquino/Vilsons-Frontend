@@ -10,7 +10,7 @@ import Loading from "../../../components/Loading";
 import formatDate from "../../../utils/formatDate";
 import useGetByMonthYear from "../../../hooks/useGetByMonthYear";
 import useDeleteData from "../../../hooks/useDeleteData";
-import { type FormDataContractor, type FormDataEmployee, type PayComponents } from "./LaborModal";
+import { type FormData, type PayComponents } from "./LaborModal";
 import { useEffect, useState, type ReactElement } from "react";
 import Options from "../../../components/Options";
 import ConfirmModal from "../../../components/ConfirmModal";
@@ -38,21 +38,18 @@ const laborExpenseColumns: Column<LaborExpense>[] = [
 ];
 
 type LaborTableProps = {
-    setPresetDataContractor: (presets: FormDataContractor) => void,
-    setPresetDataEmployee: (presets: FormDataEmployee) => void,
+    setPresetData: (presets: FormData) => void,
     reloadFlag: boolean,
     setShowModal: (action: 'create' | 'edit' | null) => void;
     selectedId: string;
     setSelectedId: (id: string) => void;
-    activeTab: string;
     setActiveTab: (tab: string) => void;
-    presetDataContractor: FormDataContractor;
-    presetDataEmployee: FormDataEmployee;
-    setSelectedContractor: (selected: SelectedContractor) => void;
-    setSelectedEmployee: (selected: SelectedEmployee) => void;
+    presetData: FormData;
+    setPreSelectedContractor: (preSelected: Record<string, any> | null) => void;
+    setPreSelectedEmployee: (preSelected: Record<string, any> | null) => void;
 }
 
-export default function LaborExpensesTable({ setPresetDataContractor, setPresetDataEmployee, reloadFlag, setShowModal, selectedId, setSelectedId, activeTab, setActiveTab, presetDataContractor, presetDataEmployee, setSelectedContractor, setSelectedEmployee }: LaborTableProps) {
+export default function LaborExpensesTable({ setPresetData, reloadFlag, setShowModal, selectedId, setSelectedId, setActiveTab, setPreSelectedContractor, setPreSelectedEmployee}: LaborTableProps) {
     const [laborType, setLaborType] = useState<"contractor" | "employee" >("contractor");
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const { data, loading, error, closeError, reload, searchParams, setSearchParams, setMonthYearParams } = useGetByMonthYear('/api/labors');
@@ -71,17 +68,16 @@ export default function LaborExpensesTable({ setPresetDataContractor, setPresetD
 
             const contractor = (await get({ route: `/api/contractors/${item.contractorId}` })).data
             console.log(contractor.user.fullName)
-            setPresetDataContractor({ userId: item.userId, amount: item.amount / 100, type: item.salaryType, branchId: item.branchId } as FormDataContractor)
-            setSelectedContractor({ name: contractor.user.fullName, username: contractor?.user?.username, id: item.userId, balance: contractor?.jobOrderSummary?.totalBalance } as SelectedContractor)
+            setPresetData({ userId: item.userId, amount: item.amount / 100, type: item.salaryType, branchId: item.branchId } as FormData)
+            setPreSelectedContractor({ name: contractor.user.fullName, username: contractor?.user?.username, id: item.userId, balance: contractor?.jobOrderSummary?.totalBalance } as SelectedContractor)
         } else {
             setActiveTab(laborType);
 
             const employee = (await get({ route: `/api/employees/${item.employeeId}` })).data
             console.log("employee", employee)
-            // console.log(item.payComponents)
             const payComponents = item.payComponents.map((comp: PayComponents) => ({...comp, amount: comp.amount / 100}))
-            setPresetDataEmployee({ userId: item.userId, payComponents: payComponents, branchId: item.branchId } as FormDataEmployee)
-            setSelectedEmployee({ name: employee.user.fullName, username: employee.user.username, id: item.userId, payComponents: payComponents } as SelectedEmployee)
+            setPresetData({ userId: item.userId, payComponents: payComponents, branchId: item.branchId } as FormData)
+            setPreSelectedEmployee({ name: employee.user.fullName, username: employee.user.username, id: item.userId, payComponents: payComponents } as SelectedEmployee)
         }
 
         setShowModal('edit');
@@ -95,10 +91,6 @@ export default function LaborExpensesTable({ setPresetDataContractor, setPresetD
             setShowDeleteModal(false)
         }
     }
-
-    useEffect(() => {
-        // console.log("selected", setSelectedContractor)
-    }, [setSelectedContractor])
 
     useEffect(() => {
         reload()

@@ -323,29 +323,41 @@ export default function JobOrderModal({ branchOptions, setShowModal, presetData,
                                             validated={!!selectedTruck}
                                             readOnly={action === "edit"}
                                             value={truckSearch}
-                                            supportingInfo={`${selectedTruck ? `${selectedTruck?.make} ${selectedTruck?.model}` : ''}`}
-                                            onBlur={() => {
-                                                // if input text doesn't match selected name, clear the selection
-                                                if (!selectedTruck || truckSearch !== selectedTruck.name) {
-                                                    setSelectedTruck(null);
-                                                }
-                                            }}
+                                            supportingInfo={selectedTruck ? `${selectedTruck.make} ${selectedTruck.model}` : ""}
                                             onChange={(e) => setTruckSearch(e.target.value)}
+                                            onBlur={() => {
+                                                if (isSelectingRef.current) return;
+                                                if (!selectedTruck || truckSearch !== selectedTruck.name) setSelectedTruck(null);
+                                            }}
                                         >
                                             {truckOptions.map((truck, i) => (
                                                 <div
                                                     key={i}
                                                     onMouseDown={() => {
                                                         isSelectingRef.current = true;
-                                                        handleSelectTruck(truck)
-                                                        isSelectingRef.current = false;
+                                                    }}
+                                                    onMouseUp={() => {
+                                                        handleSelectTruck(truck);
+                                                        setTimeout(() => {
+                                                            isSelectingRef.current = false;
+                                                        }, 0);
+                                                    }}
+                                                    onMouseLeave={() => {
+                                                        if (isSelectingRef.current) {
+                                                            setTimeout(() => {
+                                                                isSelectingRef.current = false;
+                                                            }, 0);
+                                                        }
                                                     }}
                                                 >
                                                     <span>{truck.plate}</span>
-                                                    <p className="text-sm text-darker">{truck.make} {truck.model}</p>
+                                                    <p className="text-sm text-darker">
+                                                        {truck.make} {truck.model}
+                                                    </p>
                                                 </div>
                                             ))}
-                                        </Field.List>}
+                                        </Field.List>
+                                    }
                                 </div>
                             </fieldset>
 
@@ -425,27 +437,36 @@ export default function JobOrderModal({ branchOptions, setShowModal, presetData,
                                     :
                                     <div className="grid grid-cols-[1fr_auto] gap-[10px]">
                                         <Field.List
-                                            readOnly={(isCurrentOwner && !isCreatingNewTruck) || action === "edit"}
                                             id="customerSelection"
                                             placeholder="Select Customer Owner"
                                             validated={!!selectedCustomer}
+                                            readOnly={(isCurrentOwner && !isCreatingNewTruck) || action === "edit"}
                                             value={customerSearch}
-                                            supportingInfo={`${selectedCustomer ? `@${selectedCustomer?.username}` : ''}`}
-                                            onBlur={() => {
-                                                // if input text doesn't match selected name, clear the selection
-                                                if (!selectedCustomer || customerSearch !== selectedCustomer.name) {
-                                                    setSelectedContractor(null);
-                                                }
-                                            }}
+                                            supportingInfo={selectedCustomer ? `@${selectedCustomer.username}` : ""}
                                             onChange={(e) => setCustomerSearch(e.target.value)}
+                                            onBlur={() => {
+                                                if (isSelectingRef.current) return;
+                                                if (!selectedCustomer || customerSearch !== selectedCustomer.name) setSelectedCustomer(null);
+                                            }}
                                         >
                                             {customerOptions.map((customer, i) => (
                                                 <div
                                                     key={i}
                                                     onMouseDown={() => {
                                                         isSelectingRef.current = true;
-                                                        handleSelectCustomer(customer)
-                                                        isSelectingRef.current = false;
+                                                    }}
+                                                    onMouseUp={() => {
+                                                        handleSelectCustomer(customer);
+                                                        setTimeout(() => {
+                                                            isSelectingRef.current = false;
+                                                        }, 0);
+                                                    }}
+                                                    onMouseLeave={() => {
+                                                        if (isSelectingRef.current) {
+                                                            setTimeout(() => {
+                                                                isSelectingRef.current = false;
+                                                            }, 0);
+                                                        }
                                                     }}
                                                 >
                                                     <span>{customer.user.fullName}</span>
@@ -475,20 +496,31 @@ export default function JobOrderModal({ branchOptions, setShowModal, presetData,
                                     placeholder="Select Contractor"
                                     validated={!!selectedContractor}
                                     value={contractorSearch}
-                                    supportingInfo={`${selectedContractor ? `@${selectedContractor?.username}` : ''}`}
-                                    onBlur={() => {
-                                        // if input text doesn't match selected name, clear the selection
-                                        if (!selectedContractor || contractorSearch !== selectedContractor.name) {
-                                            setSelectedContractor(null);
-                                        }
-                                    }}
+                                    supportingInfo={selectedContractor ? `@${selectedContractor.username}` : ""}
                                     onChange={(e) => setContractorSearch(e.target.value)}
+                                    onBlur={() => {
+                                        if (isSelectingRef.current) return;
+                                        if (!selectedContractor || contractorSearch !== selectedContractor.name) setSelectedContractor(null);
+                                    }}
                                 >
                                     {contractorOptions.map((contractor, i) => (
-                                        <div key={i}
+                                        <div
+                                            key={i}
                                             onMouseDown={() => {
                                                 isSelectingRef.current = true;
-                                                handleSelectContractor(contractor)
+                                            }}
+                                            onMouseUp={() => {
+                                                handleSelectContractor(contractor);
+                                                setTimeout(() => {
+                                                    isSelectingRef.current = false;
+                                                }, 0);
+                                            }}
+                                            onMouseLeave={() => {
+                                                if (isSelectingRef.current) {
+                                                    setTimeout(() => {
+                                                        isSelectingRef.current = false;
+                                                    }, 0);
+                                                }
                                             }}
                                         >
                                             <span>{contractor.user.fullName}</span>

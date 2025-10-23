@@ -32,7 +32,6 @@ export default function RolesAndPermissionsModal({
     onSuccess,
     selectedRole,
     rolePermissions,
-    setRolePermissions,
     customRoleOptions,
     baseRolesOptions,
 }: RolesAndPermissionsModalProps) {
@@ -57,9 +56,8 @@ export default function RolesAndPermissionsModal({
 
     const {
         data: roleData,
-        loading: roleLoading,
         error: roleError,
-        closeError: roleCloseError,
+        closeError: closeRoleError,
         refetch: roleRefetch,
     } = useGetDataWithTrigger(`api/roles/permissions/${activeRoleId}`);
 
@@ -68,7 +66,7 @@ export default function RolesAndPermissionsModal({
         if (activeRoleId) roleRefetch();
     }, [activeRoleId, fetchTrigger]);
 
-    // 🧹 Reset all allowed/approval flags
+    // Reset all allowed/approval flags
     const resetAllPermissions = () => {
         setPermissions((prev) => {
             if (!prev) return prev;
@@ -136,9 +134,9 @@ export default function RolesAndPermissionsModal({
 
     return (
         <>
-            {error ? (
-                <ErrorModal error={error!} closeError={closeError} />
-            ) : (
+            {(error || roleError) ?
+                <ErrorModal error={(error || roleError)!} closeError={error ? closeError : closeRoleError} />
+                :
                 <>
                     <form
                         onSubmit={handleSubmit}
@@ -279,7 +277,7 @@ export default function RolesAndPermissionsModal({
 
                     <div className="backdrop"></div>
                 </>
-            )}
+            }
         </>
     );
 }

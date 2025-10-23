@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { get } from "../services/apiService";
 import handleAxiosError from "../utils/handleAxiosError";
 
@@ -32,17 +32,6 @@ export default function useGetDataWithTrigger(route: string, params?: {}) {
         }
     };
 
-    // // initial load
-    // useEffect(() => {
-    //     const loadCache = async () => {
-    //         if (!cachedData[route]) {
-    //             setLoading(true);
-    //             cachedData[route] = await fetchData();
-    //         }
-    //         else setData(cachedData[route]);
-    //     }
-    //     loadCache()
-    // }, []);
 
     return { data, loading, error, closeError, refetch: fetchData, reload: async() => cachedData[route] = await fetchData()};
 }
