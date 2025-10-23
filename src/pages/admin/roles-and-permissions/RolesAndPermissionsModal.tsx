@@ -1,26 +1,16 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../../../components/Button";
 import Field from "../../../components/Field";
 import validateAndSanitize, { type ValidationSchema } from "../../../utils/validateAndSanitize";
 import ErrorModal from "../../../components/ErrorModal";
 import usePostPutData from "../../../hooks/usePostPutData";
-import useFieldList from "../../../hooks/useFieldList";
 import type { ModulePermissions } from "./PermissionsTable";
 import PermissionsTable from "./PermissionsTable";
 import Selection, { type SelectionOptions } from "../../../components/Selection";
-import useGetData from "../../../hooks/useGetData";
-import Icon from "../../../components/Icon";
-// import type { SelectedCustomer } from "./TrucksSection";
-
-export type FormData = {
-    truckId: string,
-    customerId: string,
-}
+import useGetDataWithTrigger from "../../../hooks/useGetDataWithTrigger";
 
 const formSchema: ValidationSchema = {
-    plate: { required: true },
-    make: { required: true },
-    model: { required: true },
+    roleName: { required: true, label: "Role Name" },
 };
 
 type RolesAndPermissionsModalProps = {
@@ -31,161 +21,185 @@ type RolesAndPermissionsModalProps = {
     rolePermissions: Record<string, ModulePermissions[]> | null;
     setRolePermissions: React.Dispatch<
         React.SetStateAction<Record<string, ModulePermissions[]> | null>
-    >
-    customRoleOptions: SelectionOptions[] | []
-    baseRolesOptions: SelectionOptions[] | []
-}
+    >;
+    customRoleOptions: SelectionOptions[] | [];
+    baseRolesOptions: SelectionOptions[] | [];
+};
 
-export default function RolesAndPermissionsModal({ action, setShowModal, onSuccess, selectedRole, rolePermissions, setRolePermissions, customRoleOptions, baseRolesOptions }: RolesAndPermissionsModalProps) {
-    // const isSelectingRef = useRef(false);
-    // const [formData, setFormData] = useState<FormData>({ truckId: truckId, customerId: "" })
-    const { loading, error, closeError, putData, postData } = usePostPutData('/api/roles')
-    const [permissions, setPermissions] = useState<Record<string, ModulePermissions[]> | null>(action === "edit" ? rolePermissions : null)
-    const [role, setRole] = useState(action === "edit" ? selectedRole : { roleName: '', baseRoleId: '' })
+export default function RolesAndPermissionsModal({
+    action,
+    setShowModal,
+    onSuccess,
+    selectedRole,
+    rolePermissions,
+    setRolePermissions,
+    customRoleOptions,
+    baseRolesOptions,
+}: RolesAndPermissionsModalProps) {
+
+    const { loading, error, closeError, putData, postData } = usePostPutData("/api/roles");
+
+    const [permissions, setPermissions] = useState<Record<string, ModulePermissions[]> | null>(
+        action === "edit" ? rolePermissions : null
+    );
+    const [role, setRole] = useState(
+        action === "edit" ? selectedRole : { roleName: "", baseRoleId: "" }
+    );
+
     const [selectedRoleId, setSelectedRoleId] = useState<string>("");
     const [selectedBaseRoleId, setSelectedBaseRoleId] = useState<string>("");
-    // const [resetPermissions, setResetPermissions] = useState<boolean>(false);
     const [clonePopup, setClonePopup] = useState<boolean>(false);
-    const [roleFetchTrigger, setRoleFetchTrigger] = useState<number>(0);
     const [isCloning, setIsCloning] = useState<boolean>(false);
+    const [fetchTrigger, setFetchTrigger] = useState<number>(0);
+
+    // 👇 choose which role ID to use when fetching
+    const activeRoleId = isCloning ? selectedRoleId : selectedBaseRoleId;
+
     const {
         data: roleData,
         loading: roleLoading,
         error: roleError,
         closeError: roleCloseError,
         refetch: roleRefetch,
-        reload: roleReload,
-    } = useGetData(`api/roles/permissions/${selectedRoleId}`)
+    } = useGetDataWithTrigger(`api/roles/permissions/${activeRoleId}`);
 
-
+    // 🟢 Refetch whenever the selected role changes or manual trigger increments
     useEffect(() => {
-        console.log(roleFetchTrigger)
-        console.log("🔄 selectedRoleId changed:", selectedRoleId);
-        if (selectedRoleId !== "") roleRefetch();
-    }, [selectedRoleId, roleFetchTrigger]);
+        if (activeRoleId) roleRefetch();
+    }, [activeRoleId, fetchTrigger]);
 
-
-
+    // 🧹 Reset all allowed/approval flags
     const resetAllPermissions = () => {
         setPermissions((prev) => {
             if (!prev) return prev;
-
             const updated = Object.fromEntries(
-                Object.entries(prev).map(([moduleName, permissions]) => [
+                Object.entries(prev).map(([moduleName, perms]) => [
                     moduleName,
-                    permissions.map((perm) => ({
+                    perms.map((perm) => ({
                         ...perm,
                         allowed: false,
                         approval: false,
                     })),
                 ])
             );
-
             return updated;
         });
     };
 
+    // 🔁 Handle fetched role data
     useEffect(() => {
-        if (roleData && roleData.permissions && typeof roleData.permissions === "object") {
+        if (roleData && typeof roleData.permissions === "object") {
             setPermissions(roleData.permissions);
 
             if (isCloning) {
-                setRole({ ...role, roleName: roleData.roleName + '-copy' })
-                setSelectedBaseRoleId(roleData.baseRoleId)
-                console.log("ROLEDATA", roleData)
+                // If cloning — copy role name and keep permissions checked
+                setRole({
+                    ...role,
+                    roleName: `${roleData.roleName}-copy`,
+                    baseRoleId: roleData.baseRoleId,
+                });
+            } else {
+                // If base role — clear all permissions
+                resetAllPermissions();
+                setRole({
+                    ...role,
+                    baseRoleId: activeRoleId,
+                });
             }
-            else resetAllPermissions()
         }
     }, [roleData]);
 
-    useEffect(() => {
-        setRole({ ...role, baseRoleId: roleData.baseRoleId})
-    }, [selectedBaseRoleId])
-    // const {
-    //     selected: selectedCustomer,
-    //     setSelected: setSelectedCustomer,
-    //     options: customerOptions,
-    //     setOptions: setCustomerOptions,
-    //     search: customerSearch,
-    //     setSearch: setCustomerSearch
-    // } = useFieldList("customers", "/api/customers?search=", null)
-
-    // console.log(formData)
-
     const closeModal = () => {
-        setShowModal(null)
-        // setCustomerOptions([])
-    }
-
-    // const handleSelectCustomer = (customer: any) => {
-    //     setSelectedCustomer({
-    //         id: customer.user.customerId,
-    //         name: customer.user.fullName,
-    //         username: customer.user.username,
-    //     });
-    //     setCustomerSearch(customer.user.fullName); // show name in input
-    // };
-
-    // useEffect(() => {
-    //     setFormData({ ...formData, customerId: selectedCustomer?.id })
-    // }, [selectedCustomer])
+        setShowModal(null);
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const formData = { ...role, permissions: permissions}
-        const success = action === "create" ? await postData(formData) : await putData()
+        const formData = { ...role, permissions };
+        const { validatedData, isValid } = validateAndSanitize(formData, formSchema);
+
+        if (!isValid) return;
+
+        const success =
+            action === "create"
+                ? await postData(validatedData)
+                : await putData(role.roleId, validatedData);
+
         if (success) {
             onSuccess();
-            setRole({ roleName: '', baseRoleId: '' });
+            setRole({ roleName: "", baseRoleId: "" });
             setPermissions(null);
             closeModal();
         }
     };
 
-      useEffect(() => {
-    console.log("FORM:", {...role, permissions: permissions});
-  }, [permissions, role]);
-
     return (
         <>
-            {error ? <ErrorModal error={error!} closeError={closeError} /> :
+            {error ? (
+                <ErrorModal error={error!} closeError={closeError} />
+            ) : (
                 <>
-                    <form onSubmit={handleSubmit} className="card modal gap-[20px] w-[40%]">
+                    <form
+                        onSubmit={handleSubmit}
+                        className="card modal gap-[20px] w-[40%]"
+                    >
                         <div className="text-xl flex justify-between items-center">
-                            <h2 className="font-bold">Edit Permissions</h2>
+                            <h2 className="font-bold">
+                                {action === "create"
+                                    ? "Create Role"
+                                    : "Edit Permissions"}
+                            </h2>
                             <Button.X onClick={closeModal} disabled={loading} />
                         </div>
 
                         <div>
-                            {action === "create" ?
+                            {action === "create" ? (
                                 <fieldset className="card grid grid-cols-2 text-base gap-[20px]">
                                     <div className="relative justify-self-start w-fit col-span-full">
-                                        <Button label="Clone Role ›" variant="outline" size="mini" onClick={() => setClonePopup(true)} />
-                                        {clonePopup &&
-                                            <ul className="absolute right-0 top-0 translate-x-[105%] bg-light border-all z-40 rounded-md">
-                                                {customRoleOptions.map((role, i) => (
-                                                    <li key={i} className="px-2 hover:bg-light-primary cursor-pointer "
+                                        <Button
+                                            label="Clone Role ›"
+                                            variant="outline"
+                                            size="mini"
+                                            onClick={() => setClonePopup(true)}
+                                        />
+
+                                        {clonePopup && (
+                                            <ul
+                                                className="absolute right-0 top-0 translate-x-[105%] bg-light border-all z-40 rounded-md shadow-lg whitespace-nowrap min-w-max py-1"
+                                                onMouseLeave={() => setClonePopup(false)} // closes on hover out
+                                            >
+                                                {customRoleOptions.map((roleOpt, i) => (
+                                                    <li
+                                                        key={i}
+                                                        className="px-3 py-1 hover:bg-light-primary cursor-pointer"
                                                         onClick={() => {
-                                                            setSelectedRoleId(role.value);
+                                                            setSelectedRoleId(roleOpt.value);
                                                             setClonePopup(false);
-                                                            setIsCloning(true)
-                                                            setRoleFetchTrigger((prev) => prev + 1);
-                                                        }}>
-                                                        {role.label}
+                                                            setIsCloning(true);
+                                                            setFetchTrigger((p) => p + 1);
+                                                        }}
+                                                    >
+                                                        {roleOpt.label}
                                                     </li>
                                                 ))}
                                             </ul>
-                                        }
+                                        )}
                                     </div>
+
+
                                     <Field.Text
                                         id="roleName"
                                         label="Role"
                                         value={role.roleName}
-                                        onChange={(e) => {
-                                            setRole({ ...role, roleName: e.target.value });
-                                        }}
+                                        onChange={(e) =>
+                                            setRole({
+                                                ...role,
+                                                roleName: e.target.value,
+                                            })
+                                        }
                                     />
+
                                     <div>
                                         Base Role
                                         <Selection
@@ -194,50 +208,78 @@ export default function RolesAndPermissionsModal({ action, setShowModal, onSucce
                                             options={baseRolesOptions}
                                             value={selectedBaseRoleId}
                                             onChange={(e) => {
-                                                // setSelectedBaseRoleId(e.target.value)
-                                                setSelectedBaseRoleId(e.target.value)
-                                                setIsCloning(false)
-                                                setRoleFetchTrigger((prev) => prev + 1);
-                                        
+                                                setSelectedBaseRoleId(
+                                                    e.target.value
+                                                );
+                                                setIsCloning(false);
+                                                setFetchTrigger(
+                                                    (p) => p + 1
+                                                );
                                             }}
                                         />
                                     </div>
                                 </fieldset>
-                                :
-                                <fieldset className="card grid grid-cols-3 text-base gap-[20px]">
-                                    <div className="px-2">
-                                        <p className="text-primary">Role</p>
-                                        <p className="">{role.roleName}</p>
-                                    </div>
-                                    <div className="px-2">
-                                        <p className="text-primary">Base Role</p>
-                                        <p className="">{role.baseRoleName !== null ? role.baseRoleName : "None"}</p>
-                                    </div>
-                                    <div className="px-2">
-                                        <p className="text-primary">Type</p>
-                                        <p>{role.isCustom !== undefined && (role.isCustom ? 'Custom' : 'Built-in')}</p>
-                                    </div>
+                            ) : (
+                                <fieldset className="card grid grid-cols-2 text-base gap-[20px]">
+                                    <Field.Text
+                                        id="roleName"
+                                        label="Role"
+                                        value={role.roleName}
+                                        onChange={(e) =>
+                                            setRole({
+                                                ...role,
+                                                roleName: e.target.value,
+                                            })
+                                        }
+                                    />
+                                    <Field.Text
+                                        id="baseRoleName"
+                                        label="Base Role"
+                                        value={
+                                            role.baseRoleName ?? "None"
+                                        }
+                                        readonly={true}
+                                    />
                                 </fieldset>
-                            }
+                            )}
                         </div>
-
-
 
                         <div className="fields card p-0">
                             <fieldset className="grid gap-[20px]">
-                                <PermissionsTable rolePermissions={permissions} setRolePermissions={setPermissions} action={action} setShowModal={setShowModal} />
+                                <PermissionsTable
+                                    rolePermissions={permissions}
+                                    setRolePermissions={setPermissions}
+                                    action={action}
+                                    setShowModal={setShowModal}
+                                />
                             </fieldset>
                         </div>
 
                         <div className="flex justify-end items-center gap-[20px]">
-                            <Button variant="gray" label="Cancel" onClick={closeModal} disabled={loading} />
-                            <Button type="submit" variant="primary" label={loading ? "Changing..." : "Change Owner"} disabled={loading} />
+                            <Button
+                                variant="gray"
+                                label="Cancel"
+                                onClick={closeModal}
+                                disabled={loading}
+                            />
+                            <Button
+                                type="submit"
+                                variant="primary"
+                                label={
+                                    loading
+                                        ? "Saving..."
+                                        : action === "create"
+                                            ? "Create Role"
+                                            : "Save Changes"
+                                }
+                                disabled={loading}
+                            />
                         </div>
                     </form>
 
                     <div className="backdrop"></div>
                 </>
-            }
+            )}
         </>
-    )
+    );
 }

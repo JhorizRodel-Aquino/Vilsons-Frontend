@@ -12,6 +12,10 @@ import ErrorModal from "../../../components/ErrorModal";
 import Selection, { type SelectionOptions } from "../../../components/Selection";
 import Button from "../../../components/Button";
 import RolesAndPermissionsModal from "./RolesAndPermissionsModal";
+import Icon from "../../../components/Icon";
+import ConfirmModal from "../../../components/ConfirmModal";
+import useDeleteData from "../../../hooks/useDeleteData";
+import useGetDataWithTrigger from "../../../hooks/useGetDataWithTrigger";
 
 // const modulePermissions: ModulePermissions[] = [
 //   {
@@ -111,9 +115,16 @@ export default function RolesAndPermissionsSection() {
     error: roleError,
     closeError: roleCloseError,
     refetch: roleRefetch,
-    reload: roleReload,
-  } = useGetData(`api/roles/permissions/${selectedRoleId}`)
-  const [edit, setEdit] = useState(false);
+    reload: roleReload
+  } = useGetDataWithTrigger(`api/roles/permissions/${selectedRoleId}`)
+  const {
+    loading: deleteLoading,
+    error: deleteError,
+    closeError: closeDeleteError,
+    deleteData,
+  } = useDeleteData('/api/roles');
+  // const [edit, setEdit] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showModal, setShowModal] = useState<"create" | "edit" | null>(null);
 
 
@@ -126,19 +137,21 @@ export default function RolesAndPermissionsSection() {
   }, [role]);
 
   useEffect(() => {
-    // console.log("🔄 selectedRoleId changed:", selectedRoleId);
+    console.log("🔄 selectedRoleId changed:", selectedRoleId);
     if (selectedRoleId !== "") roleRefetch();
   }, [selectedRoleId]);
 
 
 
   const roleItems = data.data?.roles || [];
+
   const baseRoleOptions = roleItems
     ?.filter((role: any) => !role.isCustom)
     .map((role: any) => ({
       value: role.id,
       label: role.roleName,
     })) as SelectionOptions[];
+
   const customRoleOptions = roleItems
     ?.filter((role: any) => role.isCustom)
     .map((role: any) => ({
@@ -157,6 +170,16 @@ export default function RolesAndPermissionsSection() {
     console.log("PERM:", rolePermissions);
   }, [rolePermissions]);
 
+  const handleDelete = async () => {
+    if (!selectedRoleId) return
+    const success = await deleteData(selectedRoleId);
+    if (success) {
+      setSelectedRoleId("")
+      reload();
+  
+      setShowDeleteModal(false)
+    }
+  }
 
   if (loading) return <Loading />;
 
@@ -174,13 +197,17 @@ export default function RolesAndPermissionsSection() {
         }} />
       </SectionHeading>
 
-      <div className="grid grid-cols-3 py-3 px-[20px] border-all rounded-[10px] text-base gap-[20px]">
-        <Selection
-          capitalize={false}
-          options={customRoleOptions}
-          value={selectedRoleId}
-          onChange={(e) => setSelectedRoleId(e.target.value)}
-        />
+      <div className="grid grid-cols-2 py-3 px-[20px] border-all rounded-[10px] text-base gap-[20px]">
+        <div className="flex gap-2 items-center">
+          <Selection
+            className="justify-self-start"
+            capitalize={false}
+            options={customRoleOptions}
+            value={selectedRoleId}
+            onChange={(e) => setSelectedRoleId(e.target.value)}
+          />
+          <button type="button" onClick={() => setShowDeleteModal(true)}><Icon name="delete" color="dark" /></button>
+        </div>
         <div className="px-2 row-start-2">
           <p className="text-primary">Role</p>
           <p>{role.roleName}</p>
@@ -189,17 +216,29 @@ export default function RolesAndPermissionsSection() {
           <p className="text-primary">Base Role</p>
           <p>{role.baseRoleName !== null ? role.baseRoleName : "None"}</p>
         </div>
-        <div className="px-2 row-start-2">
+
+        {/* <div className="px-2 row-start-2">
           <p className="text-primary">Type</p>
           <p>{role.isCustom !== undefined && (role.isCustom ? 'Custom' : 'Built-in')}</p>
-        </div>
+        </div> */}
       </div>
 
       <PermissionsTable rolePermissions={rolePermissions} setRolePermissions={setRolePermissions} action={showModal} setShowModal={setShowModal} />
 
-      {showModal && <RolesAndPermissionsModal action={showModal} setShowModal={setShowModal} rolePermissions={rolePermissions} setRolePermissions={setRolePermissions} onSuccess={reload} selectedRole={role} customRoleOptions={customRoleOptions} baseRolesOptions={baseRoleOptions} />}
+      {showModal && <RolesAndPermissionsModal action={showModal} setShowModal={setShowModal} rolePermissions={rolePermissions} setRolePermissions={setRolePermissions} onSuccess={() => { reload(); roleReload(); roleRefetch() }} selectedRole={role} customRoleOptions={customRoleOptions} baseRolesOptions={baseRoleOptions} />}
 
-      {error && <ErrorModal error={error} closeError={closeError} />}
+      {(error || deleteError) ?
+        <ErrorModal error={(error || deleteError)!} closeError={error ? closeError : closeDeleteError} />
+        : showDeleteModal &&
+        <ConfirmModal
+          title="Delete Overhead"
+          message="Are you sure you want to delete this overhead?"
+          onClose={() => { setShowDeleteModal(false) }}
+          onConfirm={handleDelete} red={true}
+          disabledButtons={deleteLoading}
+          onProgressLabel={deleteLoading ? 'Deleting...' : ''}
+        />
+      }
     </>
   );
 }
