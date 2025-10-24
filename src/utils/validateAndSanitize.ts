@@ -52,6 +52,15 @@ export default function validateAndSanitize(
       continue;
     }
 
+    // --- Array Only / No Nested children ---
+    if (Array.isArray(value)) {
+      // ✅ New: Check minLength for arrays
+      if (rules.minLength !== undefined && value.length < rules.minLength) {
+        errors[key] = `There must be at least ${rules.minLength} ${label}`;
+        continue;
+      }
+    }
+
     // --- Array / Nested children support ---
     if (Array.isArray(value) && rules.children) {
       const validatedArray: any[] = [];

@@ -19,8 +19,6 @@ export default function MyProfileSection() {
 
     const { fullName, username, email, phone, createdAt, roles, branches } = data?.data || {};
 
-
-
     return (
         <>
             <article className="grid grid-cols-[1fr_3fr] gap-7">
@@ -58,25 +56,12 @@ export default function MyProfileSection() {
                         <Detail label='Username' value={username} />
                         <Detail label='Email Address' value={email} />
                         <Detail label='Phone Number' value={phone} />
-                        <Detail label='Branches'
-                            value={
-                                <div className="flex gap-3">
-                                    {
-                                        branches && (branches as (Record<string, any>)[]).map((branch, i) => (
-                                            <div className="font-medium px-2 py-1 bg-gray rounded-[8px] capitalize" key={i}>
-                                                {branch.branchName}
-                                            </div>
-                                        ))
-                                    }
-                                </div>
-                            }
-                        />
                         <Detail label='Roles'
                             value={
                                 <div className="flex gap-3">
                                     {
                                         roles && (roles as (Record<string, any>)[]).map((role, i) => (
-                                            <div className="font-medium px-2 py-1 bg-gray rounded-[8px] capitalize" key={i}>
+                                            <div className="font-medium px-2 py-1 bg-gray rounded-[8px]" key={i}>
                                                 {role.roleName}
                                             </div>
                                         ))
@@ -84,6 +69,22 @@ export default function MyProfileSection() {
                                 </div>
                             }
                         />
+
+                        {(branches && (branches as (Record<string, any>)[]).length > 0) &&
+                            <Detail label='Branches'
+                            value={
+                                <div className="flex gap-3">
+                                    {
+                                        branches && (branches as (Record<string, any>)[]).map((branch, i) => (
+                                            <div className="font-medium px-2 py-1 bg-gray rounded-[8px]" key={i}>
+                                                {branch.branchName}
+                                            </div>
+                                        ))
+                                    }
+                                </div>
+                            }
+                            />
+                        }
 
                         {/* <Detail label='Description' value={'Lorem ipsum dolor'} className="col-span-full" /> */}
                     </div>

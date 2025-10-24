@@ -48,7 +48,7 @@ export default function OtherIncomeModal({ branchOptions, setShowModal, onSucces
         if (success) {
             onSuccess(); // trigger reload in parent
             setFormData({ description: "", amount: 0 }); // reset form
-            closeModal()
+            closeModal();
         }
     };
 

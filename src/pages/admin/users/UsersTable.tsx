@@ -7,42 +7,120 @@ import Loading from "../../../components/Loading";
 import useGetByDateRange from "../../../hooks/useGetByDateRange";
 import ErrorModal from "../../../components/ErrorModal";
 import formatDate from "../../../utils/formatDate";
+import { useEffect, useState, type ReactElement } from "react";
+import useDeleteData from "../../../hooks/useDeleteData";
+import type { FormData } from "./UsersModal";
+import ConfirmModal from "../../../components/ConfirmModal";
+import Options from "../../../components/Options";
 
-export default function UserTable() {
-    const { data, loading, error, closeError, searchParams, setSearchParams, dateRangeParams, setDateRangeParams } = useGetByDateRange('/api/users');
+type AllUser = {
+    name: string;
+    username: string;
+    roles: (Record<string, any>)[];
+    branches: (Record<string, any>)[];
+    datetime: string;
+    options: ReactElement;
+};
+
+const allUserColumns: Column<AllUser>[] = [
+    { key: "name", label: "Name" },
+    { key: "username", label: "User Name" },
+    {
+        key: "roles", label: "Roles",
+        render: (roles) => (
+            <div className="grid gap-2 items-start justify-items-start">
+                {roles && (roles as (Record<string, any>)[]).map((role, i) => (
+                    <span className="font-medium px-2 py-1 bg-gray rounded-[8px] w-auto" key={i}>
+                        {role.roleName}
+                    </span>
+                ))}
+            </div>
+        )
+    },
+    {
+        key: "branches", label: "Branches",
+        render: (branches) => (
+            <div className="grid gap-2 items-start justify-items-start">
+                {branches && (branches as (Record<string, any>)[]).map((branch, i) => (
+                    <span className="font-medium px-2 py-1 bg-gray rounded-[8px] w-auto" key={i}>
+                        {branch.branchName}
+                    </span>
+                ))}
+            </div>
+        )
+    },
+    { key: "datetime", label: "Datetime", render: (isoDate) => formatDate(isoDate as string) },
+    { key: "options", label: "", render: (value) => value as React.ReactElement },
+];
+
+type UsersTableProps = {
+    setPresetData: (presets: FormData) => void,
+    reloadFlag: boolean,
+    setShowModal: (action: 'create' | 'edit' | null) => void;
+    selectedId: string;
+    setSelectedId: (id: string) => void;
+}
+
+
+export default function UsersTable({ setPresetData, reloadFlag, setShowModal, selectedId, setSelectedId }: UsersTableProps) {
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
+    const { data, loading, error, closeError, searchParams, setSearchParams, dateRangeParams, setDateRangeParams, reload } = useGetByDateRange('/api/users');
+    const {
+        loading: deleteLoading,
+        error: deleteError,
+        closeError: closeDeleteError,
+        deleteData,
+    } = useDeleteData('/api/users');
+
+    const handleEdit = async (item: any) => {
+        setSelectedId(item.id);
+
+        const roleIds = (item.roles || []).map((r: any) => r.id);
+        const branchIds = (item.branches || []).map((b: any) => b.id);
+
+        setPresetData({
+            name: item.fullName,
+            username: item.username,
+            email: item.email,
+            phone: item.phone,
+            roles: roleIds,
+            branches: branchIds,
+
+            commission: item.commission
+        } as FormData);
+
+        setShowModal("edit");
+    };
+
+    const handleDelete = async () => {
+        if (!selectedId) return
+        const success = await deleteData(selectedId);
+        if (success) {
+            reload();
+            setShowDeleteModal(false)
+        }
+    }
+
+    useEffect(() => {
+        reload()
+    }, [reloadFlag])
+
     if (loading) return <Loading />;
 
     const userItems = data.data?.users || [];
-
-    type AllUser = {
-        name: string;
-        username: string;
-        roles: (Record<string, any>)[];
-        datetime: string;
-    };
-
-    const allUserColumns: Column<AllUser>[] = [
-        { key: "name", label: "Name" },
-        { key: "username", label: "User Name" },
-        {
-            key: "roles", label: "Roles",
-            render: (roles) => (
-                roles && (roles as (Record<string, any>)[]).map((role, i) => (
-                    <div className="capitalize" key={i}>
-                        {role.roleName}{i < roles.length - 1 && ","}
-                    </div>
-                ))
-            )
-        },
-        { key: "datetime", label: "Datetime", render: (isoDate) => formatDate(isoDate as string) },
-    ];
 
     const allUsers: AllUser[] = userItems.map(
         (item: Record<string, any>) => ({
             name: item.fullName,
             username: item.username,
             roles: item.roles,
+            branches: item.branches,
             datetime: item.createdAt,
+            options:
+                <Options
+                    onEdit={() => handleEdit(item)}
+                    onDelete={() => { setSelectedId(item.id); setShowDeleteModal(true) }}
+                />
         })
     );
 
@@ -53,9 +131,20 @@ export default function UserTable() {
                 <DateRange dateRange={dateRangeParams} setDateRange={setDateRangeParams} />
             </TableFilter>
 
-            <Table columns={allUserColumns} rows={allUsers} />
+            <Table columns={allUserColumns} rows={allUsers} withOptions={true} />
 
-            {error && <ErrorModal error={error!} closeError={closeError} />}
+            {(error || deleteError) ?
+                <ErrorModal error={(error || deleteError)!} closeError={error ? closeError : closeDeleteError} />
+                : showDeleteModal &&
+                <ConfirmModal
+                    title="Delete User"
+                    message="Are you sure you want to delete this user?"
+                    onClose={() => { setShowDeleteModal(false) }}
+                    onConfirm={handleDelete} red={true}
+                    disabledButtons={deleteLoading}
+                    onProgressLabel={deleteLoading ? 'Deleting...' : ''}
+                />
+            }
         </>
     )
 }
