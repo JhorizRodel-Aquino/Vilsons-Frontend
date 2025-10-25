@@ -8,7 +8,7 @@ export type ValidationRule = {
   min?: number;
   max?: number;
   pattern?: RegExp;
-  type?: "money" | "number";
+  type?: "money" | "number" | "ratio";
   custom?: (value: any) => string | null;
   children?: ValidationSchema;
   label?: string; // 👈 optional friendly label for toasts
@@ -143,6 +143,33 @@ export default function validateAndSanitize(
       }
 
       validatedData[key] = numValue;
+      errors[key] = null;
+      continue;
+    }
+
+    // --- Ratio type ---
+    if (rules.type === "ratio") {
+      const numValue = Number(value);
+      if (isNaN(numValue)) {
+        errors[key] = `${label} must be a valid number.`;
+        continue;
+      }
+
+      // ✅ Default min = 0 if not specified
+      const minValue = rules.min ?? 0;
+      const maxValue = rules.max;
+
+      if (numValue < minValue) {
+        errors[key] = `${label} must be at least ${minValue}.`;
+        continue;
+      }
+
+      if (maxValue !== undefined && numValue > maxValue) {
+        errors[key] = `${label} must not exceed ${maxValue}.`;
+        continue;
+      }
+
+      validatedData[key] = Math.round(numValue / 100);
       errors[key] = null;
       continue;
     }

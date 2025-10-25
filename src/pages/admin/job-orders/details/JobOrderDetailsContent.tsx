@@ -1,9 +1,19 @@
+import { useParams } from "react-router";
 import Detail from "../../../../components/Detail"
 import formatPesoFromCents from "../../../../utils/formatPesoFromCents";
+import useGetData from "../../../../hooks/useGetData";
+import Loading from "../../../../components/Loading";
 
 
 
 export default function CustomerDetailsContent() {
+    const { id } = useParams();
+    const { data, loading, error, closeError, reload } = useGetData(`/api/job-orders/${id}`)
+
+    console.log(data)
+
+    if (loading) return <Loading />;
+
     return (
         <>
 

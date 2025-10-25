@@ -201,7 +201,7 @@ type FieldNumber = {
     min?: number
 }
 
-Field.Number = function Number({ id, label, width = 'hug', placeholder = '', value, onChange, noSpinner = false, min}: FieldNumber) {
+Field.Number = function Number({ id, label, width = 'hug', placeholder = '', value, onChange, noSpinner = false, min }: FieldNumber) {
     const fieldWidth = {
         hug: 'w-auto',
         full: 'w-full'
@@ -645,3 +645,25 @@ Field.List = function List({
 //     </div>
 //   );
 // }
+
+Field.Image = function Image({ label, onChange, multiple=false }: {
+    label?: string;
+    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    multiple?: boolean
+}) {
+    return (
+        <div>
+            {label && <label htmlFor={label}>{label}</label>}
+            <InputBox className="py-[2px] overflow-hidden">
+                <input
+                    name={label}
+                    type="file"
+                    multiple={multiple}
+                    accept="image/*"
+                    onChange={onChange}
+                />
+            </InputBox>
+        </div>
+
+    );
+}

@@ -34,22 +34,36 @@ export const get = async ({ route, params = {} }: getURL) => {
 
 export const post = async ({ route, formData }: postURL) => {
   try {
-    const response = await api.post(route, formData);
-    console.log(route, response.data)
+    const isFormData = formData instanceof FormData;
+
+    const response = await api.post(route, formData, {
+      headers: {
+        "Content-Type": isFormData ? "multipart/form-data" : "application/json",
+      },
+    });
+
+    console.log(route, response.data);
     return response.data;
   } catch (error) {
-    console.error(`Failed to create from ${route}:`, error);
+    console.error(`Failed to post to ${route}:`, error);
     throw error;
   }
 };
 
 export const put = async ({ route, formData }: putURL) => {
   try {
-    const response = await api.put(route, formData);
-    console.log(route, response.data)
+    const isFormData = formData instanceof FormData;
+
+    const response = await api.put(route, formData, {
+      headers: {
+        "Content-Type": isFormData ? "multipart/form-data" : "application/json",
+      },
+    });
+
+    console.log(route, response.data);
     return response.data;
   } catch (error) {
-    console.error(`Failed to edit from ${route}:`, error);
+    console.error(`Failed to put to ${route}:`, error);
     throw error;
   }
 };

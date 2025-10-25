@@ -3,25 +3,29 @@ import Detail from "../../../../components/Detail"
 import formatPesoFromCents from "../../../../utils/formatPesoFromCents";
 import ActiveOrdersTable from "./ActiveOrdersTable";
 import ArchivedOrdersTable from "./ArchivedOrdersTable";
-import TrucksTable from "./TrucksTable";
 
 
 
-export default function CustomerDetailsContent({ data }: { data: Record<string, any> }) {
-    const tabs = ['active', 'archived', 'trucks'];
+export default function ContractorDetailsSection({ data }: { data: Record<string, any> }) {
+    const tabs = ['active', 'archived'];
     const [activeTab, setActiveTab] = useState(tabs[0]);
 
-    const jobOrders = data?.jobOrders;
-    const orderSummary = data?.jobOrderSummary;
-    const info = data?.user;
+    let jobOrders = data?.jobOrders;
+    let orderSummary = data?.jobOrderSummary;
+    let info = data?.user;
+    useEffect(() => {
+        jobOrders = data?.jobOrders;
+        orderSummary = data?.jobOrderSummary;
+        info = data?.user;
+    }, [data])
+
 
     return (
         <>
             <div className="grid gap-[20px] grid-cols-[3fr_1fr] overflow-y-hidden thin-scrollbar">
                 <section className="grid card p-0 overflow-y-auto thin-scrollbar">
                     {activeTab === tabs[0] && <ActiveOrdersTable data={jobOrders?.active}/>}
-                    {activeTab === tabs[1] && <ArchivedOrdersTable data={jobOrders?.archived} />}
-                    {activeTab === tabs[2] && <TrucksTable data={data?.trucks}/>}
+                    {activeTab === tabs[1] && <ArchivedOrdersTable data={jobOrders?.archived}/>}
                 </section>
 
                 <div className="grid gap-[20px] content-start overflow-y-auto thin-scrollbar">
@@ -32,21 +36,14 @@ export default function CustomerDetailsContent({ data }: { data: Record<string, 
                             <Detail label='Active Orders' value={orderSummary?.activeCount} align="center" variant="flipped" highlight={activeTab === tabs[0]} />
                         </button>
                         <button className={`p-[10px] ${activeTab === tabs[1] && 'bg-light-primary border-primary rounded-[10px]'}`}
-                            onClick={() => setActiveTab(tabs[1])}>
+                            onClick={() => setActiveTab(tabs[1])}
+                        >
                             <Detail label='Archived Orders' value={orderSummary?.archivedCount} align="center" variant="flipped" highlight={activeTab === tabs[1]} />
                         </button>
                     </section>
 
                     <section className="card">
                         <Detail label='Total Balance' value={formatPesoFromCents(orderSummary?.totalBalance)} align="center" variant="flipped" />
-                    </section>
-
-                    <section className="card grid p-0">
-                        <button className={`p-[10px] ${activeTab === tabs[2] && 'bg-light-primary border-primary rounded-[10px] p-[10px]'}`}
-                            onClick={() => setActiveTab(tabs[2])}
-                        >
-                            <Detail label='Trucks Owned' value={data?.trucks?.length} align="center" variant="flipped" highlight={activeTab === tabs[2]} />
-                        </button>
                     </section>
 
                     {/* <section className="card">
@@ -61,8 +58,7 @@ export default function CustomerDetailsContent({ data }: { data: Record<string, 
                         </div>
                     </section>
 
-                    {/* 
-                    <section className="card w-full">
+                    {/* <section className="card w-full">
                         <h2 className="font-bold text-primary mb-5">Additional Information</h2>
                         <div className="grid gap-5">
                             <Detail label='Description' value={'Reliable logistics and transportation services with 15+ years of experience in the industry. '} />
@@ -72,7 +68,6 @@ export default function CustomerDetailsContent({ data }: { data: Record<string, 
                 </div>
 
             </div>
-
         </>
 
 

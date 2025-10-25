@@ -44,6 +44,10 @@ export type FormData = {
     contractorUsername?: string,
 
     description?: string,
+
+    beforeImages?: File[];
+    afterImages?: File[];
+
     labor?: number | null,
     materials?: Material[]
 
@@ -77,7 +81,7 @@ const formSchemaOldTruck: ValidationSchema = {
 const formSchemaNewCustomer: ValidationSchema = {
     name: { required: true, label: 'Customer Name' },
     username: { required: true, label: 'Customer Username' },
-    phone: { label: 'Customer Phone Number' },
+    phone: { required: true, label: 'Customer Phone Number' },
     email: { label: 'Customer Email Address' },
 };
 const formSchemaOldCustomer: ValidationSchema = {
@@ -171,7 +175,22 @@ export default function JobOrderModal({ branchOptions, setShowModal, presetData,
         console.log(validatedData)
         if (!isValid) return;
 
-        const success = action === 'create' ? await postData(validatedData) : await putData(id, validatedData)
+        const multipartFormData = new FormData();
+        Object.entries(validatedData).map(([key, value]) => {
+            if (key === "beforeImages") {
+                value.forEach((file: File) => multipartFormData.append("beforeImages", file));
+                return;
+            } else if (key === "afterImages") {
+                value.forEach((file: File) => multipartFormData.append("afterImages", file));
+                return;
+            } else {
+                value = Array.isArray(value) ? JSON.stringify(value) : value;
+            }
+            
+            multipartFormData.append(key, value)
+        })
+
+        const success = action === 'create' ? await postData(multipartFormData) : await putData(id, multipartFormData)
         if (success) {
             onSuccess();
             setFormData({
@@ -479,17 +498,7 @@ export default function JobOrderModal({ branchOptions, setShowModal, presetData,
                             </fieldset>
 
                             <fieldset className="card">
-                                <h4 className="text-lg font-semibold mb-5">Job Description</h4>
-                                <Field.TextArea
-                                    id="description"
-                                    placeholder="Describe the work needed"
-                                    value={formData.description}
-                                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                />
-                            </fieldset>
-
-                            <fieldset className="card">
-                                <h4 className="text-lg font-bold mb-5">Contractor</h4>
+                                <h4 className="text-lg font-bold mb-5">Contractor <small className="font-normal">(Optional)</small></h4>
 
                                 <Field.List
                                     id="contractorSelection"
@@ -528,6 +537,40 @@ export default function JobOrderModal({ branchOptions, setShowModal, presetData,
                                         </div>
                                     ))}
                                 </Field.List>
+                            </fieldset>
+
+                            <fieldset className="card">
+                                <h4 className="text-lg font-semibold mb-5">Job Description</h4>
+                                <Field.TextArea
+                                    id="description"
+                                    placeholder="Describe the work needed"
+                                    value={formData.description}
+                                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                />
+                            </fieldset>
+
+                            <fieldset className="card">
+                                <h4 className="text-lg font-bold mb-5">Documentation</h4>
+
+                                <div className="grid gap-y-[20px]">
+                                    <Field.Image
+                                        label="Before"
+                                        multiple={true}
+                                        onChange={(e) => {
+          const files = Array.from(e.target.files || []);
+          setFormData({ ...formData, beforeImages: files });
+        }}
+                                    />
+                                    <Field.Image
+                                        label="After"
+                                        multiple={true}
+                                        onChange={(e) => {
+          const files = Array.from(e.target.files || []);
+          setFormData({ ...formData, afterImages: files });
+        }}
+
+                                    />
+                                </div>
                             </fieldset>
 
                             <fieldset className="card">

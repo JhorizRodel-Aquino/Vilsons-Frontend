@@ -8,11 +8,13 @@ import validateAndSanitize from "../../../utils/validateAndSanitize";
 import Icon from "../../../components/Icon";
 import Selection from "../../../components/Selection";
 import { toastWarning } from "../../../utils/toastWarning";
+import ErrorModal from "../../../components/ErrorModal";
 
 export type FormData = {
+    profile?: File | null;
     name?: string;
     username?: string;
-    phone?: string;
+    phone?: number;
     email?: string;
     roles: string[];
     branches?: string[];
@@ -24,7 +26,7 @@ const formSchemaGeneral: ValidationSchema = {
     name: { required: true },
     username: { required: true },
     email: { label: "Email Address" },
-    phone: { label: "Phone Number" },
+    phone: { required: true, label: "Phone Number" },
     roles: { required: true, label: "role", minLength: 1 },
 };
 
@@ -40,9 +42,9 @@ const formSchemaContractor: ValidationSchema = {
 type UsersModalProps = {
     branchOptions?: SelectionOptions[];
     roleOptions?: (SelectionOptions & { baseRoleName: string })[];
-    setShowModal: (action: "create" | "edit" | null) => void;
+    setShowModal: (action: "create" | "edit" | "password" | null) => void;
     onSuccess: () => void;
-    action: "create" | "edit";
+    action: "create" | "edit" | "password" | null;
     presetData: FormData;
     id?: string;
 };
@@ -57,7 +59,7 @@ export default function UsersModal({
     id,
 }: UsersModalProps) {
     const [formData, setFormData] = useState<FormData>(presetData);
-    const { loading, postData, putData } = usePostPutData("/api/users");
+    const { error, closeError, loading, postData, putData } = usePostPutData("/api/users");
     console.log(formData)
     const closeModal = () => setShowModal(null);
 
@@ -186,13 +188,25 @@ export default function UsersModal({
         const { validatedData, isValid } = validateAndSanitize(formData, formSchema);
         if (!isValid) return;
 
+        const multipartFormData = new FormData();
+        multipartFormData.append("name", validatedData.name);
+        multipartFormData.append("username", validatedData.username);
+        multipartFormData.append("phone", validatedData.phone);
+        multipartFormData.append("roles", JSON.stringify(validatedData.roles || []));
+
+        if (validatedData.branches) multipartFormData.append("branches", JSON.stringify(validatedData.branches || []));
+        if (validatedData.email) multipartFormData.append("email", validatedData.email);
+        if (validatedData.commission) multipartFormData.append("commission", validatedData.commission);
+        if (formData.profile) multipartFormData.append("image", formData.profile);
+
+
         const success =
             action === "create"
-                ? await postData(validatedData)
-                : await putData(id, validatedData);
+                ? await postData(multipartFormData)
+                : await putData(id, multipartFormData);
         if (success) {
             onSuccess();
-            setFormData({roles: []});
+            setFormData({ roles: [] });
             closeModal();
         }
     };
@@ -210,162 +224,179 @@ export default function UsersModal({
 
     return (
         <>
-            <form onSubmit={handleSubmit} className="card modal gap-[20px] max-w-3xl">
-                <div className="text-xl flex justify-between items-center">
-                    <h2 className="font-bold">
-                        {action === "edit" ? "Edit User" : "Add User"}
-                    </h2>
-                    <button type="button" className="cursor-pointer" onClick={closeModal}>
-                        ✕
-                    </button>
-                </div>
+            {error ? <ErrorModal error={error!} closeError={closeError} /> :
+                <>
+                    <form onSubmit={handleSubmit} className="card modal gap-[20px] max-w-3xl">
+                        <div className="text-xl flex justify-between items-center">
+                            <h2 className="font-bold">
+                                {action === "edit" ? "Edit User" : "Add User"}
+                            </h2>
+                            <button type="button" className="cursor-pointer" onClick={closeModal}>
+                                ✕
+                            </button>
+                        </div>
 
-                {/* Personal Info */}
-                <fieldset className="card">
-                    <h4 className="text-lg font-bold mb-5">Personal Information</h4>
+                        <fieldset className="card">
+                            <h4 className="text-lg font-bold mb-5">Profile Picture</h4>
 
-                    <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-x-10 gap-y-[20px]">
-                        <Field.Text
-                            id="name"
-                            label="Name"
-                            value={formData.name}
-                            onChange={(e) =>
-                                setFormData({ ...formData, name: e.target.value })
-                            }
-                        />
-                        <Field.Text
-                            id="username"
-                            label="Username"
-                            value={formData.username}
-                            onChange={(e) =>
-                                setFormData({ ...formData, username: e.target.value })
-                            }
-                        />
-                        <Field.Email
-                            id="email"
-                            label="Email"
-                            value={formData.email}
-                            onChange={(e) =>
-                                setFormData({ ...formData, email: e.target.value })
-                            }
-                        />
-                        <Field.Number
-                            id="phone"
-                            label="Phone Number"
-                            noSpinner
-                            min={0}
-                            value={formData.phone}
-                            onChange={(e) =>
-                                setFormData({ ...formData, phone: e.target.value })
-                            }
-                        />
-                    </div>
-                </fieldset>
+                            <Field.Image
+                                onChange={(e) =>
+                                    setFormData({
+                                        ...formData,
+                                        profile: e.target.files ? e.target.files[0] : null,
+                                    })}
+                            />
+                        </fieldset>
 
-                {/* Roles Section */}
-                <fieldset className="card">
-                    <div className="mb-5 flex justify-between items-center">
-                        <h4 className="text-lg font-semibold">Roles</h4>
-                        <Button
-                            size="mini"
-                            variant="outline"
-                            label="Add Role"
-                            onClick={addRole}
-                            disabled={
-                                (formData.roles || [])
-                                    .map((id) => roleOptions.find((r) => r.value === id))
-                                    .some((r) =>
-                                        ["customer", "contractor"].includes(r?.baseRoleName || "")
-                                    )
-                            }
-                        />
-                    </div>
+                        {/* Personal Info */}
+                        <fieldset className="card">
+                            <h4 className="text-lg font-bold mb-5">Personal Information</h4>
 
-                    <div className="space-y-3">
-                        {(formData.roles || []).map((roleId, i) => (
-                            <div
-                                key={i}
-                                className="flex items-center gap-2"
-                            >
-                                <Selection
-                                    placeholder="Select a role"
-                                    options={filteredRoleOptions}
-                                    value={roleId}
-                                    onChange={(e) => updateRole(i, e.target.value)}
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => removeRole(i)}
-                                    className="p-1 text-gray-500 hover:text-red-600"
-                                >
-                                    <Icon name="delete" color="dark" />
-                                </button>
-                            </div>
-                        ))}
-
-                        {formData.roles?.length === 0 && (
-                            <p className="text-sm text-gray-500">
-                                No roles selected yet.
-                            </p>
-                        )}
-                    </div>
-                </fieldset>
-
-                {/* Branch Section (Conditional) */}
-                {(showBranches || hasContractorBaseRole) &&
-                    <fieldset className="card">
-                        <h4 className="text-lg font-bold mb-5">Additional Information</h4>
-
-                        <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-x-10 gap-y-[20px]">
-                            {showBranches && (
-                                <div>
-                                    <label className="">Branches</label>
-                                    <div className="flex flex-wrap gap-2">
-                                        {branchOptions.map((branch) => (
-                                            <button
-                                                key={branch.value}
-                                                type="button"
-                                                onClick={() => toggleBranch(branch.value)}
-                                                className={`px-3 py-1 rounded-full border ${formData.branches?.includes(branch.value)
-                                                    ? "bg-primary text-white border-primary"
-                                                    : "bg-gray-100 text-gray-700 border-gray-300"
-                                                    }`}
-                                            >
-                                                {branch.label}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-
-                            {hasContractorBaseRole &&
-                                <Field.Number
-                                    id="commission"
-                                    label="Commission (%)"
-                                    noSpinner
-                                    min={0}
-                                    value={formData.commission}
+                            <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-x-10 gap-y-[20px]">
+                                <Field.Text
+                                    id="name"
+                                    label="Name"
+                                    value={formData.name}
                                     onChange={(e) =>
-                                        setFormData({ ...formData, commission: +e.target.value })
+                                        setFormData({ ...formData, name: e.target.value })
                                     }
                                 />
+                                <Field.Text
+                                    id="username"
+                                    label="Username"
+                                    value={formData.username}
+                                    readonly={action === "edit"}
+                                    onChange={(e) =>
+                                        setFormData({ ...formData, username: e.target.value })
+                                    }
+                                />
+                                <Field.Email
+                                    id="email"
+                                    label="Email"
+                                    value={formData.email}
+                                    onChange={(e) =>
+                                        setFormData({ ...formData, email: e.target.value })
+                                    }
+                                />
+                                <Field.Number
+                                    id="phone"
+                                    label="Phone Number"
+                                    noSpinner
+                                    min={0}
+                                    value={formData.phone}
+                                    onChange={(e) =>
+                                        setFormData({ ...formData, phone: +e.target.value })
+                                    }
+                                />
+                            </div>
+                        </fieldset>
+
+                        {/* Roles Section */}
+                        <fieldset className="card">
+                            <div className="mb-5 flex justify-between items-center">
+                                <h4 className="text-lg font-semibold">Roles</h4>
+                                <Button
+                                    size="mini"
+                                    variant="outline"
+                                    label="Add Role"
+                                    onClick={addRole}
+                                    disabled={
+                                        (formData.roles || [])
+                                            .map((id) => roleOptions.find((r) => r.value === id))
+                                            .some((r) =>
+                                                ["customer", "contractor"].includes(r?.baseRoleName || "")
+                                            )
+                                    }
+                                />
+                            </div>
+
+                            <div className="space-y-3">
+                                {(formData.roles || []).map((roleId, i) => (
+                                    <div
+                                        key={i}
+                                        className="flex items-center gap-2"
+                                    >
+                                        <Selection
+                                            placeholder="Select a role"
+                                            options={filteredRoleOptions}
+                                            value={roleId}
+                                            onChange={(e) => updateRole(i, e.target.value)}
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => removeRole(i)}
+                                            className="p-1 text-gray-500 hover:text-red-600"
+                                        >
+                                            <Icon name="delete" color="dark" />
+                                        </button>
+                                    </div>
+                                ))}
+
+                                {formData.roles?.length === 0 && (
+                                    <p className="text-sm text-gray-500">
+                                        No roles selected yet.
+                                    </p>
+                                )}
+                            </div>
+                        </fieldset>
+
+                        {/* Branch Section (Conditional) */}
+                        {(showBranches || hasContractorBaseRole) &&
+                            <fieldset className="card">
+                                <h4 className="text-lg font-bold mb-5">Additional Information</h4>
+
+                                <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-x-10 gap-y-[20px]">
+                                    {showBranches && (
+                                        <div>
+                                            <label className="">Branches</label>
+                                            <div className="flex flex-wrap gap-2">
+                                                {branchOptions.map((branch) => (
+                                                    <button
+                                                        key={branch.value}
+                                                        type="button"
+                                                        onClick={() => toggleBranch(branch.value)}
+                                                        className={`px-3 py-1 rounded-full border ${formData.branches?.includes(branch.value)
+                                                            ? "bg-primary text-white border-primary"
+                                                            : "bg-gray-100 text-gray-700 border-gray-300"
+                                                            }`}
+                                                    >
+                                                        {branch.label}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {hasContractorBaseRole &&
+                                        <Field.Number
+                                            id="commission"
+                                            label="Commission (%)"
+                                            noSpinner
+                                            min={0}
+                                            value={formData.commission}
+                                            onChange={(e) =>
+                                                setFormData({ ...formData, commission: +e.target.value })
+                                            }
+                                        />
+                                    }
+
+                                </div>
+                            </fieldset>
+                        }
+
+
+                        <div className="flex justify-end items-center gap-[20px]">
+                            <Button variant="gray" label="Cancel" onClick={closeModal} />
+                            {action === 'create'
+                                ? <Button type="submit" variant="primary" label={loading ? "Adding..." : "Add User"} disabled={loading} />
+                                : <Button type="submit" variant="primary" label={loading ? "Saving..." : "Save"} disabled={loading} />
                             }
-
                         </div>
-                    </fieldset>
-                }
+                    </form>
 
-
-                <div className="flex justify-end items-center gap-[20px]">
-                    <Button variant="gray" label="Cancel" onClick={closeModal} />
-                    {action === 'create'
-                        ? <Button type="submit" variant="primary" label={loading ? "Adding..." : "Add User"} disabled={loading} />
-                        : <Button type="submit" variant="primary" label={loading ? "Saving..." : "Save"} disabled={loading} />
-                    }
-                </div>
-            </form>
-
-            <div className="backdrop"></div>
+                    <div className="backdrop"></div>
+                </>
+            }
         </>
     );
 }

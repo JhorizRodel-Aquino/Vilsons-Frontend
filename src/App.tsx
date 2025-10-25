@@ -25,6 +25,7 @@ import Header from './components/Header'
 import Main from './components/Main'
 import './App.css'
 import { Toaster } from "react-hot-toast";
+import UserDetailsPage from "./pages/admin/users/details/UserDetailsPage";
 
 function MainLayout() {
   return (
@@ -70,6 +71,7 @@ function App() {
           <Route path="/contractors/:id" element={<ContractorDetailsPage />} />
           <Route path="/job-orders/:id" element={<JobOrderDetailsPage />} />
           <Route path="/trucks/:id" element={<TruckDetailsPage />} />
+          <Route path="/users/:id" element={<UserDetailsPage />} />
 
         </Route>
 

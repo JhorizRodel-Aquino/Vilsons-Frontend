@@ -21,7 +21,7 @@ import Selection from "../../../components/Selection";
 import getStatuses from "../../../utils/statusOptions";
 
 type ActiveJobOrder = {
-    jobNumber: string;
+    jobNumber: ReactElement;
     status: Status;
     plateNumber: string;
     contractor: ReactElement;
@@ -31,7 +31,7 @@ type ActiveJobOrder = {
 };
 
 const activeJobOrderColumns: Column<ActiveJobOrder>[] = [
-    { key: "jobNumber", label: "Job Number" },
+    { key: "jobNumber", label: "Job Number", render: (value) => value as ReactElement },
     { key: "status", label: "Status", render: (value) => <StatusIndicator status={value as Status} /> },
     { key: "plateNumber", label: "Plate Number" },
     { key: "contractor", label: "Contractor", render: (value) => value as React.ReactElement },
@@ -94,7 +94,7 @@ export default function ActiveOrdersTable({ setPresetData, reloadFlag, setShowMo
 
     const activeJobOrders: ActiveJobOrder[] = jobOrderItems.map(
         (item: Record<string, any>) => ({
-            jobNumber: item.jobOrderCode,
+            jobNumber: <Link to={`/job-orders/${item.id}`}>{item.jobOrderCode}</Link>,
             status: item.status,
             plateNumber: item.plateNumber,
             contractor: <Link to={`/contractors/${item.contractorId}`}>{item.contractorName}</Link>,

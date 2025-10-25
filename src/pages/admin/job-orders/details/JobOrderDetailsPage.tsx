@@ -9,19 +9,14 @@ import PageHeading from "../../../../components/PageHeading";
 
 export default function CustomerDetailsPage() {
     return (
-        <AppLayout>
-            <Sidebar />
 
-            <ContentLayout>
-                <Header />
-                <Main>
-                    <PageHeading title={'JO-25-233'} />
+        <>
+            <PageHeading title={'JO-25-233'} />
 
-                    <PageContent>
-                        <CustomerDetailsContent />
-                    </PageContent>
-                </Main>
-            </ContentLayout>
-        </AppLayout>
+            <PageContent>
+                <CustomerDetailsContent />
+            </PageContent>
+        </>
+
     )
 }

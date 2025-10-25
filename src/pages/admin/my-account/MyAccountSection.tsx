@@ -9,6 +9,7 @@ import { useState } from "react";
 import type { FormData } from "./MyInfoModal";
 import MyInfoModal from "./MyInfoModal";
 import MyPasswordModal from "./MyPasswordModal";
+import API_URL from "../../../constants/API_URL";
 
 export default function MyProfileSection() {
     const [showModal, setShowModal] = useState<'info' | 'password' | null>(null)
@@ -17,14 +18,14 @@ export default function MyProfileSection() {
 
     if (loading) return <Loading />;
 
-    const { fullName, username, email, phone, createdAt, roles, branches } = data?.data || {};
+    const { fullName, username, email, phone, createdAt, roles, branches, image } = data?.data || {};
 
     return (
         <>
             <article className="grid grid-cols-[1fr_3fr] gap-7">
                 <section className="card w-full">
                     <div className="grid gap-6 justify-items-center">
-                        <ProfilePicture src={''} />
+                        <ProfilePicture src={API_URL + `/images/users/${image}`} />
                         <div className="grid gap-1 mb-1">
                             <p className="font-medium">{fullName}</p>
                             <p className="font-medium text-darker">@{username}</p>

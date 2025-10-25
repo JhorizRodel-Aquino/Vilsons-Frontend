@@ -6,15 +6,16 @@ import ErrorModal from "../../../components/ErrorModal";
 import usePostPutData from "../../../hooks/usePostPutData";
 
 export type FormData = {
-    name: string,
-    email: string
-    phone?: number
+    name: string;
+    email: string;
+    phone?: number;
+    profile?: File | null;
 }
 
 const formSchema: ValidationSchema = {
     name: { required: true, label: "Full Name" },
-    email: { required: true },
-    phone: { required: true },
+    email: { label: "Email Address" },
+    phone: { required: true, label: "Phone Number" },
 };
 
 type MyInfoModalProps = {
@@ -39,7 +40,13 @@ export default function MyInfoModal({ setShowModal, onSuccess, presetData }: MyI
         const { validatedData, isValid } = validateAndSanitize(formData, formSchema);
         if (!isValid) return;
 
-        const success = await putData("", validatedData);
+        const multipartFormData = new FormData();
+        multipartFormData.append("name", validatedData.name);
+        multipartFormData.append("phone", validatedData.phone);
+        if (validatedData.email) multipartFormData.append("email", validatedData.email);
+        if (formData.profile) multipartFormData.append("image", formData.profile);
+
+        const success = await putData("", multipartFormData);
         if (success) {
             onSuccess();
             setFormData({ name: "", email: "", phone: undefined });
@@ -58,6 +65,20 @@ export default function MyInfoModal({ setShowModal, onSuccess, presetData }: MyI
                         </div>
 
                         <fieldset className="card">
+                            <h4 className="text-lg font-bold mb-5">Profile Picture</h4>
+
+                            <Field.Image
+                                onChange={(e) =>
+                                    setFormData({
+                                        ...formData,
+                                        profile: e.target.files ? e.target.files[0] : null,
+                                    })}
+                            />
+                        </fieldset>
+
+                        <fieldset className="card">
+                            <h4 className="text-lg font-bold mb-5">Personal Information</h4>
+
                             <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-x-10 gap-y-[20px]">
                                 <Field.Text
                                     id="name"
@@ -76,7 +97,6 @@ export default function MyInfoModal({ setShowModal, onSuccess, presetData }: MyI
                                         setFormData({ ...formData, email: e.target.value });
                                     }}
                                 />
-
 
                                 <Field.Number
                                     id="phone"

@@ -1,3 +1,3 @@
-const API_URL = "https://delegation-cameras-importantly-automotive.trycloudflare.com";
+const API_URL = "https://sender-dated-boost-handmade.trycloudflare.com";
 
 export default API_URL

@@ -8,6 +8,7 @@ import useGetData from "../../../../hooks/useGetData";
 import Loading from "../../../../components/Loading";
 import ErrorModal from "../../../../components/ErrorModal";
 import formatDate from "../../../../utils/formatDate";
+import API_URL from "../../../../constants/API_URL";
 
 export default function TruckDetailsPage() {
     const { id } = useParams(); // 👈 get contractor ID from URL
@@ -23,7 +24,7 @@ export default function TruckDetailsPage() {
     return (
         <>
             <div className="w-full flex gap-6 items-center mb-[34px]">
-                <ProfilePicture src={'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgUk6Xk1c0YN5OhlaA7bOW0UGQfgIdlkArHQ&s'} />
+                <ProfilePicture src={API_URL + `/images/trucks/${truckData.image}`} />
                 <div className="">
                     <PageHeading title={truckData.plate} />
                     <div className="flex flex-wrap gap-x-10 gap-y-5 -mt-[20px]">

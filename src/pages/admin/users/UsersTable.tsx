@@ -12,10 +12,11 @@ import useDeleteData from "../../../hooks/useDeleteData";
 import type { FormData } from "./UsersModal";
 import ConfirmModal from "../../../components/ConfirmModal";
 import Options from "../../../components/Options";
+import { Link } from "react-router";
 
 type AllUser = {
     name: string;
-    username: string;
+    username: ReactElement;
     roles: (Record<string, any>)[];
     branches: (Record<string, any>)[];
     datetime: string;
@@ -24,7 +25,7 @@ type AllUser = {
 
 const allUserColumns: Column<AllUser>[] = [
     { key: "name", label: "Name" },
-    { key: "username", label: "User Name" },
+    { key: "username", label: "User Name", render: (value) => value as React.ReactElement },
     {
         key: "roles", label: "Roles",
         render: (roles) => (
@@ -112,7 +113,7 @@ export default function UsersTable({ setPresetData, reloadFlag, setShowModal, se
     const allUsers: AllUser[] = userItems.map(
         (item: Record<string, any>) => ({
             name: item.fullName,
-            username: item.username,
+            username: <Link to={`/users/${item.id}`}>{item.username}</Link>,
             roles: item.roles,
             branches: item.branches,
             datetime: item.createdAt,
