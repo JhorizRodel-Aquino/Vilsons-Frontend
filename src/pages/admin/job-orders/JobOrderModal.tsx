@@ -186,6 +186,8 @@ export default function JobOrderModal({ branchOptions, setShowModal, presetData,
             } else {
                 value = Array.isArray(value) ? JSON.stringify(value) : value;
             }
+
+            if (key === "contractorName" || key === "contractorUsername") return;
             
             multipartFormData.append(key, value)
         })
@@ -454,7 +456,7 @@ export default function JobOrderModal({ branchOptions, setShowModal, presetData,
                                         />
                                     </div>
                                     :
-                                    <div className="grid grid-cols-[1fr_auto] gap-[10px]">
+                                    <div className="grid gap-[10px]">
                                         <Field.List
                                             id="customerSelection"
                                             placeholder="Select Customer Owner"
