@@ -25,7 +25,7 @@ export default function ImagePreview({ images, API_URL }: { images: any; API_URL
         visible.map((img, i) => (
           <div key={i} className="relative cursor-pointer" onClick={() => handleOpen(setType, i)}>
             <img
-              src={`${API_URL}/images/job-orders/${img.filename}`}
+              src={`${API_URL}/images/${img.filename}`}
               className="h-32 w-32 object-cover rounded-lg border border-gray-300"
               alt=""
             />
@@ -103,7 +103,7 @@ export default function ImagePreview({ images, API_URL }: { images: any; API_URL
             </button>
 
             <img
-              src={`${API_URL}/images/job-orders/${currentImages[activeIndex].filename}`}
+              src={`${API_URL}/images/${currentImages[activeIndex].filename}`}
               className="max-h-[80vh] max-w-[90vw] object-contain rounded-lg"
               alt=""
             />

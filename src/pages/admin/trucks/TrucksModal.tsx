@@ -18,9 +18,9 @@ const formSchema: ValidationSchema = {
 };
 
 type TrucksModalProps = {
-    setShowModal: (action: 'create' | 'edit' | 'change' | null) => void,
+    setShowModal: (action: 'create' | 'edit' | null) => void,
     onSuccess: () => void,
-    action: 'create' | 'edit' | 'change' | null,
+    action: 'create' | 'edit' | null,
     presetData: FormData;
     id?: string;
 }

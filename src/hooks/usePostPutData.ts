@@ -10,6 +10,7 @@ export default function usePostPutData(route: string) {
     const closeError = () => setError(null)
 
     const postData = async (formData: {}, specify: string = "") => {
+        setLoading(true);
         try {
             const result = await post({ route: `${route}/${specify}`, formData });
             console.log('result:', result)

@@ -18,7 +18,7 @@ export default function JobOrdersActiveTabContent() {
     });
     const [reloadFlag, setReloadFlag] = useState(false);
 
-    const [showModal, setShowModal] = useState<'create' | 'edit' | 'change' | null>(null)
+    const [showModal, setShowModal] = useState<'create' | 'edit' | 'status' | null>(null)
 
     const reload = useCallback(() => setReloadFlag(prev => !prev), []);
 
@@ -39,7 +39,7 @@ export default function JobOrdersActiveTabContent() {
 
             {(showModal === "create" || showModal === "edit") && <JobOrderModal branchOptions={branchOptions} setShowModal={setShowModal} presetData={presetData} onSuccess={reload} id={selectedId} action={showModal} />}
 
-            {showModal === "change" && <ChangeStatusModal onSuccess={reload} setShowModal={setShowModal} id={selectedId} selectedJobOrder={selectedJobOrder} />}
+            {showModal === "status" && <ChangeStatusModal onSuccess={reload} setShowModal={setShowModal} id={selectedId} selectedJobOrder={selectedJobOrder} />}
         </>
     )
 }

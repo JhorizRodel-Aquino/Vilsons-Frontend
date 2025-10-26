@@ -36,7 +36,7 @@ const formSchemaAdminEmployee: ValidationSchema = {
 
 const formSchemaContractor: ValidationSchema = {
     branches: { required: true, label: "branch", minLength: 1 },
-    commission: { required: true, type: "number" }
+    commission: { required: true, type: "number", min: 0, max: 100 }
 };
 
 type UsersModalProps = {
@@ -196,7 +196,7 @@ export default function UsersModal({
 
         if (validatedData.branches) multipartFormData.append("branches", JSON.stringify(validatedData.branches || []));
         if (validatedData.email) multipartFormData.append("email", validatedData.email);
-        if (validatedData.commission) multipartFormData.append("commission", validatedData.commission);
+        if (validatedData.commission) multipartFormData.append("commission", (validatedData.commission / 100).toString());
         if (formData.profile) multipartFormData.append("image", formData.profile);
 
 

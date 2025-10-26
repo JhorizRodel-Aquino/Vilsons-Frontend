@@ -43,7 +43,7 @@ const activeJobOrderColumns: Column<ActiveJobOrder>[] = [
 type EquipmentTableProps = {
     setPresetData: (presets: FormData) => void,
     reloadFlag: boolean,
-    setShowModal: (action: 'create' | 'edit' | 'change' | null) => void;
+    setShowModal: (action: 'create' | 'edit' | 'status' | null) => void;
     selectedId: string;
     setSelectedId: (id: string) => void;
     setSelectedJobOrder: ({ }: { jobNumber: string, status: string }) => void;
@@ -107,7 +107,7 @@ export default function ActiveOrdersTable({ setPresetData, reloadFlag, setShowMo
                 >
                     <button onClick={() => {
                         setSelectedId(item.id)
-                        setShowModal('change')
+                        setShowModal('status')
                         setSelectedJobOrder({ jobNumber: item.jobOrderCode, status: (item.status as string).toLowerCase() })
                     }}>
                         <Icon name="edit" />Change Status

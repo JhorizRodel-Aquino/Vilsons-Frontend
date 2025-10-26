@@ -32,12 +32,14 @@ export type FormData = {
     plate?: string,
     make?: string,
     model?: string,
+    truckImage?: File | null,
 
     customerId?: string,
     name?: string,
     username?: string,
     phone?: number | string,
     email?: string,
+    customerImage?: File | null,
 
     contractorId?: string,
     contractorName?: string,
@@ -183,12 +185,16 @@ export default function JobOrderModal({ branchOptions, setShowModal, presetData,
             } else if (key === "afterImages") {
                 value.forEach((file: File) => multipartFormData.append("afterImages", file));
                 return;
-            } else {
-                value = Array.isArray(value) ? JSON.stringify(value) : value;
+            } else if (value instanceof File) {
+                multipartFormData.append(key, value);
+                return;
             }
 
+            // if (!value) return 
+
             if (key === "contractorName" || key === "contractorUsername") return;
-            
+
+            value = Array.isArray(value) ? JSON.stringify(value) : value;
             multipartFormData.append(key, value)
         })
 
@@ -263,6 +269,10 @@ export default function JobOrderModal({ branchOptions, setShowModal, presetData,
         setMaterials((prev) => [...prev, { id: prev.length + 1, materialName: "", quantity: 1, price: null } as Material]);
     };
 
+    const removeMaterial = (id: number) => {
+        setMaterials((prev) => prev.filter((mat) => mat.id !== id));
+    };
+
     const closeModal = () => {
         setShowModal(null)
         setContractorOptions([])
@@ -312,6 +322,14 @@ export default function JobOrderModal({ branchOptions, setShowModal, presetData,
                                 <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-x-10 gap-y-[20px]">
                                     {isCreatingNewTruck ?
                                         <>
+                                            <Field.Image
+                                                label="Truck Picture"
+                                                onChange={(e) =>
+                                                    setFormData({
+                                                        ...formData,
+                                                        truckImage: e.target.files ? e.target.files[0] : null,
+                                                    })}
+                                            />
                                             <Field.Text
                                                 id="plate"
                                                 label="Plate Number"
@@ -421,6 +439,15 @@ export default function JobOrderModal({ branchOptions, setShowModal, presetData,
 
                                 {isCreatingNewCustomer ?
                                     <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-x-10 gap-y-[20px]">
+                                        <Field.Image
+                                            label="Profile Picture"
+                                            onChange={(e) =>
+                                                setFormData({
+                                                    ...formData,
+                                                    customerImage: e.target.files ? e.target.files[0] : null,
+                                                })}
+                                        />
+
                                         <Field.Text
                                             id="customerName"
                                             label="Name"
@@ -559,17 +586,17 @@ export default function JobOrderModal({ branchOptions, setShowModal, presetData,
                                         label="Before"
                                         multiple={true}
                                         onChange={(e) => {
-          const files = Array.from(e.target.files || []);
-          setFormData({ ...formData, beforeImages: files });
-        }}
+                                            const files = Array.from(e.target.files || []);
+                                            setFormData({ ...formData, beforeImages: files });
+                                        }}
                                     />
                                     <Field.Image
                                         label="After"
                                         multiple={true}
                                         onChange={(e) => {
-          const files = Array.from(e.target.files || []);
-          setFormData({ ...formData, afterImages: files });
-        }}
+                                            const files = Array.from(e.target.files || []);
+                                            setFormData({ ...formData, afterImages: files });
+                                        }}
 
                                     />
                                 </div>
@@ -631,7 +658,7 @@ export default function JobOrderModal({ branchOptions, setShowModal, presetData,
                                                             setMaterials(updatedMaterials)
                                                         }}
                                                     />
-                                                    <button className="mt-auto py-[5px] cursor-pointer" onClick={() => { }}><Icon name="delete" color="dark" /></button>
+                                                    <button type="button" className="mt-auto py-[5px] cursor-pointer" onClick={() => removeMaterial(material.id)}><Icon name="delete" color="dark" /></button>
                                                     <p className="py-[5px] text-end">{formatPesoFromCents((material.price || 0) * (material.quantity || 0) * 100)}</p>
                                                 </li>
                                             ))}

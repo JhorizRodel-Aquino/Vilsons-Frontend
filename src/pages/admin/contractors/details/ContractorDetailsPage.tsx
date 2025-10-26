@@ -18,19 +18,19 @@ export default function ContractorDetailsPage() {
 
     return (
         <>
-            <div className="w-full flex gap-6 items-center mb-[34px]">
+            {/* <div className="w-full flex gap-6 items-center mb-[34px]">
                 <ProfilePicture src={API_URL + `/images/users/${contractorData.image}`} />
                 <div className="">
                     <PageHeading title={contractorData?.user?.fullName} />
                     <p className="font-medium text-darker -mt-[30px]">@{contractorData?.user?.username}</p>
                 </div>
-            </div>
+            </div> */}
 
             <PageContent scroll={false}>
-                <ContractorDetailsSection data={contractorData}/>
+                <ContractorDetailsSection/>
             </PageContent>
 
-            {error && <ErrorModal error={error!} closeError={closeError} />}
+            
         </>
     )
 }

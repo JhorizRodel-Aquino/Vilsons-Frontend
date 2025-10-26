@@ -24,7 +24,7 @@ export default function UserDetailsSection() {
     const branchOptions = getBranches()
     const [presetData, setPresetData] = useState<FormData>({ roles: [], branches: [] })
     const [selectedId, setSelectedId] = useState<string>('');
-    const [showModal, setShowModal] = useState<'create' | 'edit' | 'password' | null>(null)
+    const [showModal, setShowModal] = useState<string | null>(null)
 
     if (loading) return <Loading />;
 
@@ -65,7 +65,7 @@ export default function UserDetailsSection() {
             <article className="grid grid-cols-[1fr_3fr] gap-7">
                 <section className="card w-full">
                     <div className="grid gap-6 justify-items-center">
-                        <ProfilePicture src={API_URL + `/images/users/${image}`} />
+                        <ProfilePicture src={API_URL + `/images/${image}`} />
                         <div className="grid gap-1 mb-1">
                             <p className="font-medium">{fullName}</p>
                             <p className="font-medium text-darker">@{username}</p>
@@ -148,11 +148,17 @@ export default function UserDetailsSection() {
             {/* {showModal === "info" && <MyInfoModal setShowModal={setShowModal} onSuccess={reload} presetData={presetData} />} */}
             {/* {showModal === "password" && <MyPasswordModal setShowModal={setShowModal} />} */}
 
-            {showModal === "edit" && <UsersModal branchOptions={branchOptions} roleOptions={customRoleOptions} setShowModal={setShowModal} onSuccess={reload} action={showModal} id={selectedId} presetData={presetData} />}
+            {error ? <ErrorModal error={error!} closeError={closeError} /> :
+            <>
+                {showModal === "edit" && <UsersModal branchOptions={branchOptions} roleOptions={customRoleOptions} setShowModal={setShowModal} onSuccess={reload} action={showModal} id={selectedId} presetData={presetData} />}
 
-            {showModal === "password" && <UserPasswordModal userId={id ?? ""} setShowModal={setShowModal} />}
+                {showModal === "password" && <UserPasswordModal userId={id ?? ""} setShowModal={setShowModal} />}
+            </>
+            }
 
-            {error && <ErrorModal error={error!} closeError={closeError} />}
+
+
+
         </>
     )
 }
