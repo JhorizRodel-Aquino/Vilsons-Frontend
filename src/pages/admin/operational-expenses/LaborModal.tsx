@@ -19,6 +19,7 @@ export type FormData = {
     type?: string;
     payComponents?: PayComponents[];
     branchId?: string;
+    remarks?: string;
 }
 
 export type PayComponents = {
@@ -32,6 +33,7 @@ const formSchemaContractor: ValidationSchema = {
     amount: { required: true, type: "money", label: "Amount" },
     type: { required: true, label: "Salary Type" },
     branchId: { required: true, label: "Branch" },
+    remarks: { required: true },
 };
 
 const formSchemaEmployee: ValidationSchema = {
@@ -44,6 +46,7 @@ const formSchemaEmployee: ValidationSchema = {
         },
     },
     branchId: { required: true, label: "Branch" },
+    remarks: { required: true },
 };
 
 
@@ -193,62 +196,44 @@ export default function LaborModal({ branchOptions, setShowModal, onSuccess, act
                                 <div className="grid gap-[20px]">
                                     <fieldset className="card grid gap-[20px]">
                                         <h4 className="text-lg font-bold">Contractor</h4>
-
-                                        {action !== "edit" &&
-                                            <Field.List
-                                                id="contractorSelection"
-                                                placeholder="Select Contractor"
-                                                validated={!!selectedContractor}
-                                                value={contractorSearch}
-                                                supportingInfo={selectedContractor ? `@${selectedContractor.username}` : ""}
-                                                onChange={(e) => setContractorSearch(e.target.value)}
-                                                onBlur={() => {
-                                                    if (isSelectingRef.current) return;
-                                                    if (!selectedContractor || contractorSearch !== selectedContractor.name) setSelectedContractor(null);
-                                                }}
-                                            >
-                                                {contractorOptions.map((contractor, i) => (
-                                                    <div
-                                                        key={i}
-                                                        onMouseDown={() => {
-                                                            isSelectingRef.current = true;
-                                                        }}
-                                                        onMouseUp={() => {
-                                                            handleSelectContractor(contractor);
+                                        <Field.List
+                                            id="contractorSelection"
+                                            placeholder="Select Contractor"
+                                            validated={!!selectedContractor}
+                                            value={contractorSearch}
+                                            readOnly={action === "edit"}
+                                            supportingInfo={selectedContractor ? `@${selectedContractor.username}` : ""}
+                                            onChange={(e) => setContractorSearch(e.target.value)}
+                                            onBlur={() => {
+                                                if (isSelectingRef.current) return;
+                                                if (!selectedContractor || contractorSearch !== selectedContractor.name) setSelectedContractor(null);
+                                            }}
+                                        >
+                                            {contractorOptions.map((contractor, i) => (
+                                                <div
+                                                    key={i}
+                                                    onMouseDown={() => {
+                                                        isSelectingRef.current = true;
+                                                    }}
+                                                    onMouseUp={() => {
+                                                        handleSelectContractor(contractor);
+                                                        setTimeout(() => {
+                                                            isSelectingRef.current = false;
+                                                        }, 0);
+                                                    }}
+                                                    onMouseLeave={() => {
+                                                        if (isSelectingRef.current) {
                                                             setTimeout(() => {
                                                                 isSelectingRef.current = false;
                                                             }, 0);
-                                                        }}
-                                                        onMouseLeave={() => {
-                                                            if (isSelectingRef.current) {
-                                                                setTimeout(() => {
-                                                                    isSelectingRef.current = false;
-                                                                }, 0);
-                                                            }
-                                                        }}
-                                                    >
-                                                        <span>{contractor.user.fullName}</span>
-                                                        <p className="text-sm text-darker">@{contractor.user.username}</p>
-                                                    </div>
-                                                ))}
-                                            </Field.List>
-                                        }
-
-                                        <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-x-10 gap-y-[20px]">
-                                            <Field.Text
-                                                id="contractorName"
-                                                label="Name"
-                                                value={selectedContractor?.name ?? ""}
-                                                readonly={true}
-                                            />
-
-                                            <Field.Text
-                                                id="contractorUsername"
-                                                label="Username"
-                                                value={selectedContractor?.name ?? ""}
-                                                readonly={true}
-                                            />
-                                        </div>
+                                                        }
+                                                    }}
+                                                >
+                                                    <span>{contractor.user.fullName}</span>
+                                                    <p className="text-sm text-darker">@{contractor.user.username}</p>
+                                                </div>
+                                            ))}
+                                        </Field.List>
                                     </fieldset>
 
                                     <fieldset className="card grid gap-[20px]">
@@ -280,7 +265,16 @@ export default function LaborModal({ branchOptions, setShowModal, onSuccess, act
                                             />
                                         </div>
 
-
+                                        {action === 'edit' &&
+                                            <Field.TextArea
+                                                id="remarks"
+                                                label="Remarks"
+                                                value={formData.remarks}
+                                                onChange={(e) => {
+                                                    setFormData({ ...formData, remarks: e.target.value });
+                                                }}
+                                            />
+                                        }
                                     </fieldset>
 
                                     <fieldset className="card">
@@ -300,70 +294,52 @@ export default function LaborModal({ branchOptions, setShowModal, onSuccess, act
                                 <div className="grid gap-[20px]">
                                     <fieldset className="card grid gap-[20px]">
                                         <h4 className="text-lg font-bold">Employee</h4>
-
-                                        {action !== "edit" &&
-                                            <Field.List
-                                                id="employeeSelection"
-                                                placeholder="Select Employee"
-                                                validated={!!selectedEmployee}
-                                                value={employeeSearch}
-                                                supportingInfo={selectedEmployee ? `@${selectedEmployee.username}` : ""}
-                                                onChange={(e) => setEmployeeSearch(e.target.value)}
-                                                onBlur={() => {
-                                                    // if we're in the middle of selecting (mouse down on an option), ignore the blur
-                                                    if (isSelectingRef.current) return;
-                                                    if (!selectedEmployee || employeeSearch !== selectedEmployee.name) setSelectedEmployee(null);
-                                                }}
-                                            >
-                                                {employeeOptions.map((employee, i) => (
-                                                    <div
-                                                        key={i}
-                                                        // mark that a selection is in progress before blur fires
-                                                        onMouseDown={() => {
-                                                            isSelectingRef.current = true;
-                                                        }}
-                                                        // when mouse is released, actually pick the employee and restore the flag
-                                                        onMouseUp={() => {
-                                                            // call your existing handler (make sure it sets employee search, not contractor search)
-                                                            handleSelectEmployee(employee);
-                                                            // small delay to make sure onBlur (if it fires) sees the flag; then reset
-                                                            // (you can usually just set false here, but timeout ensures DOM event ordering won't race)
+                                        <Field.List
+                                            id="employeeSelection"
+                                            placeholder="Select Employee"
+                                            validated={!!selectedEmployee}
+                                            value={employeeSearch}
+                                            readOnly={action === "edit"}
+                                            supportingInfo={selectedEmployee ? `@${selectedEmployee.username}` : ""}
+                                            onChange={(e) => setEmployeeSearch(e.target.value)}
+                                            onBlur={() => {
+                                                // if we're in the middle of selecting (mouse down on an option), ignore the blur
+                                                if (isSelectingRef.current) return;
+                                                if (!selectedEmployee || employeeSearch !== selectedEmployee.name) setSelectedEmployee(null);
+                                            }}
+                                        >
+                                            {employeeOptions.map((employee, i) => (
+                                                <div
+                                                    key={i}
+                                                    // mark that a selection is in progress before blur fires
+                                                    onMouseDown={() => {
+                                                        isSelectingRef.current = true;
+                                                    }}
+                                                    // when mouse is released, actually pick the employee and restore the flag
+                                                    onMouseUp={() => {
+                                                        // call your existing handler (make sure it sets employee search, not contractor search)
+                                                        handleSelectEmployee(employee);
+                                                        // small delay to make sure onBlur (if it fires) sees the flag; then reset
+                                                        // (you can usually just set false here, but timeout ensures DOM event ordering won't race)
+                                                        setTimeout(() => {
+                                                            isSelectingRef.current = false;
+                                                        }, 0);
+                                                    }}
+                                                    // optional: in case mouse leaves the option before mouseup
+                                                    onMouseLeave={() => {
+                                                        // if mouse leaves while holding, reset the flag
+                                                        if (isSelectingRef.current) {
                                                             setTimeout(() => {
                                                                 isSelectingRef.current = false;
                                                             }, 0);
-                                                        }}
-                                                        // optional: in case mouse leaves the option before mouseup
-                                                        onMouseLeave={() => {
-                                                            // if mouse leaves while holding, reset the flag
-                                                            if (isSelectingRef.current) {
-                                                                setTimeout(() => {
-                                                                    isSelectingRef.current = false;
-                                                                }, 0);
-                                                            }
-                                                        }}
-                                                    >
-                                                        <span>{employee.user.fullName}</span>
-                                                        <p className="text-sm text-darker">@{employee.user.username}</p>
-                                                    </div>
-                                                ))}
-                                            </Field.List>
-                                        }
-
-                                        <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-x-10 gap-y-[20px]">
-                                            <Field.Text
-                                                id="employeeName"
-                                                label="Name"
-                                                value={selectedEmployee?.name ?? ""}
-                                                readonly={true}
-                                            />
-
-                                            <Field.Text
-                                                id="employeeUsername"
-                                                label="Username"
-                                                value={selectedEmployee?.name ?? ""}
-                                                readonly={true}
-                                            />
-                                        </div>
+                                                        }
+                                                    }}
+                                                >
+                                                    <span>{employee.user.fullName}</span>
+                                                    <p className="text-sm text-darker">@{employee.user.username}</p>
+                                                </div>
+                                            ))}
+                                        </Field.List>
                                     </fieldset>
 
                                     <fieldset className="card grid gap-[20px]">
@@ -437,6 +413,16 @@ export default function LaborModal({ branchOptions, setShowModal, onSuccess, act
                                                 </>
                                             }
                                         </div>
+                                        {action === 'edit' &&
+                                            <Field.TextArea
+                                                id="remarks"
+                                                label="Remarks"
+                                                value={formData.remarks}
+                                                onChange={(e) => {
+                                                    setFormData({ ...formData, remarks: e.target.value });
+                                                }}
+                                            />
+                                        }
                                     </fieldset>
 
                                     <fieldset className="card">

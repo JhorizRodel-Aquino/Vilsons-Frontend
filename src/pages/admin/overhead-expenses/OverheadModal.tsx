@@ -11,7 +11,8 @@ import ErrorModal from "../../../components/ErrorModal";
 export type FormData = {
     description: string,
     amount: number | null,
-    branchId?: string
+    branchId?: string,
+    monthly?: boolean
 }
 
 const formSchema: ValidationSchema = {
@@ -49,7 +50,7 @@ export default function OverheadModal({ branchOptions, setShowModal, onSuccess, 
         const success = action === 'create' ? await postData(validatedData) : await putData(id, validatedData)
         if (success) {
             onSuccess();
-            setFormData({ description: "", amount: null }); 
+            setFormData({ description: "", amount: null });
             closeModal();
         }
     };
@@ -64,7 +65,7 @@ export default function OverheadModal({ branchOptions, setShowModal, onSuccess, 
                             <Button.X onClick={closeModal} disabled={loading} />
                         </div>
 
-                        <fieldset className="flex items-center gap-2">
+                        <fieldset>
                             Branch
                             <Selection
                                 options={branchOptions}
@@ -84,6 +85,15 @@ export default function OverheadModal({ branchOptions, setShowModal, onSuccess, 
                                         setFormData({ ...formData, description: e.target.value });
                                     }}
                                 />
+                                <label className="flex gap-2 -mt-2 items-center text-dark">
+                                    <input
+                                        type="checkbox"
+                                        checked={!!formData.monthly}
+                                        onChange={(e) => setFormData({ ...formData, monthly: e.target.checked })}
+                                    />
+                                    Monthly
+                                </label>
+                                
                                 <Field.Money
                                     id="amount"
                                     label="Amount"

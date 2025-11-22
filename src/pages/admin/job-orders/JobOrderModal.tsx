@@ -32,6 +32,7 @@ export type FormData = {
     plate?: string,
     make?: string,
     model?: string,
+    engine?: string,
     truckImage?: File | null,
 
     customerId?: string,
@@ -86,11 +87,10 @@ const formSchemaNewCustomer: ValidationSchema = {
     phone: { required: true, label: 'Customer Phone Number' },
     email: { label: 'Customer Email Address' },
 };
+
 const formSchemaOldCustomer: ValidationSchema = {
     customerId: { required: true, label: "Customer" },
 };
-
-
 
 export default function JobOrderModal({ branchOptions, setShowModal, presetData, onSuccess, action, id }: JobOrdersModalProps) {
     const [formData, setFormData] = useState<FormData>(presetData)
@@ -316,7 +316,6 @@ export default function JobOrderModal({ branchOptions, setShowModal, presetData,
                                                 resetSelectedTruck()
                                             }} />
                                     )}
-
                                 </div>
 
                                 <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-x-10 gap-y-[20px]">
@@ -352,6 +351,14 @@ export default function JobOrderModal({ branchOptions, setShowModal, presetData,
                                                 value={formData.model}
                                                 onChange={(e) => {
                                                     setFormData({ ...formData, model: e.target.value });
+                                                }}
+                                            />
+                                            <Field.Text
+                                                id="engine"
+                                                label="Engine"
+                                                value={formData.engine}
+                                                onChange={(e) => {
+                                                    setFormData({ ...formData, engine: e.target.value });
                                                 }}
                                             />
                                         </>

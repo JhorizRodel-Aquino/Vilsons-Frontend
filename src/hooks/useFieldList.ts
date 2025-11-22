@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { get } from "../services/apiService";
 
-export default function useFieldList(resource: 'contractors' | 'customers' | 'employees' | 'trucks', route: string, sel: Record<string, any> | null) {
+export default function useFieldList(resource: 'contractors' | 'customers' | 'employees' | 'trucks' | 'jobOrders', route: string, sel: Record<string, any> | null) {
     const [selected, setSelected] = useState<Record<string, any> | null>(sel);
     const [options, setOptions] = useState<Record<string, any>[]>([]);
     const [search, setSearch] = useState('')
@@ -10,7 +10,7 @@ export default function useFieldList(resource: 'contractors' | 'customers' | 'em
         const populateUserOptions = async () => {
             const response = await get({ route: `${route}${search}` })
             const optionList = Array.isArray(response?.data) ? response?.data : response?.data?.[resource];
-            // console.log("OPTIONS:", optionList)
+            console.log("OPTIONS:", optionList)
             setOptions(optionList)
         }
         populateUserOptions()

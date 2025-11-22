@@ -11,13 +11,15 @@ export type FormData = {
     quantity: number,
     amount: number | null,
     branchId?: string
+    remarks?: string,
 }
 
 const formSchema: ValidationSchema = {
     equipment: { required: true },
     quantity: { required: true },
     amount: { required: true, type: "money" },
-    branchId: { required: true }
+    branchId: { required: true },
+    remarks: { required: true },
 };
 
 type TransactionsModalProps = {
@@ -46,8 +48,8 @@ export default function EquipmentModal({ branchOptions, setShowModal, onSuccess,
 
         if (!isValid) return;
 
-        const { equipment, quantity, amount, branchId } = validatedData;
-        const formattedData = { name: equipment, quantity, price: amount, branchId }
+        const { equipment, quantity, amount, branchId, remarks } = validatedData;
+        const formattedData = { name: equipment, quantity, price: amount, branchId, remarks }
         const success = action === 'create' ? await postData(formattedData) : await putData(id, formattedData)
         if (success) {
             onSuccess(); // trigger reload in parent
@@ -67,43 +69,57 @@ export default function EquipmentModal({ branchOptions, setShowModal, onSuccess,
                         </div>
 
                         <fieldset>
-                                Branch
-                                <Selection
-                                    options={branchOptions}
-                                    value={formData.branchId}
-                                    onChange={(e) => setFormData({ ...formData, branchId: e.target.value })}
-                                />
+                            Branch
+                            <Selection
+                                options={branchOptions}
+                                value={formData.branchId}
+                                onChange={(e) => setFormData({ ...formData, branchId: e.target.value })}
+                            />
                         </fieldset>
 
-                        <fieldset className="card">
-                            <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-x-10 gap-y-[20px]">
-                                <Field.Text
-                                    id="equipmentName"
-                                    label="Equipment"
-                                    value={formData.equipment}
-                                    onChange={(e) => {
-                                        setFormData({ ...formData, equipment: e.target.value });
-                                    }}
-                                />
+                        <div className="fields">
+                            <fieldset className="card grid gap-[20px]">
+                                <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-x-10 gap-y-[20px]">
+                                    <Field.Text
+                                        id="equipmentName"
+                                        label="Equipment"
+                                        value={formData.equipment}
+                                        onChange={(e) => {
+                                            setFormData({ ...formData, equipment: e.target.value });
+                                        }}
+                                    />
 
-                                <Field.Number
-                                    id="quantity"
-                                    label="Quantity"
-                                    value={formData.quantity}
-                                    onChange={(e) => {
-                                        setFormData({ ...formData, quantity: +e.target.value });
-                                    }}
-                                />
-                                <Field.Money
-                                    id="amount"
-                                    label="Amount"
-                                    value={formData.amount}
-                                    onChange={(values) => {
-                                        setFormData({ ...formData, amount: values.floatValue ?? null });
-                                    }}
-                                />
-                            </div>
-                        </fieldset>
+                                    <Field.Number
+                                        id="quantity"
+                                        label="Quantity"
+                                        value={formData.quantity}
+                                        onChange={(e) => {
+                                            setFormData({ ...formData, quantity: +e.target.value });
+                                        }}
+                                    />
+
+                                    <Field.Money
+                                        id="amount"
+                                        label="Amount"
+                                        value={formData.amount}
+                                        onChange={(values) => {
+                                            setFormData({ ...formData, amount: values.floatValue ?? null });
+                                        }}
+                                    />
+                                </div>
+
+                                {action === 'edit' &&
+                                    <Field.TextArea
+                                        id="remarks"
+                                        label="Remarks"
+                                        value={formData.remarks}
+                                        onChange={(e) => {
+                                            setFormData({ ...formData, remarks: e.target.value });
+                                        }}
+                                    />
+                                }
+                            </fieldset>
+                        </div>
 
                         <div className="flex justify-end items-center gap-[20px]">
                             <Button variant="gray" label="Cancel" onClick={closeModal} disabled={loading} />

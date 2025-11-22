@@ -14,6 +14,7 @@ import { useEffect, useState, type ReactElement } from "react";
 import useDeleteData from "../../../hooks/useDeleteData";
 import type { FormData } from "./TransactionsModal";
 import Options from "../../../components/Options";
+import { get } from "../../../services/apiService";
 
 type Transaction = {
     referenceNumber: string;
@@ -56,7 +57,8 @@ export default function TransactionsTable({ setPresetData, reloadFlag, setShowMo
 
     const handleEdit = async (item: any) => {
         setSelectedId(item.id)
-        setPresetData({ referenceNumber: item.referenceNumber, jobOrderCode: item.jobOrderCode, senderName: item.senderName, amount: item.amount / 100, mop: item.mop } as FormData)
+        const jobOrder = (await get({ route: `/api/job-orders?search=${item.jobOrderCode}` })).data.jobOrders[0];
+        setPresetData({ referenceNumber: item.referenceNumber, jobOrderCode: item.jobOrderCode, senderName: item.senderName, amount: item.amount / 100, mop: item.mop, plateNumber: jobOrder.plateNumber } as FormData)
         setShowModal('edit');
     }
 

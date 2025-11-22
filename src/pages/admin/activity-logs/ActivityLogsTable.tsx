@@ -10,11 +10,13 @@ import formatDate from "../../../utils/formatDate";
 
 type ActivityLog = {
     activity: string;
+    remarks: string;
     datetime: string;
 };
 
 const activityLogColumns: Column<ActivityLog>[] = [
     { key: "activity", label: "Activity" },
+    { key: "remarks", label: "Remarks" },
     { key: "datetime", label: "Datetime", render: (value) => formatDate(value) },
 ];
 
@@ -28,6 +30,7 @@ export default function ActivityLogsTable() {
     const activityLogs: ActivityLog[] = activityItems.map(
         (item: Record<string, any>) => ({
             activity: item.activity,
+            remarks: item.remarks || '',
             datetime: item.createdAt,
         })
     );

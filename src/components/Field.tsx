@@ -282,7 +282,7 @@ type FieldList = {
     children?: ReactNode;
     className?: string
     validated?: boolean;
-    supportingInfo?: string;
+    supportingInfo?: ReactNode;
     readOnly?: boolean;
 };
 

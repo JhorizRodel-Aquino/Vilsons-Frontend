@@ -19,6 +19,7 @@ type Truck = {
     plateNumber: string;
     make: string;
     model: string;
+    engine: string;
     owner: string;
     dateAdded: string;
     options: ReactElement;
@@ -28,6 +29,7 @@ const truckColumns: Column<Truck>[] = [
     { key: "plateNumber", label: "Plate Number", render: (value) => value as React.ReactElement },
     { key: "make", label: "Make" },
     { key: "model", label: "Model" },
+    { key: "engine", label: "Engine" },
     { key: "owner", label: "Owner", render: (value) => value as React.ReactElement },
     { key: "dateAdded", label: "Date Added", render: (isoDate) => formatDate(isoDate as string, 'date') },
     { key: "options", label: "", render: (value) => value as React.ReactElement },
@@ -55,7 +57,7 @@ export default function TrucksTable({ setPresetData, reloadFlag, setShowModal, s
 
     const handleEdit = async (item: any) => {
         setSelectedId(item.id)
-        setPresetData({ plate: item.plate, make: item.make, model: item.model } as FormData)
+        setPresetData({ plate: item.plate, make: item.make, model: item.model, engine: item.engine } as FormData)
         setShowModal('edit');
     }
 
@@ -81,6 +83,7 @@ export default function TrucksTable({ setPresetData, reloadFlag, setShowModal, s
             plateNumber: <Link to={`/trucks/${item.id}`}>{item.plate}</Link>,
             make: item.make,
             model: item.model,
+            engine: item.engine || '',
             owner: <Link to={`/customers/${item.customerId}`}>{item.customerFullName}</Link>,
             dateAdded: item.createdAt,
             options:

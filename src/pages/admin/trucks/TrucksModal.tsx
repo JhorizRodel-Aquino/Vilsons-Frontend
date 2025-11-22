@@ -8,13 +8,15 @@ import usePostPutData from "../../../hooks/usePostPutData";
 export type FormData = {
     plate: string,
     make: string,
-    model: string
+    model: string,
+    engine?: string,
 }
 
 const formSchema: ValidationSchema = {
     plate: { required: true },
     make: { required: true },
     model: { required: true },
+    engine: { },
 };
 
 type TrucksModalProps = {
@@ -44,7 +46,7 @@ export default function TrucksModal({ setShowModal, onSuccess, action, presetDat
         const success = action === 'create' ? await postData(validatedData) : await putData(id, validatedData)
         if (success) {
             onSuccess();
-            setFormData({ plate: "", make: "", model: "" });
+            setFormData({ plate: "", make: "", model: "", engine: ""});
             closeModal();
         }
     };
@@ -85,6 +87,15 @@ export default function TrucksModal({ setShowModal, onSuccess, action, presetDat
                                     value={formData.model}
                                     onChange={(e) => {
                                         setFormData({ ...formData, model: e.target.value });
+                                    }}
+                                />
+
+                                <Field.Text
+                                    id="engine"
+                                    label="Engine"
+                                    value={formData.engine}
+                                    onChange={(e) => {
+                                        setFormData({ ...formData, engine: e.target.value });
                                     }}
                                 />
                             </div>

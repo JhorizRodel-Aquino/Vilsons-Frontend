@@ -38,6 +38,6 @@ export default function ActiveOrdersTable({ data }: { data: [] }) {
     );
 
     return (
-        <Table columns={activeOrderColumns} rows={activeOrders} withOptions={true} />
+        <Table columns={activeOrderColumns} rows={activeOrders} />
     )
 }

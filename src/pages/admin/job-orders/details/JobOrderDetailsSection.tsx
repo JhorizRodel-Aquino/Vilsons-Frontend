@@ -28,7 +28,7 @@ export default function CustomerDetailsSection() {
         jobOrderCode, status,
         createdAt, updatedAt, updatedBy,
         branchName,
-        truckId, plate, make, model,
+        truckId, plate, make, model, engine,
         contractorId, contractorName, contractorUsername, contractorPhone, contractorEmail,
         customerId, customerName, customerUsername, customerPhone, customerEmail,
         description,
@@ -40,7 +40,7 @@ export default function CustomerDetailsSection() {
 
     const handleEdit = () => {
         setPresetData({
-            truckId, plate, make, model,
+            truckId, plate, make, model, engine,
             customerId, name: customerName, username: customerUsername,
             contractorId, contractorName, contractorUsername,
             description, labor: labor / 100 || null,
@@ -94,9 +94,10 @@ export default function CustomerDetailsSection() {
                 <section className="card w-full">
                     <h2 className="font-bold text-primary mb-5">Vehicle Information</h2>
                     <div className="flex flex-wrap gap-x-30 gap-y-5">
-                        <Detail label='Plate Number' value={plate} />
+                        <Detail label='Plate' value={plate} />
                         <Detail label='Make' value={make} />
                         <Detail label='Model' value={model} />
+                        <Detail label='Engine' value={engine} />
                     </div>
                 </section>
 

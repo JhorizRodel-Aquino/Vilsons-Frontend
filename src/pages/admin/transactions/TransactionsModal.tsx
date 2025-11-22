@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Button from "../../../components/Button";
 import Field from "../../../components/Field";
 import usePostPutData from "../../../hooks/usePostPutData";
 import ErrorModal from "../../../components/ErrorModal";
 import validateAndSanitize, { type ValidationSchema } from "../../../utils/validateAndSanitize";
+import useFieldList from "../../../hooks/useFieldList";
+import formatPesoFromCents from "../../../utils/formatPesoFromCents";
 
 export type FormData = {
     referenceNumber: string,
@@ -11,6 +13,7 @@ export type FormData = {
     senderName: string
     amount: number | null,
     mop: string,
+    plateNumber?: string,
 }
 
 const formSchema: ValidationSchema = {
@@ -32,11 +35,21 @@ type TransactionsModalProps = {
 export default function TransactionModal({ setShowModal, onSuccess, action, presetData, id }: TransactionsModalProps) {
     const [formData, setFormData] = useState<FormData>(presetData)
     const { loading, error, closeError, postData, putData } = usePostPutData('/api/transactions')
+    const isSelectingRef = useRef(false);
+    const {
+        selected: selectedJobCode,
+        setSelected: setSelectedJobCode,
+        options: jobCodeOptions,
+        setOptions: setJobCodeOptions,
+        search: jobCodeSearch,
+        setSearch: setJobCodeSearch
+    } = useFieldList("jobOrders", "/api/job-orders/unpaid?search=", null)
 
     console.log(formData)
 
     const closeModal = () => {
         setShowModal(null)
+        setJobCodeOptions([])
     }
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -46,14 +59,47 @@ export default function TransactionModal({ setShowModal, onSuccess, action, pres
 
         if (!isValid) return;
 
-        const formattedData = {...validatedData, status: 'successful'}
+        const formattedData = { ...validatedData, status: 'successful' }
         const success = action === 'create' ? await postData(formattedData) : await putData(id, formattedData)
         if (success) {
             onSuccess();
-            setFormData({ referenceNumber: '', jobOrderCode: '', senderName: '', amount: null, mop: '' });
+            setFormData({ referenceNumber: '', jobOrderCode: '', senderName: '', amount: null, mop: '', plateNumber: '' }); // reset form
             closeModal();
+            setJobCodeOptions([])
         }
     };
+
+    const handleSelectJobCode = (jobCode: any) => {
+        setSelectedJobCode({
+            name: jobCode.jobOrderCode,
+            status: jobCode.status,
+            plateNumber: jobCode.plateNumber,
+            balance: jobCode.balance
+        });
+        setJobCodeSearch(jobCode.jobOrderCode); // show name in input
+    };
+
+    // new helper: set amount to job balance (assumes balance is cents; divide by 100)
+    const applyMaxAmount = () => {
+        if (!selectedJobCode || selectedJobCode.balance == null) return;
+        const rawBalance = selectedJobCode.balance;
+        const amountValue = typeof rawBalance === 'number' ? rawBalance / 100 : parseFloat(String(rawBalance));
+        setFormData({ ...formData, amount: isNaN(amountValue) ? null : amountValue });
+    };
+
+    useEffect(() => {
+        setFormData({ ...formData, jobOrderCode: selectedJobCode?.name })
+    }, [selectedJobCode])
+
+    useEffect(() => {
+        if (action === "edit") {
+            setSelectedJobCode({
+                name: formData.jobOrderCode,
+                plateNumber: formData.plateNumber,
+            });
+        }
+        setJobCodeSearch(formData.jobOrderCode || "");
+    }, [])
 
     return (
         <>
@@ -67,6 +113,56 @@ export default function TransactionModal({ setShowModal, onSuccess, action, pres
 
                         <fieldset className="card">
                             <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-x-10 gap-y-[20px]">
+
+                                <div>
+                                    Job Number
+                                    <Field.List
+                                        id="jobCodeSelection"
+                                        placeholder="Select Job Number"
+                                        validated={!!selectedJobCode}
+                                        readOnly={action === "edit"}
+                                        value={jobCodeSearch}
+                                        supportingInfo={selectedJobCode &&
+                                            <>
+                                                plate: {selectedJobCode.plateNumber} {<br />}
+                                                {action === 'create' && (<>balance: {formatPesoFromCents(selectedJobCode.balance)}</>)}
+                                            </>
+                                        }
+                                        onChange={(e) => setJobCodeSearch(e.target.value)}
+                                        onBlur={() => {
+                                            if (isSelectingRef.current) return;
+                                            if (!selectedJobCode || jobCodeSearch !== selectedJobCode.name) setSelectedJobCode(null);
+                                        }}
+                                    >
+                                        {jobCodeOptions.map((jobCode, i) => (
+                                            <div
+                                                key={i}
+                                                onMouseDown={() => {
+                                                    isSelectingRef.current = true;
+                                                }}
+                                                onMouseUp={() => {
+                                                    handleSelectJobCode(jobCode);
+                                                    setTimeout(() => {
+                                                        isSelectingRef.current = false;
+                                                    }, 0);
+                                                }}
+                                                onMouseLeave={() => {
+                                                    if (isSelectingRef.current) {
+                                                        setTimeout(() => {
+                                                            isSelectingRef.current = false;
+                                                        }, 0);
+                                                    }
+                                                }}
+                                            >
+                                                <span>{jobCode.jobOrderCode}</span>
+                                                <p className="text-sm text-darker">
+                                                    plate: {jobCode.plateNumber}
+                                                </p>
+                                            </div>
+                                        ))}
+                                    </Field.List>
+                                </div>
+
                                 <Field.Text
                                     id="referenceNumber"
                                     label="Reference Number"
@@ -74,13 +170,7 @@ export default function TransactionModal({ setShowModal, onSuccess, action, pres
                                     onChange={(e) => setFormData({ ...formData, referenceNumber: e.target.value })}
 
                                 />
-                                <Field.Text
-                                    id="jobOrderCode"
-                                    label="Job Number"
-                                    placeholder="JO-XX-XXX"
-                                    value={formData.jobOrderCode}
-                                    onChange={(e) => setFormData({ ...formData, jobOrderCode: e.target.value })}
-                                />
+
                                 <Field.Text
                                     id="senderName"
                                     label="Sender Name"
@@ -92,14 +182,18 @@ export default function TransactionModal({ setShowModal, onSuccess, action, pres
                                     label="Mode of Payment"
                                     value={formData.mop}
                                     onChange={(e) => setFormData({ ...formData, mop: e.target.value })}
-                                />                                   <Field.Money
-                                    id="amount"
-                                    label="Amount"
-                                    value={formData.amount}
-                                    onChange={(values) => {
-                                        setFormData({ ...formData, amount: values.floatValue ?? null });
-                                    }}
-                                />
+                                />                                  <div className="flex justify-between items-end gap-2">
+                                    <Field.Money
+                                        id="amount"
+                                        label="Amount"
+                                        value={formData.amount}
+                                        onChange={(values) => {
+                                            setFormData({ ...formData, amount: values.floatValue ?? null });
+                                        }}
+                                        width="full"
+                                    />
+                                    <Button label="Max" variant="outline" size="mini" onClick={applyMaxAmount} />
+                                </div>
 
                             </div>
                         </fieldset>
