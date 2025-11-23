@@ -9,6 +9,9 @@ import Icon from "../../../components/Icon";
 import Selection from "../../../components/Selection";
 import { toastWarning } from "../../../utils/toastWarning";
 import ErrorModal from "../../../components/ErrorModal";
+import formatPesoFromCents from "../../../utils/formatPesoFromCents";
+import Dropdown from "../../../components/Dropdown";
+import api from "../../../utils/axiosInstance";
 
 export type FormData = {
     profile?: File | null;
@@ -21,6 +24,14 @@ export type FormData = {
 
     commission?: number;
 };
+
+export type Component = {
+    id: number;
+    componentName?: string,
+    amount?: number | null,
+    schedules?: number | null
+}
+
 
 const formSchemaGeneral: ValidationSchema = {
     name: { required: true },
@@ -62,6 +73,8 @@ export default function UsersModal({
     const { error, closeError, loading, postData, putData } = usePostPutData("/api/users");
     console.log(formData)
     const closeModal = () => setShowModal(null);
+    const [components, setComponents] = useState<Component[]>([])
+    const [componentsOptions, setComponentsOptions] = useState<SelectionOptions[]>([])
 
     // role add/remove logic
     const addRole = () => {
@@ -211,6 +224,14 @@ export default function UsersModal({
         }
     };
 
+    const removeComponent = (id: number) => {
+        setComponents((prev) => prev.filter((mat) => mat.id !== id));
+    };
+
+    const addComponent = (comp: any) => {
+        setComponents((prev) => [...prev, { id: comp.value, componentName: comp.label, amount: null, schedules: null } as Component]);
+    };
+
     useEffect(() => {
         if (showBranches && branchOptions.length > 0) {
             setFormData((prev) => {
@@ -221,6 +242,28 @@ export default function UsersModal({
             });
         }
     }, [showBranches, branchOptions]);
+useEffect(() => {
+    const fetchComponentsOptions = async () => {
+        try {
+            const components = (await api.get('/api/components')).data.data;
+            const compOptions = components?.map((component: any) => ({
+                value: component.id,
+                label: component.componentName
+            }))
+            console.log("COMPONENT", components);
+            
+            // Set the mapped options, not the original components
+            setComponentsOptions(compOptions as SelectionOptions[]);
+        } catch (error) {
+            console.error('Error fetching components:', error);
+            setComponentsOptions([]); // Set empty array on error
+        }
+    };
+
+    if (hasCustomerBaseRole) {
+        fetchComponentsOptions();
+    }
+}, [hasCustomerBaseRole]);
 
     return (
         <>
@@ -236,153 +279,231 @@ export default function UsersModal({
                             </button>
                         </div>
 
-                        <fieldset className="card">
-                            <h4 className="text-lg font-bold mb-5">Profile Picture</h4>
-
-                            <Field.Image
-                                onChange={(e) =>
-                                    setFormData({
-                                        ...formData,
-                                        profile: e.target.files ? e.target.files[0] : null,
-                                    })}
-                            />
-                        </fieldset>
-
-                        {/* Personal Info */}
-                        <fieldset className="card">
-                            <h4 className="text-lg font-bold mb-5">Personal Information</h4>
-
-                            <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-x-10 gap-y-[20px]">
-                                <Field.Text
-                                    id="name"
-                                    label="Name"
-                                    value={formData.name}
-                                    onChange={(e) =>
-                                        setFormData({ ...formData, name: e.target.value })
-                                    }
-                                />
-                                <Field.Text
-                                    id="username"
-                                    label="Username"
-                                    value={formData.username}
-                                    readonly={action === "edit"}
-                                    onChange={(e) =>
-                                        setFormData({ ...formData, username: e.target.value })
-                                    }
-                                />
-                                <Field.Email
-                                    id="email"
-                                    label="Email"
-                                    value={formData.email}
-                                    onChange={(e) =>
-                                        setFormData({ ...formData, email: e.target.value })
-                                    }
-                                />
-                                <Field.Number
-                                    id="phone"
-                                    label="Phone Number"
-                                    noSpinner
-                                    min={0}
-                                    value={formData.phone}
-                                    onChange={(e) =>
-                                        setFormData({ ...formData, phone: +e.target.value })
-                                    }
-                                />
-                            </div>
-                        </fieldset>
-
-                        {/* Roles Section */}
-                        <fieldset className="card">
-                            <div className="mb-5 flex justify-between items-center">
-                                <h4 className="text-lg font-semibold">Roles</h4>
-                                <Button
-                                    size="mini"
-                                    variant="outline"
-                                    label="Add Role"
-                                    onClick={addRole}
-                                    disabled={
-                                        (formData.roles || [])
-                                            .map((id) => roleOptions.find((r) => r.value === id))
-                                            .some((r) =>
-                                                ["customer", "contractor"].includes(r?.baseRoleName || "")
-                                            )
-                                    }
-                                />
-                            </div>
-
-                            <div className="space-y-3">
-                                {(formData.roles || []).map((roleId, i) => (
-                                    <div
-                                        key={i}
-                                        className="flex items-center gap-2"
-                                    >
-                                        <Selection
-                                            placeholder="Select a role"
-                                            options={filteredRoleOptions}
-                                            value={roleId}
-                                            onChange={(e) => updateRole(i, e.target.value)}
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={() => removeRole(i)}
-                                            className="p-1 text-gray-500 hover:text-red-600"
-                                        >
-                                            <Icon name="delete" color="dark" />
-                                        </button>
-                                    </div>
-                                ))}
-
-                                {formData.roles?.length === 0 && (
-                                    <p className="text-sm text-gray-500">
-                                        No roles selected yet.
-                                    </p>
-                                )}
-                            </div>
-                        </fieldset>
-
-                        {/* Branch Section (Conditional) */}
-                        {(showBranches || hasContractorBaseRole) &&
+                        <div className="fields grid gap-[20px]">
                             <fieldset className="card">
-                                <h4 className="text-lg font-bold mb-5">Additional Information</h4>
+                                <h4 className="text-lg font-bold mb-5">Profile Picture</h4>
+
+                                <Field.Image
+                                    onChange={(e) =>
+                                        setFormData({
+                                            ...formData,
+                                            profile: e.target.files ? e.target.files[0] : null,
+                                        })}
+                                />
+                            </fieldset>
+
+                            {/* Personal Info */}
+                            <fieldset className="card">
+                                <h4 className="text-lg font-bold mb-5">Personal Information</h4>
 
                                 <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-x-10 gap-y-[20px]">
-                                    {showBranches && (
-                                        <div>
-                                            <label className="">Branches</label>
-                                            <div className="flex flex-wrap gap-2">
-                                                {branchOptions.map((branch) => (
-                                                    <button
-                                                        key={branch.value}
-                                                        type="button"
-                                                        onClick={() => toggleBranch(branch.value)}
-                                                        className={`px-3 py-1 rounded-full border ${formData.branches?.includes(branch.value)
-                                                            ? "bg-primary text-white border-primary"
-                                                            : "bg-gray-100 text-gray-700 border-gray-300"
-                                                            }`}
-                                                    >
-                                                        {branch.label}
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {hasContractorBaseRole &&
-                                        <Field.Number
-                                            id="commission"
-                                            label="Commission (%)"
-                                            noSpinner
-                                            min={0}
-                                            value={formData.commission}
-                                            onChange={(e) =>
-                                                setFormData({ ...formData, commission: +e.target.value })
-                                            }
-                                        />
-                                    }
-
+                                    <Field.Text
+                                        id="name"
+                                        label="Name"
+                                        value={formData.name}
+                                        onChange={(e) =>
+                                            setFormData({ ...formData, name: e.target.value })
+                                        }
+                                    />
+                                    <Field.Text
+                                        id="username"
+                                        label="Username"
+                                        value={formData.username}
+                                        readonly={action === "edit"}
+                                        onChange={(e) =>
+                                            setFormData({ ...formData, username: e.target.value })
+                                        }
+                                    />
+                                    <Field.Email
+                                        id="email"
+                                        label="Email"
+                                        value={formData.email}
+                                        onChange={(e) =>
+                                            setFormData({ ...formData, email: e.target.value })
+                                        }
+                                    />
+                                    <Field.Number
+                                        id="phone"
+                                        label="Phone Number"
+                                        noSpinner
+                                        min={0}
+                                        value={formData.phone}
+                                        onChange={(e) =>
+                                            setFormData({ ...formData, phone: +e.target.value })
+                                        }
+                                    />
                                 </div>
                             </fieldset>
-                        }
+
+                            {/* Roles Section */}
+                            <fieldset className="card">
+                                <div className="mb-5 flex justify-between items-center">
+                                    <h4 className="text-lg font-semibold">Roles</h4>
+                                    <Button
+                                        size="mini"
+                                        variant="outline"
+                                        label="Add Role"
+                                        onClick={addRole}
+                                        disabled={
+                                            (formData.roles || [])
+                                                .map((id) => roleOptions.find((r) => r.value === id))
+                                                .some((r) =>
+                                                    ["customer", "contractor"].includes(r?.baseRoleName || "")
+                                                )
+                                        }
+                                    />
+                                </div>
+
+                                <div className="space-y-3">
+                                    {(formData.roles || []).map((roleId, i) => (
+                                        <div
+                                            key={i}
+                                            className="flex items-center gap-2"
+                                        >
+                                            <Selection
+                                                placeholder="Select a role"
+                                                options={filteredRoleOptions}
+                                                value={roleId}
+                                                onChange={(e) => updateRole(i, e.target.value)}
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => removeRole(i)}
+                                                className="p-1 text-gray-500 hover:text-red-600"
+                                            >
+                                                <Icon name="delete" color="dark" />
+                                            </button>
+                                        </div>
+                                    ))}
+
+                                    {formData.roles?.length === 0 && (
+                                        <p className="text-sm text-gray-500">
+                                            No roles selected yet.
+                                        </p>
+                                    )}
+                                </div>
+                            </fieldset>
+
+                            {/* Branch Section (Conditional) */}
+                            {(showBranches || hasContractorBaseRole || hasCustomerBaseRole) &&
+                                <fieldset className="card">
+                                    <h4 className="text-lg font-bold mb-5">Additional Information</h4>
+
+                                    <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-x-10 gap-y-[20px]">
+                                        {showBranches && (
+                                            <div>
+                                                <label className="">Branches</label>
+                                                <div className="flex flex-wrap gap-2">
+                                                    {branchOptions.map((branch) => (
+                                                        <button
+                                                            key={branch.value}
+                                                            type="button"
+                                                            onClick={() => toggleBranch(branch.value)}
+                                                            className={`px-3 py-1 rounded-full border ${formData.branches?.includes(branch.value)
+                                                                ? "bg-primary text-white border-primary"
+                                                                : "bg-gray-100 text-gray-700 border-gray-300"
+                                                                }`}
+                                                        >
+                                                            {branch.label}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {hasContractorBaseRole &&
+                                            <Field.Number
+                                                id="commission"
+                                                label="Commission (%)"
+                                                noSpinner
+                                                min={0}
+                                                value={formData.commission}
+                                                onChange={(e) =>
+                                                    setFormData({ ...formData, commission: +e.target.value })
+                                                }
+                                            />
+                                        }
+
+                                        {hasCustomerBaseRole &&
+                                            <div className="col-span-full">
+                                                <div className="mb-5 flex justify-between items-center">
+                                                    <h4 className="text-lg font-semibold">Components</h4>
+                                                    {/* <Button variant="outline" label="Add Component" size="mini" onClick={addComponent} /> */}
+                                                    <Selection
+                                                        options={componentsOptions}
+                                                        value=""
+                                                        placeholder="Select Component"
+                                                        onChange={(e) => addComponent(componentsOptions.find(comp => comp.value === e.target.value))}
+                                                    />
+                                                </div>
+
+                                                {components.length > 0 &&
+                                                    <>
+                                                        <div className="grid grid-cols-[3fr_2fr_2fr_auto] gap-x-5 gap-y-[20px] font-semibold">
+                                                            <span>Pay</span>
+                                                            <span>Amount</span>
+                                                            <span>Schedules</span>
+                                                            <span className="opacity-0"><Icon name="Delete" /></span>
+                                                        </div>
+
+                                                        <ol className="grid gap-2 list-decimal list-inside">
+                                                            {components.map((component, i) => (
+                                                                <li key={i} id={`${component.id}`} className="grid grid-cols-[3fr_2fr_2fr_auto] gap-x-5 gap-y-[20px]">
+                                                                    <Field.Text
+                                                                        id={`${component.id}-name`}
+                                                                        value={component.componentName}
+                                                                        readonly
+                                                                        onChange={(e) => {
+                                                                            const updatedComponents = components.map((comp) =>
+                                                                                comp.id === component.id
+                                                                                    ? { ...comp, componentName: e.target.value }
+                                                                                    : comp
+                                                                            );
+                                                                            setComponents(updatedComponents)
+                                                                        }}
+                                                                    />
+
+                                                                    {/* <Dropdown options/> */}
+
+                                                                    <Field.Money
+                                                                        id={`${component.id}-amount`}
+                                                                        value={component.amount}
+                                                                        onChange={(values) => {
+                                                                            const updatedComponents = components.map((comp) =>
+                                                                                comp.id === component.id
+                                                                                    ? { ...comp, amount: values.floatValue ?? null }
+                                                                                    : comp
+                                                                            );
+                                                                            setComponents(updatedComponents)
+                                                                        }}
+                                                                    />
+
+                                                                    {/* <Field.Number
+                                                                        id={`${component.id}-schedules`}
+                                                                        min={1}
+                                                                        value={component.schedules}
+                                                                        onChange={(e) => {
+                                                                            const updatedComponents = components.map((comp) =>
+                                                                                comp.id === component.id
+                                                                                    ? { ...comp, schedules: +e.target.value }
+                                                                                    : comp
+                                                                            );
+                                                                            setComponents(updatedComponents)
+                                                                        }}
+                                                                    /> */}
+                                                                    <button type="button" className="mt-auto py-[5px] cursor-pointer" onClick={() => removeComponent(component.id)}><Icon name="delete" color="dark" /></button>
+
+                                                                </li>
+                                                            ))}
+                                                        </ol>
+                                                    </>
+                                                }
+                                            </div>
+                                        }
+                                    </div>
+                                </fieldset>
+                            }
+                        </div>
 
 
                         <div className="flex justify-end items-center gap-[20px]">

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { act, useEffect, useRef, useState } from "react";
 import Button from "../../../components/Button";
 import Field from "../../../components/Field";
 import Tabs from "../../../components/Tabs";
@@ -11,7 +11,6 @@ import validateAndSanitize from "../../../utils/validateAndSanitize";
 import ErrorModal from "../../../components/ErrorModal";
 import Selection from "../../../components/Selection";
 import useFieldList from "../../../hooks/useFieldList";
-
 
 export type FormData = {
     userId?: string;
@@ -73,6 +72,7 @@ export default function LaborModal({ branchOptions, setShowModal, onSuccess, act
 
     const [formData, setFormData] = useState<FormData>(presetData)
     const { loading, error, closeError, postData, putData } = usePostPutData('/api')
+    const [componentsOptions, setComponentsOptions] = useState<SelectionOptions[]>([])
 
     const {
         selected: selectedContractor,
@@ -107,7 +107,16 @@ export default function LaborModal({ branchOptions, setShowModal, onSuccess, act
     }, [selectedContractor])
 
     useEffect(() => {
-        setFormData({ ...formData, userId: selectedEmployee?.id, payComponents: selectedEmployee?.payComponents })
+        const nonEmptyComponents = selectedEmployee?.payComponents?.filter((comp: PayComponents) => comp.amount > 0) || [];
+        const emptyComponents = selectedEmployee?.payComponents?.filter((comp: PayComponents) => comp.amount <= 0) || [];
+        setComponentsOptions([
+            ...emptyComponents.map((comp: PayComponents) => ({
+                value: comp.componentId,
+                label: comp.componentName
+            })),
+            { value: '', label: 'New Component' }
+        ]);
+        setFormData({ ...formData, userId: selectedEmployee?.id, payComponents: nonEmptyComponents })
     }, [selectedEmployee])
 
 
@@ -346,11 +355,38 @@ export default function LaborModal({ branchOptions, setShowModal, onSuccess, act
                                         <div className="flex justify-between">
                                             <h4 className="text-lg font-bold">Salary Components</h4>
                                             {selectedEmployee?.id && (
-                                                <Button
-                                                    label="Add Component"
-                                                    variant="outline"
-                                                    size="mini"
-                                                    onClick={addComponent}
+                                                // <Button
+                                                //     label="Add Component"
+                                                //     variant="outline"
+                                                //     size="mini"
+                                                //     onClick={addComponent}
+                                                // />
+                                                <Selection
+                                                    options={componentsOptions}
+                                                    value=""
+                                                    placeholder="Add Component"
+                                                    onChange={(e) => {
+                                                        const selectedValue = e.target.value;
+                                                        const selectedComponent = componentsOptions.find(comp => comp.value === selectedValue);
+
+                                                        if (selectedComponent?.label === 'New Component') {
+                                                            // Run addComponent function for new component
+                                                            addComponent();
+                                                        } else {
+                                                            // Add existing component to payComponents
+                                                            setFormData({
+                                                                ...formData,
+                                                                payComponents: [
+                                                                    ...(formData.payComponents ? formData.payComponents : []),
+                                                                    {
+                                                                        componentId: selectedValue,
+                                                                        componentName: selectedComponent?.label || '',
+                                                                        amount: 0
+                                                                    }
+                                                                ]
+                                                            });
+                                                        }
+                                                    }}
                                                 />
                                             )}
                                         </div>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Button from "../../../components/Button";
 import Field from "../../../components/Field";
 import type { SelectionOptions } from "../../../components/Selection";
@@ -7,12 +7,13 @@ import usePostPutData from "../../../hooks/usePostPutData";
 import validateAndSanitize from "../../../utils/validateAndSanitize";
 import Selection from "../../../components/Selection";
 import ErrorModal from "../../../components/ErrorModal";
+import useFieldList from "../../../hooks/useFieldList";
 
 export type FormData = {
     description: string,
     amount: number | null,
     branchId?: string,
-    monthly?: boolean
+    isMonthly?: boolean
 }
 
 const formSchema: ValidationSchema = {
@@ -33,12 +34,34 @@ type OverheadModalProps = {
 export default function OverheadModal({ branchOptions, setShowModal, onSuccess, action, presetData, id }: OverheadModalProps) {
     const [formData, setFormData] = useState<FormData>(presetData)
     const { loading, error, closeError, postData, putData } = usePostPutData('/api/overheads')
+    const isSelectingRef = useRef(false);
+    const {
+        // selected: selectedDescription,
+        // setSelected: setSelectedDescription,
+        options: descriptionOptions,
+        setOptions: setDescriptionOptions,
+        // search: descriptionSearch,
+        // setSearch: setDescriptionSearch
+    } = useFieldList("overheads", "/api/overheads/monthly", null)
 
     console.log(formData)
 
     const closeModal = () => {
-        setShowModal(null)
+        setDescriptionOptions([]);
+        setShowModal(null);
     }
+
+    const handleSelectDescription = (description: any) => {
+        // setSelectedDescription({
+        //     description: description.description,
+        //     isMonthly: description.isMonthly,
+        // });
+        // setDescriptionSearch(description.plate); // show name in input
+        setFormData({
+            ...formData,
+            isMonthly: description.isMonthly,
+        });
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -51,9 +74,19 @@ export default function OverheadModal({ branchOptions, setShowModal, onSuccess, 
         if (success) {
             onSuccess();
             setFormData({ description: "", amount: null });
+            setDescriptionOptions([])
             closeModal();
         }
     };
+
+    useEffect(() => {
+        if (formData.description === '') {
+            setFormData({
+                ...formData,
+                isMonthly: false,
+            });
+        }
+    }, [formData.description])
 
     return (
         <>
@@ -76,7 +109,7 @@ export default function OverheadModal({ branchOptions, setShowModal, onSuccess, 
 
                         <fieldset className="card">
                             <div className="grid gap-x-10 gap-y-[20px]">
-                                <Field.Text
+                                {/* <Field.Text
                                     id="description"
                                     label="Description"
                                     placeholder="Electric Bill"
@@ -84,16 +117,59 @@ export default function OverheadModal({ branchOptions, setShowModal, onSuccess, 
                                     onChange={(e) => {
                                         setFormData({ ...formData, description: e.target.value });
                                     }}
-                                />
-                                <label className="flex gap-2 -mt-2 items-center text-dark">
+                                /> */}
+
+                                <Field.List
+                                    id="description"
+                                    placeholder="Enter Description"
+                                    value={formData.description}
+                                    noValidation={true}
+                                    onChange={(e) => {
+                                        // setDescriptionSearch(e.target.value); 
+                                        setFormData({ ...formData, description: e.target.value });
+                                    }}
+                                    onBlur={() => {
+                                        if (isSelectingRef.current) return;
+                                        // if (!selectedDescription || descriptionSearch !== selectedDescription.name) setSelectedDescription(null);
+                                    }}
+                                >
+                                    {descriptionOptions.map((description, i) => (
+                                        <div
+                                            key={i}
+                                            onMouseDown={() => {
+                                                isSelectingRef.current = true;
+                                            }}
+                                            onMouseUp={() => {
+                                                handleSelectDescription(description);
+                                                setTimeout(() => {
+                                                    isSelectingRef.current = false;
+                                                }, 0);
+                                            }}
+                                            onMouseLeave={() => {
+                                                if (isSelectingRef.current) {
+                                                    setTimeout(() => {
+                                                        isSelectingRef.current = false;
+                                                    }, 0);
+                                                }
+                                            }}
+                                        >
+                                            <span>{description.description}</span>
+                                        </div>
+                                    ))}
+                                </Field.List>
+
+                                <div className="flex gap-2 -mt-2 items-center text-dark">
                                     <input
+                                        id="isMonthly"
                                         type="checkbox"
-                                        checked={!!formData.monthly}
-                                        onChange={(e) => setFormData({ ...formData, monthly: e.target.checked })}
+                                        checked={!!formData.isMonthly}
+                                        onChange={(e) => setFormData({ ...formData, isMonthly: e.target.checked })}
                                     />
-                                    Monthly
-                                </label>
-                                
+                                    <label htmlFor="isMonthly">
+                                        Display as option next time.
+                                    </label>
+                                </div>
+
                                 <Field.Money
                                     id="amount"
                                     label="Amount"

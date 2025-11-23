@@ -54,7 +54,7 @@ export default function UserDetailsSection() {
             roles: roleIds,
             branches: branchIds,
 
-            commission: item.commission
+            commission: item.commission * 100
         } as FormData);
 
         setShowModal("edit");

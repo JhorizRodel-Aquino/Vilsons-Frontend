@@ -26,6 +26,8 @@ import Main from './components/Main'
 import './App.css'
 import { Toaster } from "react-hot-toast";
 import UserDetailsPage from "./pages/admin/users/details/UserDetailsPage";
+import ApprovalLogsPage from "./pages/admin/approval-logs/ActivityLogsPage";
+import BranchesPage from "./pages/admin/branches/BranchesPage";
 
 function MainLayout() {
   return (
@@ -60,7 +62,9 @@ function App() {
           <Route path='/revenue-and-profit' element={<RevenueAndProfitPage />} />
           <Route path='/operational-expenses' element={<OperationalExpensesPage />} />
           <Route path='/overhead-expenses' element={<OverheadExpensesPage />} />
+          <Route path='/branches' element={<BranchesPage />} />
           <Route path='/trucks' element={<TrucksPage />} />
+          <Route path='/approval-logs' element={<ApprovalLogsPage />} />
           <Route path='/activity-logs' element={<ActivityLogsPage />} />
           <Route path='/users' element={<UsersPage />} />
           <Route path='/roles-and-permissions' element={<RolesAndPermissionsPage />} />

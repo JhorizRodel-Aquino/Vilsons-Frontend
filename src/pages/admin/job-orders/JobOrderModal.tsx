@@ -704,9 +704,9 @@ export default function JobOrderModal({ branchOptions, setShowModal, presetData,
                                     <dd className="text-lg font-semibold py-1">
                                         {formatPesoFromCents(
                                             materials.reduce(
-                                                (total, material) => total + ((material.price || 0) * (material.quantity || 0) * 100) + (formData.labor || 0),
+                                                (total, material) => total + ((material.price || 0) * (material.quantity || 0) * 100),
                                                 0
-                                            )
+                                            ) + ((formData.labor || 0) * 100)
                                         )}
                                     </dd>
                                 </dl>

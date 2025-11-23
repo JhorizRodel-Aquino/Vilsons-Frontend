@@ -131,7 +131,7 @@ export default function CustomerDetailsSection() {
                 </div>
             </section>
 
-            <ImagePreview images={images} API_URL={API_URL} />
+            <ImagePreview images={images} API_URL={API_URL} onSuccess={reload}/>
 
             <div className="grid gap-[20px] grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
                 <section className="card w-full flex flex-col max-h-[400px] overflow-hidden">

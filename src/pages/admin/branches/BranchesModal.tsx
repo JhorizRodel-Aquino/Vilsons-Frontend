@@ -1,0 +1,107 @@
+import { useState } from "react";
+import Button from "../../../components/Button";
+import Selection, { type SelectionOptions } from "../../../components/Selection";
+import Field from "../../../components/Field";
+import ErrorModal from "../../../components/ErrorModal";
+import validateAndSanitize, { type ValidationSchema } from "../../../utils/validateAndSanitize";
+import usePostPutData from "../../../hooks/usePostPutData";
+
+export type FormData = {
+    branch: string,
+    address?: string,
+}
+
+const formSchema: ValidationSchema = {
+    branch: { required: true },
+};
+
+type BranchesModalProps = {
+    branchOptions?: SelectionOptions[];
+    setShowModal: (action: 'create' | 'edit' | null) => void,
+    onSuccess: () => void,
+    action: 'create' | 'edit',
+    presetData: FormData;
+    id?: string;
+}
+
+export default function BranchesModal({ branchOptions, setShowModal, onSuccess, action, presetData, id }: BranchesModalProps) {
+    const [formData, setFormData] = useState<FormData>(presetData)
+    const { loading, error, closeError, postData, putData } = usePostPutData('/api/other-incomes')
+
+    console.log(formData)
+
+    const closeModal = () => {
+        setShowModal(null)
+    }
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        const { validatedData, isValid } = validateAndSanitize(formData, formSchema);
+
+        if (!isValid) return;
+
+        const success = action === 'create' ? await postData(validatedData) : await putData(id, validatedData)
+        if (success) {
+            onSuccess(); // trigger reload in parent
+            setFormData({ branch: "", address: "" }); // reset form
+            closeModal();
+        }
+    };
+
+    return (
+        <>
+            {error ? <ErrorModal error={error!} closeError={closeError} /> :
+                <>
+                    <form onSubmit={handleSubmit} className="card modal gap-[20px]">
+                        <div className="text-xl flex justify-between items-center">
+                            <h2 className="font-bold">Add  Income</h2>
+                            <Button.X onClick={closeModal} disabled={loading} />
+                        </div>
+
+                        {/* <fieldset>
+                            Branch
+                            <Selection
+                                 options={branchOptions}
+                                    value={formData.branchId}
+                                    onChange={(e) => setFormData({ ...formData, branchId: e.target.value })}
+                            />
+                        </fieldset> */}
+
+                        <fieldset className="card">
+                            <div className="grid gap-x-10 gap-y-[20px]">
+
+                                <div className="fields grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-x-10 gap-y-[20px]">
+                                    <Field.Text
+                                        id="branch"
+                                        label="Branch"
+                                        value={formData.branch}
+                                        onChange={(e) => setFormData({ ...formData, branch: e.target.value })}
+                                    />
+
+                                    <Field.Text
+                                        id="address"
+                                        label="Address"
+                                        value={formData.address}
+                                        onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                                    />
+                                </div>
+
+                            </div>
+                        </fieldset>
+
+                        <div className="flex justify-end items-center gap-[20px]">
+                            <Button variant="gray" label="Cancel" onClick={closeModal} disabled={loading} />
+                            {action === 'create'
+                                ? <Button type="submit" variant="primary" label={loading ? "Adding..." : "Add Income"} disabled={loading} />
+                                : <Button type="submit" variant="primary" label={loading ? "Saving..." : "Save"} disabled={loading} />
+                            }
+                        </div>
+                    </form>
+                    <div className="backdrop"></div>
+                </>
+            }
+
+        </>
+    )
+}

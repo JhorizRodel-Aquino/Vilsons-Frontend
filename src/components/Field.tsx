@@ -282,6 +282,7 @@ type FieldList = {
     children?: ReactNode;
     className?: string
     validated?: boolean;
+    noValidation?: boolean;
     supportingInfo?: ReactNode;
     readOnly?: boolean;
 };
@@ -428,6 +429,7 @@ Field.List = function List({
     children,
     className,
     validated = false,
+    noValidation = false,
     supportingInfo,
     readOnly = false
 }: FieldList) {
@@ -482,8 +484,8 @@ Field.List = function List({
             <div className={`${fieldWidth} relative ${className} overflow-visible`}>
                 {label && <label htmlFor={id}>{label}</label>}
 
-                <InputBox className={`flex justify-between ${validated ? 'font-medium text-darkest border-b-2 border-green over'
-                    : 'border-b border-yellow'}`}>
+                <InputBox className={`flex justify-between ${!noValidation && (validated ? 'font-medium text-darkest border-b-2 border-green over'
+                    : 'border-b border-yellow')}`}>
                     <div className="flex items-center w-full">
                         {/* <span className={`rounded-full w-2 h-2 ml-[8px] ${validated ? 'bg-green' : 'bg-yellow'}`}></span> */}
                         <input
@@ -493,8 +495,8 @@ Field.List = function List({
                             readOnly={readOnly}
                             placeholder={placeholder}
                             value={value}
-                            className={`input ${validated ? 'text-darker'
-                                : 'text-gray-400'}`}
+                            className={`input ${!noValidation && (validated ? 'text-darker'
+                                : 'text-gray-400')}`}
                             onChange={onChange}
                             onKeyDown={onKeyDown}
                             onFocus={() => setOpen(true)} // open on focus

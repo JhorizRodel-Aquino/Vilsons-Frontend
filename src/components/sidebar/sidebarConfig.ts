@@ -46,9 +46,19 @@ export const sidebarItems: NavItem[] = [
         ]
     },
     {
+        label: 'Branches',
+        iconName: 'truck',
+        path: '/branches' 
+    },
+    {
         label: 'Trucks',
         iconName: 'truck',
         path: '/trucks' 
+    },
+    {
+        label: 'Approval Logs',
+        iconName: 'activity-logs',
+        path: '/approval-logs' 
     },
     {
         label: 'Activity Logs',

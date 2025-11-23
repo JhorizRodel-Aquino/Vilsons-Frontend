@@ -19,6 +19,8 @@ import { get } from "../../../services/apiService";
 import useDeleteData from "../../../hooks/useDeleteData";
 import Selection from "../../../components/Selection";
 import getStatuses from "../../../utils/statusOptions";
+import Button from "../../../components/Button";
+import usePostPutData from "../../../hooks/usePostPutData";
 
 type ActiveJobOrder = {
     jobNumber: ReactElement;
@@ -27,6 +29,7 @@ type ActiveJobOrder = {
     contractor: ReactElement;
     totalBill: number;
     balance: number;
+    action: ReactElement
     options: ReactElement
 };
 
@@ -37,6 +40,7 @@ const activeJobOrderColumns: Column<ActiveJobOrder>[] = [
     { key: "contractor", label: "Contractor", render: (value) => value as React.ReactElement },
     { key: "totalBill", label: "Total Bill", render: (value) => formatPesoFromCents(value as number) },
     { key: "balance", label: "Balance", render: (value) => formatPesoFromCents(value as number) },
+    { key: "action", label: "Action", render: (value) => value as ReactElement },
     { key: "options", label: "", render: (value) => value as React.ReactElement },
 ];
 
@@ -50,7 +54,7 @@ type EquipmentTableProps = {
 }
 
 export default function ActiveOrdersTable({ setPresetData, reloadFlag, setShowModal, selectedId, setSelectedId, setSelectedJobOrder }: EquipmentTableProps) {
-    const statusOptions = [{value: "", label: "All Statuses"}, ...getStatuses()];
+    const statusOptions = [{ value: "", label: "All Statuses" }, ...getStatuses()];
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const { data, loading, error, closeError, reload, searchParams, setSearchParams, dateRangeParams, setDateRangeParams, statusParams, setStatusParams } = useGetByDateRange('/api/job-orders/group/active');
     const {
@@ -59,6 +63,25 @@ export default function ActiveOrdersTable({ setPresetData, reloadFlag, setShowMo
         closeError: closeDeleteError,
         deleteData,
     } = useDeleteData('/api/job-orders');
+
+    const [action, setAction] = useState<'accept' | 'reject' | 'released' | null>(null);
+    const { error: approveError, closeError: approveCloseError, putData } = usePostPutData(`/api/job-orders/${action}`);
+
+    useEffect(() => {
+        const handleApproval = async () => {
+            if (selectedId && action) {
+                const success = await putData(selectedId, { responseComment: '_' });
+                if (success) {
+                    reload();
+                }
+                // Reset states regardless of success/failure
+                setSelectedId('');
+                setAction(null);
+            }
+        };
+
+        handleApproval();
+    }, [selectedId, action]);
 
     const handleEdit = async (item: any) => {
         setSelectedId(item.id)
@@ -69,7 +92,7 @@ export default function ActiveOrdersTable({ setPresetData, reloadFlag, setShowMo
             customerId: jobOrder.customerId, name: jobOrder.customerName, username: jobOrder.customerUsername,
             contractorId: jobOrder.contractorId, contractorName: jobOrder.contractorName, contractorUsername: jobOrder.contractorUsername,
             description: jobOrder.description, labor: jobOrder.labor / 100 || null,
-            materials: jobOrder.materials.map((mat: Material) => ({id: mat.id, materialName: mat.materialName, quantity: mat.quantity, price: mat.price! / 100}))
+            materials: jobOrder.materials.map((mat: Material) => ({ id: mat.id, materialName: mat.materialName, quantity: mat.quantity, price: mat.price! / 100 }))
         } as FormData)
         setShowModal('edit');
     }
@@ -100,6 +123,12 @@ export default function ActiveOrdersTable({ setPresetData, reloadFlag, setShowMo
             contractor: <Link to={`/contractors/${item.contractorId}`}>{item.contractorName}</Link>,
             totalBill: item.totalBill,
             balance: item.balance,
+            action: item.status.toLowerCase() === 'completed' ?
+                <div className="flex gap-2">
+                    <Button label="Accept" variant="primary" size="mini" onClick={() => { setSelectedId(item.id); setAction('accept') }} />
+                    <Button label="Reject" variant="outline" size="mini" onClick={() => { setSelectedId(item.id); setAction('reject') }} />
+                </div>
+                : item.status.toLowerCase() === 'forrelease' && <Button label="Released" variant="primary" size="mini" onClick={() => { setSelectedId(item.id); setAction('released') }} />,
             options:
                 <Options
                     onEdit={() => handleEdit(item)}
@@ -108,7 +137,7 @@ export default function ActiveOrdersTable({ setPresetData, reloadFlag, setShowMo
                     <button onClick={() => {
                         setSelectedId(item.id)
                         setShowModal('status')
-                        setSelectedJobOrder({ jobNumber: item.jobOrderCode, status: (item.status as string).toLowerCase() })
+                        setSelectedJobOrder({ jobNumber: item.jobOrderCode, status: (item.status as string) })
                     }}>
                         <Icon name="edit" />Change Status
                     </button>
