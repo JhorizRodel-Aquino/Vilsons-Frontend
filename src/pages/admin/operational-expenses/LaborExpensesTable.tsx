@@ -16,6 +16,8 @@ import Options from "../../../components/Options";
 import ConfirmModal from "../../../components/ConfirmModal";
 import type { SelectedContractor, SelectedEmployee } from "./LaborExpensesSection";
 import { get } from "../../../services/apiService";
+import Selection from "../../../components/Selection";
+import getBranches from "../../../utils/branchOptions";
 
 type LaborExpense = {
     name: string;
@@ -49,10 +51,11 @@ type LaborTableProps = {
     setPreSelectedEmployee: (preSelected: Record<string, any> | null) => void;
 }
 
-export default function LaborExpensesTable({ setPresetData, reloadFlag, setShowModal, selectedId, setSelectedId, setActiveTab, setPreSelectedContractor, setPreSelectedEmployee}: LaborTableProps) {
-    const [laborType, setLaborType] = useState<"contractor" | "employee" >("contractor");
+export default function LaborExpensesTable({ setPresetData, reloadFlag, setShowModal, selectedId, setSelectedId, setActiveTab, setPreSelectedContractor, setPreSelectedEmployee }: LaborTableProps) {
+    const branchOptions = getBranches()
+    const [laborType, setLaborType] = useState<"contractor" | "employee">("contractor");
     const [showDeleteModal, setShowDeleteModal] = useState(false)
-    const { data, loading, error, closeError, reload, searchParams, setSearchParams, setMonthYearParams } = useGetByMonthYear('/api/labors');
+    const { data, loading, error, closeError, reload, searchParams, setSearchParams, setMonthYearParams, branchParams, setBranchParams } = useGetByMonthYear('/api/labors');
     const { options, option, setOption, monthYear, setMonthYear, year, setYear } = useMonthYearFilter(setMonthYearParams);
     const {
         loading: deleteLoading,
@@ -75,7 +78,7 @@ export default function LaborExpensesTable({ setPresetData, reloadFlag, setShowM
 
             const employee = (await get({ route: `/api/employees/${item.employeeId}` })).data
             console.log("employee", employee)
-            const payComponents = item.payComponents.map((comp: PayComponents) => ({...comp, amount: comp.amount / 100}))
+            const payComponents = item.payComponents.map((comp: PayComponents) => ({ ...comp, amount: comp.amount / 100 }))
             setPresetData({ userId: item.userId, payComponents: payComponents, branchId: item.branchId } as FormData)
             setPreSelectedEmployee({ name: employee.user.fullName, username: employee.user.username, id: item.userId, payComponents: payComponents } as SelectedEmployee)
         }
@@ -85,7 +88,7 @@ export default function LaborExpensesTable({ setPresetData, reloadFlag, setShowM
 
     const handleDelete = async () => {
         if (!selectedId) return
-        const success = laborType === "contractor" ? await deleteData(`contractor-pays/${selectedId}`) : await deleteData(`employee-pays/${selectedId}`) ;
+        const success = laborType === "contractor" ? await deleteData(`contractor-pays/${selectedId}`) : await deleteData(`employee-pays/${selectedId}`);
         if (success) {
             reload();
             setShowDeleteModal(false)
@@ -112,7 +115,7 @@ export default function LaborExpensesTable({ setPresetData, reloadFlag, setShowM
             amount: item.amount,
             options:
                 <Options
-                    onEdit={() => 
+                    onEdit={() =>
                         handleEdit(item, item.type)
                     }
                     onDelete={() => { setLaborType(item.type); setSelectedId(item.id); setShowDeleteModal(true) }}
@@ -123,7 +126,14 @@ export default function LaborExpensesTable({ setPresetData, reloadFlag, setShowM
     return (
         <>
             <TableFilter>
-                <SearchBar search={searchParams} setSearch={setSearchParams} placeholder='Laborer name' />
+                <TableFilter.Group>
+                    <SearchBar search={searchParams} setSearch={setSearchParams} placeholder='Laborer name' />
+                    <Selection
+                        options={branchOptions}
+                        value={branchParams}
+                        onChange={(e) => setBranchParams(e.target.value)}
+                    />
+                </TableFilter.Group>
                 <MonthYearFilter options={options} option={option} setOption={setOption} monthYear={monthYear} year={year} setMonthYear={setMonthYear} setYear={setYear} />
             </TableFilter>
 

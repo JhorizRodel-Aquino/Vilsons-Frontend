@@ -14,6 +14,7 @@ import Options from "../../../components/Options";
 import ConfirmModal from "../../../components/ConfirmModal";
 import useDeleteData from "../../../hooks/useDeleteData";
 import type { FormData } from "./BranchesModal";
+import useGetData from "../../../hooks/useGetData";
 
 type Branches = {
     branch: string;
@@ -39,7 +40,7 @@ type BranchesTableProps = {
 
 export default function BranchesTable({ setPresetData, reloadFlag, setShowModal, selectedId, setSelectedId }: BranchesTableProps) {
     const [showDeleteModal, setShowDeleteModal] = useState(false)
-    const { data, loading, error, closeError, reload, searchParams, setSearchParams, setMonthYearParams } = useGetByMonthYear('/api/branches');
+    const { data, loading, error, closeError, reload} = useGetData('/api/branches');
     // const { options, option, setOption, monthYear, setMonthYear, year, setYear } = useMonthYearFilter(setMonthYearParams);
     const {
         loading: deleteLoading,
@@ -50,7 +51,7 @@ export default function BranchesTable({ setPresetData, reloadFlag, setShowModal,
 
     const handleEdit = async (item: any) => { 
         setSelectedId(item.id)
-        setPresetData({branch: item.branch, address: item.address } as FormData) 
+        setPresetData({branch: item.branchName, address: item.address } as FormData) 
         setShowModal('edit');
     }
 
@@ -77,7 +78,7 @@ export default function BranchesTable({ setPresetData, reloadFlag, setShowModal,
 
     const branchess: Branches[] = branchesItems.map(
         (item: Record<string, any>) => ({
-            branch: item.branch,
+            branch: item.branchName,
             address: item.address,
             options:
                 <Options 

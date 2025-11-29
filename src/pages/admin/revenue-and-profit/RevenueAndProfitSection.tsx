@@ -8,9 +8,12 @@ import Loading from "../../../components/Loading";
 import useMonthYearFilter from "../../../hooks/useMonthYearFilter";
 import ErrorModal from "../../../components/ErrorModal";
 import useGetByMonthYear from "../../../hooks/useGetByMonthYear";
+import Selection from "../../../components/Selection";
+import getBranches from "../../../utils/branchOptions";
 
 export default function RevenueAndProfitSection() {
-  const { data, loading, error, closeError, setMonthYearParams } = useGetByMonthYear('/api/finances', true);
+  const branchOptions = getBranches();
+  const { data, loading, error, closeError, setMonthYearParams, branchParams, setBranchParams } = useGetByMonthYear('/api/finances', true);
   const { options, option, setOption, monthYear, setMonthYear, year, setYear } = useMonthYearFilter(setMonthYearParams);
 
   if (loading) return <Loading />;
@@ -41,6 +44,12 @@ export default function RevenueAndProfitSection() {
       </SectionHeading>
 
       <TableFilter>
+        <Selection
+          options={branchOptions}
+          value={branchParams}
+          onChange={(e) => setBranchParams(e.target.value)}
+        />
+
         <MonthYearFilter options={options} option={option} setOption={setOption} monthYear={monthYear} year={year} setMonthYear={setMonthYear} setYear={setYear} />
       </TableFilter>
 

@@ -13,6 +13,8 @@ import type { FormData } from "./EquipmentModal";
 import ConfirmModal from "../../../components/ConfirmModal";
 import Options from "../../../components/Options";
 import { useEffect, useState, type ReactElement } from "react";
+import Selection from "../../../components/Selection";
+import getBranches from "../../../utils/branchOptions";
 
 type EquipmentExpense = {
     equipment: string;
@@ -42,8 +44,9 @@ type EquipmentTableProps = {
 }
 
 export default function EquipmentExpensesTable({ setPresetData, reloadFlag, setShowModal, selectedId, setSelectedId }: EquipmentTableProps) {
+    const branchOptions = getBranches()
     const [showDeleteModal, setShowDeleteModal] = useState(false)
-    const { data, loading, error, closeError, reload, searchParams, setSearchParams, setMonthYearParams } = useGetByMonthYear('/api/equipments');
+    const { data, loading, error, closeError, reload, searchParams, setSearchParams, setMonthYearParams, branchParams, setBranchParams } = useGetByMonthYear('/api/equipments');
     const { options, option, setOption, monthYear, setMonthYear, year, setYear } = useMonthYearFilter(setMonthYearParams);
     const {
         loading: deleteLoading,
@@ -94,7 +97,16 @@ export default function EquipmentExpensesTable({ setPresetData, reloadFlag, setS
     return (
         <>
             <TableFilter>
-                <SearchBar search={searchParams} setSearch={setSearchParams} placeholder='Equipment name' />
+                <TableFilter.Group>
+                    <SearchBar search={searchParams} setSearch={setSearchParams} placeholder='Equipment name' />
+
+                    <Selection
+                        options={branchOptions}
+                        value={branchParams}
+                        onChange={(e) => setBranchParams(e.target.value)}
+                    />
+                </TableFilter.Group>
+
                 <MonthYearFilter options={options} option={option} setOption={setOption} monthYear={monthYear} year={year} setMonthYear={setMonthYear} setYear={setYear} />
             </TableFilter>
 

@@ -5,11 +5,9 @@ import Details from "../../../components/Details"
 import Button from "../../../components/Button";
 import BranchesTable from "./BranchesTable";
 import BranchesModal, { type FormData } from "./BranchesModal";
-import getBranches from "../../../utils/branchOptions";
 
 
 export default function BranchesSection() {
-    const branchOptions = getBranches()
     const [selectedId, setSelectedId] = useState<string>('');
     const [presetData, setPresetData] = useState<FormData>({ branch: '', address: '' });
     const [reloadFlag, setReloadFlag] = useState(false);
@@ -26,7 +24,7 @@ export default function BranchesSection() {
 
             <BranchesTable reloadFlag={reloadFlag} setPresetData={setPresetData} selectedId={selectedId} setSelectedId={setSelectedId} setShowModal={setShowModal} />
 
-            {showModal && <BranchesModal branchOptions={branchOptions} setShowModal={setShowModal} onSuccess={reload} action={showModal} id={selectedId} presetData={presetData} />}
+            {showModal && <BranchesModal setShowModal={setShowModal} onSuccess={reload} action={showModal} id={selectedId} presetData={presetData} />}
         </>
     )
 }

@@ -21,8 +21,9 @@ export default function useGetByMonthYear(route: string, noSearch: boolean = fal
     const monthYearToday: MonthYearParams = { year: +dayjs().format("YYYY"), month: +dayjs().format("MM") }
     const [monthYearParams, setMonthYearParams] = useState<MonthYearParams>(monthYearToday);
     const [searchParams, setSearchParams] = useState<string>('');
+    const [branchParams, setBranchParams] = useState<string>('');
 
-    const params = { ...monthYearParams, ...(!noSearch && { search: searchParams }) }
+    const params = { ...monthYearParams, ...(!noSearch && { search: searchParams }), branch: branchParams };
     const { data, loading, error, closeError, refetch, reload } = useGetData(route, params)
 
 
@@ -48,5 +49,9 @@ export default function useGetByMonthYear(route: string, noSearch: boolean = fal
         }
     }, [searchParams]);
 
-    return { data, loading, error, closeError, refetch, reload, searchParams, setSearchParams, setMonthYearParams };
+    useEffect(() => {
+        refetch();
+    }, [branchParams]);
+
+    return { data, loading, error, closeError, refetch, reload, searchParams, setSearchParams, setMonthYearParams, branchParams, setBranchParams };
 }

@@ -8,6 +8,8 @@ import useMonthYearFilter from "../../../hooks/useMonthYearFilter";
 import ErrorModal from "../../../components/ErrorModal";
 import Loading from "../../../components/Loading";
 import useGetByMonthYear from "../../../hooks/useGetByMonthYear";
+import getBranches from "../../../utils/branchOptions";
+import Selection from "../../../components/Selection";
 
 type MaterialExpense = {
     jobNumber: string;
@@ -28,7 +30,8 @@ const materialExpenseColumns: Column<MaterialExpense>[] = [
 ];
 
 export default function MaterialExpensesTable() {
-    const { data, loading, error, closeError, searchParams, setSearchParams, setMonthYearParams } = useGetByMonthYear('/api/materials');
+    const branchOptions = getBranches()
+    const { data, loading, error, closeError, searchParams, setSearchParams, setMonthYearParams, branchParams, setBranchParams } = useGetByMonthYear('/api/materials');
     const { options, option, setOption, monthYear, setMonthYear, year, setYear } = useMonthYearFilter(setMonthYearParams);
 
     if (loading) return <Loading />;
@@ -50,7 +53,14 @@ export default function MaterialExpensesTable() {
     return (
         <>
             <TableFilter>
-                <SearchBar search={searchParams} setSearch={setSearchParams} placeholder='Material name or job number' />
+                <TableFilter.Group>
+                    <SearchBar search={searchParams} setSearch={setSearchParams} placeholder='Material name or job number' />
+                    <Selection
+                        options={branchOptions}
+                        value={branchParams}
+                        onChange={(e) => setBranchParams(e.target.value)}
+                    />
+                </TableFilter.Group>
                 <MonthYearFilter options={options} option={option} setOption={setOption} monthYear={monthYear} year={year} setMonthYear={setMonthYear} setYear={setYear} />
             </TableFilter>
 

@@ -14,6 +14,8 @@ import useDeleteData from "../../../hooks/useDeleteData";
 import { useEffect, useState, type ReactElement } from "react";
 import ConfirmModal from "../../../components/ConfirmModal";
 import Options from "../../../components/Options";
+import Selection from "../../../components/Selection";
+import getBranches from "../../../utils/branchOptions";
 
 
 type OverheadExpense = {
@@ -41,8 +43,9 @@ type OverheadTableProps = {
 }
 
 export default function OverheadExpensesTable({ setPresetData, reloadFlag, setShowModal, selectedId, setSelectedId }: OverheadTableProps) {
+    const branchOptions = getBranches()
     const [showDeleteModal, setShowDeleteModal] = useState(false)
-    const { data, loading, error, closeError, reload, searchParams, setSearchParams, setMonthYearParams } = useGetByMonthYear('/api/overheads');
+    const { data, loading, error, closeError, reload, searchParams, setSearchParams, setMonthYearParams, branchParams, setBranchParams } = useGetByMonthYear('/api/overheads');
     const { options, option, setOption, monthYear, setMonthYear, year, setYear } = useMonthYearFilter(setMonthYearParams);
     const {
         loading: deleteLoading,
@@ -92,12 +95,18 @@ export default function OverheadExpensesTable({ setPresetData, reloadFlag, setSh
     return (
         <>
             <TableFilter>
-                <SearchBar search={searchParams} setSearch={setSearchParams} placeholder='Overhead description' />
+                <TableFilter.Group>
+                    <SearchBar search={searchParams} setSearch={setSearchParams} placeholder='Overhead description' />
+                    <Selection
+                        options={branchOptions}
+                        value={branchParams}
+                        onChange={(e) => setBranchParams(e.target.value)}
+                    />
+                </TableFilter.Group>
                 <MonthYearFilter options={options} option={option} setOption={setOption} monthYear={monthYear} year={year} setMonthYear={setMonthYear} setYear={setYear} />
             </TableFilter>
 
             <Table columns={overheadExpenseColumns} rows={overheadExpenses} total={total} withOptions={true} />
-
 
             {(error || deleteError) ?
                 <ErrorModal error={(error || deleteError)!} closeError={error ? closeError : closeDeleteError} />

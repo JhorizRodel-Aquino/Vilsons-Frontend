@@ -21,6 +21,7 @@ import Selection from "../../../components/Selection";
 import getStatuses from "../../../utils/statusOptions";
 import Button from "../../../components/Button";
 import usePostPutData from "../../../hooks/usePostPutData";
+import getBranches from "../../../utils/branchOptions";
 
 type ActiveJobOrder = {
     jobNumber: ReactElement;
@@ -54,9 +55,10 @@ type EquipmentTableProps = {
 }
 
 export default function ActiveOrdersTable({ setPresetData, reloadFlag, setShowModal, selectedId, setSelectedId, setSelectedJobOrder }: EquipmentTableProps) {
+    const branchOptions = getBranches()
     const statusOptions = [{ value: "", label: "All Statuses" }, ...getStatuses()];
     const [showDeleteModal, setShowDeleteModal] = useState(false)
-    const { data, loading, error, closeError, reload, searchParams, setSearchParams, dateRangeParams, setDateRangeParams, statusParams, setStatusParams } = useGetByDateRange('/api/job-orders/group/active');
+    const { data, loading, error, closeError, reload, searchParams, setSearchParams, dateRangeParams, setDateRangeParams, statusParams, setStatusParams, branchParams, setBranchParams } = useGetByDateRange('/api/job-orders/group/active');
     const {
         loading: deleteLoading,
         error: deleteError,
@@ -152,6 +154,11 @@ export default function ActiveOrdersTable({ setPresetData, reloadFlag, setShowMo
                 <SearchBar search={searchParams} setSearch={setSearchParams} placeholder="Job#, Plate#, or Contractor" />
 
                 <TableFilter.Group>
+                    <Selection
+                        options={branchOptions}
+                        value={branchParams}
+                        onChange={(e) => setBranchParams(e.target.value)}
+                    />
                     <Selection
                         options={statusOptions}
                         value={statusParams}

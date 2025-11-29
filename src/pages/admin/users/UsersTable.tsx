@@ -13,6 +13,8 @@ import type { FormData } from "./UsersModal";
 import ConfirmModal from "../../../components/ConfirmModal";
 import Options from "../../../components/Options";
 import { Link } from "react-router";
+import getBranches from "../../../utils/branchOptions";
+import Selection from "../../../components/Selection";
 
 type AllUser = {
     name: string;
@@ -64,8 +66,9 @@ type UsersTableProps = {
 
 
 export default function UsersTable({ setPresetData, reloadFlag, setShowModal, selectedId, setSelectedId }: UsersTableProps) {
+    const branchOptions = getBranches()
     const [showDeleteModal, setShowDeleteModal] = useState(false)
-    const { data, loading, error, closeError, searchParams, setSearchParams, dateRangeParams, setDateRangeParams, reload } = useGetByDateRange('/api/users');
+    const { data, loading, error, closeError, searchParams, setSearchParams, dateRangeParams, setDateRangeParams, reload, branchParams, setBranchParams } = useGetByDateRange('/api/users');
     const {
         loading: deleteLoading,
         error: deleteError,
@@ -128,7 +131,14 @@ export default function UsersTable({ setPresetData, reloadFlag, setShowModal, se
     return (
         <>
             <TableFilter>
-                <SearchBar search={searchParams} setSearch={setSearchParams} placeholder="Truck make or model" />
+                <TableFilter.Group>
+                    <SearchBar search={searchParams} setSearch={setSearchParams} placeholder="Truck make or model" />
+                    <Selection
+                        options={branchOptions}
+                        value={branchParams}
+                        onChange={(e) => setBranchParams(e.target.value)}
+                    />
+                </TableFilter.Group>
                 <DateRange dateRange={dateRangeParams} setDateRange={setDateRangeParams} />
             </TableFilter>
 

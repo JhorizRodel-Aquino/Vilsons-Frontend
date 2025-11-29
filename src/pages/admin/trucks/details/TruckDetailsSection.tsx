@@ -125,7 +125,7 @@ export default function TruckDetailsSection() {
             {error ? <ErrorModal error={error!} closeError={closeError} /> : 
                 <>
                     {showModal === "edit" && <TrucksModal setShowModal={setShowModal} onSuccess={reload} action={showModal} id={id} presetData={presetData} />}
-                    {showModal === "owner" && <ChangeOwnerModal setShowModal={setShowModal} onSuccess={reload} truckId={data.id} selectedTruck={{ plate: plate }} />}
+                    {showModal === "owner" && <ChangeOwnerModal setShowModal={setShowModal} onSuccess={reload} truckId={id ?? ''} selectedTruck={{ plate: plate }} />}
                 </>
             }
         </>

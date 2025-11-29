@@ -1,6 +1,5 @@
 import { useState } from "react";
 import Button from "../../../components/Button";
-import Selection, { type SelectionOptions } from "../../../components/Selection";
 import Field from "../../../components/Field";
 import ErrorModal from "../../../components/ErrorModal";
 import validateAndSanitize, { type ValidationSchema } from "../../../utils/validateAndSanitize";
@@ -8,15 +7,15 @@ import usePostPutData from "../../../hooks/usePostPutData";
 
 export type FormData = {
     branch: string,
-    address?: string,
+    address: string,
 }
 
 const formSchema: ValidationSchema = {
     branch: { required: true },
+    address: { required: true },
 };
 
 type BranchesModalProps = {
-    branchOptions?: SelectionOptions[];
     setShowModal: (action: 'create' | 'edit' | null) => void,
     onSuccess: () => void,
     action: 'create' | 'edit',
@@ -24,9 +23,9 @@ type BranchesModalProps = {
     id?: string;
 }
 
-export default function BranchesModal({ branchOptions, setShowModal, onSuccess, action, presetData, id }: BranchesModalProps) {
+export default function BranchesModal({ setShowModal, onSuccess, action, presetData, id }: BranchesModalProps) {
     const [formData, setFormData] = useState<FormData>(presetData)
-    const { loading, error, closeError, postData, putData } = usePostPutData('/api/other-incomes')
+    const { loading, error, closeError, postData, putData } = usePostPutData('/api/branches')
 
     console.log(formData)
 
@@ -38,10 +37,14 @@ export default function BranchesModal({ branchOptions, setShowModal, onSuccess, 
         e.preventDefault();
 
         const { validatedData, isValid } = validateAndSanitize(formData, formSchema);
+        const formattedData = {
+            address: validatedData.address,
+            name: validatedData.branch,
+        }
 
         if (!isValid) return;
 
-        const success = action === 'create' ? await postData(validatedData) : await putData(id, validatedData)
+        const success = action === 'create' ? await postData(formattedData) : await putData(id, formattedData)
         if (success) {
             onSuccess(); // trigger reload in parent
             setFormData({ branch: "", address: "" }); // reset form
