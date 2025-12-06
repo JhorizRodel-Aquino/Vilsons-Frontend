@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import Icon from "../../../components/Icon"
+import Icon from "../../../../components/Icon"
 import type { Children } from "./FinanceCard"
+import formatPesoFromCents from '../../../../utils/formatPesoFromCents';
 
 function FinanceCardChild({ child, depth = 0, expand }: { child: Children, depth: number, expand: boolean }) {
   const [expanded, setExpanded] = useState(expand);
@@ -13,7 +14,7 @@ function FinanceCardChild({ child, depth = 0, expand }: { child: Children, depth
           {hasChildren && <Icon name='chev-right' size={18} className={`-mx-[2px] duration-200 ${expanded ? 'rotate-90' : 'rotate-0'}`} />}
           <p className='flex-1'>{child.label}</p>
         </span>
-        <p>{child.value}</p>
+        <p>{formatPesoFromCents(child.value)}</p>
       </div>
       
       {hasChildren && 

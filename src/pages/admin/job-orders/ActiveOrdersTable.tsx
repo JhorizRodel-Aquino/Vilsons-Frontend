@@ -151,14 +151,17 @@ export default function ActiveOrdersTable({ setPresetData, reloadFlag, setShowMo
     return (
         <>
             <TableFilter>
-                <SearchBar search={searchParams} setSearch={setSearchParams} placeholder="Job#, Plate#, or Contractor" />
-
                 <TableFilter.Group>
+                    <SearchBar search={searchParams} setSearch={setSearchParams} placeholder="Job#, Plate#, or Contractor" />
+
                     <Selection
                         options={branchOptions}
                         value={branchParams}
                         onChange={(e) => setBranchParams(e.target.value)}
                     />
+                </TableFilter.Group>
+
+                <TableFilter.Group>
                     <Selection
                         options={statusOptions}
                         value={statusParams}

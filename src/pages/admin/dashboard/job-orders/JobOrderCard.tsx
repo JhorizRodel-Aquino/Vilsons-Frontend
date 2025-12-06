@@ -1,6 +1,6 @@
-import Icon from '../../../components/Icon';
-import { statusItems } from '../../../config/statusConfig';
-import type { Status } from '../../../config/statusConfig';
+import Icon from '../../../../components/Icon';
+import { statusItems } from '../../../../config/statusConfig';
+import type { Status } from '../../../../config/statusConfig';
 
 type JobOrderCardProps = {
     status: Status,

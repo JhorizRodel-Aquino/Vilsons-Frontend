@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 export default function TableFilter({ children }: {children: ReactNode}) {
     return (
-        <div className="flex flex-wrap gap-y-2 justify-between items-start">
+        <div className="flex flex-wrap gap-y-2 justify-between md:items-center">
             {children}
         </div>
     )
@@ -10,7 +10,7 @@ export default function TableFilter({ children }: {children: ReactNode}) {
 
 TableFilter.Group = function Group({ children }: {children: ReactNode}) {
     return (
-        <div className="flex flex-col md:flex-row gap-y-2 gap-x-7 justify-between items-start">
+        <div className="flex flex-col md:flex-row gap-y-2 gap-x-7 justify-between md:items-center">
             {children}
         </div>
     )

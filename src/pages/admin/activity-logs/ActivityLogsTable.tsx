@@ -7,6 +7,8 @@ import useGetByDateRange from "../../../hooks/useGetByDateRange";
 import Loading from "../../../components/Loading";
 import ErrorModal from "../../../components/ErrorModal";
 import formatDate from "../../../utils/formatDate";
+import Selection from "../../../components/Selection";
+import getBranches from "../../../utils/branchOptions";
 
 type ActivityLog = {
     activity: string;
@@ -21,7 +23,8 @@ const activityLogColumns: Column<ActivityLog>[] = [
 ];
 
 export default function ActivityLogsTable() {
-    const { data, loading, error, closeError, reload, searchParams, setSearchParams, dateRangeParams, setDateRangeParams } = useGetByDateRange('/api/activity-logs');
+    const branchOptions = getBranches()
+    const { data, loading, error, closeError, reload, searchParams, setSearchParams, dateRangeParams, setDateRangeParams, branchParams, setBranchParams } = useGetByDateRange('/api/activity-logs');
 
     if (loading) return <Loading />;
 
@@ -38,7 +41,14 @@ export default function ActivityLogsTable() {
     return (
         <>
             <TableFilter>
+                <TableFilter.Group>
                 <SearchBar search={searchParams} setSearch={setSearchParams} placeholder="Activity" />
+                                    <Selection
+                        options={branchOptions}
+                        value={branchParams}
+                        onChange={(e) => setBranchParams(e.target.value)}
+                    />
+                </TableFilter.Group>
                 <DateRange dateRange={dateRangeParams} setDateRange={setDateRangeParams} />
             </TableFilter>
 

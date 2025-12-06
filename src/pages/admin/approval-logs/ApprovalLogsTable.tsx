@@ -12,6 +12,8 @@ import { useEffect, useState, type ReactElement } from "react";
 import Button from "../../../components/Button";
 import usePostData from "../../../hooks/usePostData";
 import usePostPutData from "../../../hooks/usePostPutData";
+import Selection from "../../../components/Selection";
+import getBranches from "../../../utils/branchOptions";
 
 type ApprovalLog = {
     tableName: string;
@@ -43,15 +45,16 @@ const approvalLogColumns: Column<ApprovalLog>[] = [
 ];
 
 export default function ApprovalLogsTable() {
+    const branchOptions = getBranches()
     const [selectedId, setSelectedId] = useState<string | null>(null);
     const [action, setAction] = useState<'approve' | 'reject' | null>(null);
-    const { data, loading, error, closeError, reload, searchParams, setSearchParams, dateRangeParams, setDateRangeParams } = useGetByDateRange('/api/approval-logs');
+    const { data, loading, error, closeError, reload, searchParams, setSearchParams, dateRangeParams, setDateRangeParams, branchParams, setBranchParams } = useGetByDateRange('/api/approval-logs');
     const { error: approveError, closeError: approveCloseError, putData } = usePostPutData(`/api/approval-logs/${action}`);
 
     useEffect(() => {
         const handleApproval = async () => {
             if (selectedId && action) {
-                const success = await putData(selectedId, {responseComment: '_'});
+                const success = await putData(selectedId, { responseComment: '_' });
                 if (success) {
                     reload();
                 }
@@ -87,7 +90,15 @@ export default function ApprovalLogsTable() {
     return (
         <>
             <TableFilter>
-                <SearchBar search={searchParams} setSearch={setSearchParams} placeholder="Approval" />
+                <TableFilter.Group>
+                    <SearchBar search={searchParams} setSearch={setSearchParams} placeholder="Approval" />
+
+                    <Selection
+                        options={branchOptions}
+                        value={branchParams}
+                        onChange={(e) => setBranchParams(e.target.value)}
+                    />
+                </TableFilter.Group>
                 <DateRange dateRange={dateRangeParams} setDateRange={setDateRangeParams} />
             </TableFilter>
 

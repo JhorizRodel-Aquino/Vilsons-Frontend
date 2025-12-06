@@ -1,5 +1,5 @@
-import StatusIndicator from '../../../components/StatusIndicator';
-import type { Status } from '../../../config/statusConfig';
+import StatusIndicator from '../../../../components/StatusIndicator';
+import type { Status } from '../../../../config/statusConfig';
 
 type RecentJobOrderCardProps = {
     jobNumber: string,

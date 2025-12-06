@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import Icon from '../../../components/Icon';
+import Icon from '../../../../components/Icon';
 import FinanceCardChild from './FinanceCardChild';
-import formatPesoFromCents from '../../../utils/formatPesoFromCents';
+import formatPesoFromCents from '../../../../utils/formatPesoFromCents';
 
 export type Children = {
     label: string,
