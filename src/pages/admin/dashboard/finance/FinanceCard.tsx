@@ -22,7 +22,7 @@ function FinanceCard({ label, iconName, value, delta, children }: FinanceCardPro
     const hasChildren = children && children.length > 0;
 
     return (
-        <div className='rounded-[15px] border-all p-5'>
+        <div className='rounded-[15px] border-all p-5 bg-light'>
             <div className='flex justify-between items-center text-base mb-5'>
                 <span className={`flex flex-1 items-center ${hasChildren && 'cursor-pointer'}`} {...(hasChildren ? { onClick: () => setExpanded(!expanded) } : {})} >
                     {hasChildren && <Icon name={'chev-right'} className={`-mx-[2px] duration-200 ${expanded ? 'rotate-90' : 'rotate-0'}`} />}
@@ -33,11 +33,11 @@ function FinanceCard({ label, iconName, value, delta, children }: FinanceCardPro
 
             <p className='text-3xl font-medium'>{formatPesoFromCents(value)}</p>
 
-            <small className='text-sm text-dark'>
+            {/* <small className='text-sm text-dark'>
                 {<span className={`${delta < 0 ? 'text-red' : 'text-green'}`}>
                     {delta > 0 ? `+${delta}` : delta}%
                 </span>} from last month
-            </small>
+            </small> */}
 
             
             {children && children.length > 1 &&
