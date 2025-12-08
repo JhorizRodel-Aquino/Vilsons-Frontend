@@ -71,7 +71,7 @@ export default function LaborExpensesTable({ setPresetData, reloadFlag, setShowM
 
             const contractor = (await get({ route: `/api/contractors/${item.contractorId}` })).data
             console.log(contractor.user.fullName)
-            setPresetData({ userId: item.userId, amount: item.amount / 100, type: item.salaryType, branchId: item.branchId } as FormData)
+            setPresetData({ userId: item.userId, amount: item.amount / 100, type: item.salaryType, branchId: item.branchId, userConnectingRoleIds: [{role: laborType,  id: item.contractorId}] } as FormData)
             setPreSelectedContractor({ name: contractor.user.fullName, username: contractor?.user?.username, id: item.userId, balance: contractor?.jobOrderSummary?.totalBalance } as SelectedContractor)
         } else {
             setActiveTab(laborType);
@@ -79,7 +79,7 @@ export default function LaborExpensesTable({ setPresetData, reloadFlag, setShowM
             const employee = (await get({ route: `/api/employees/${item.employeeId}` })).data
             console.log("employee", employee)
             const payComponents = item.payComponents.map((comp: PayComponents) => ({ ...comp, amount: comp.amount / 100 }))
-            setPresetData({ userId: item.userId, payComponents: payComponents, branchId: item.branchId } as FormData)
+            setPresetData({ userId: item.userId, payComponents: payComponents, branchId: item.branchId, userConnectingRoleIds: [{role: laborType,  id: item.employeeId}] } as FormData)
             setPreSelectedEmployee({ name: employee.user.fullName, username: employee.user.username, id: item.userId, payComponents: payComponents } as SelectedEmployee)
         }
 

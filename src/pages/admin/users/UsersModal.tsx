@@ -12,6 +12,7 @@ import ErrorModal from "../../../components/ErrorModal";
 import formatPesoFromCents from "../../../utils/formatPesoFromCents";
 import Dropdown from "../../../components/Dropdown";
 import api from "../../../utils/axiosInstance";
+import { invalidateCache } from "../../../hooks/useGetData";
 
 export type FormData = {
     profile?: File | null;
@@ -23,6 +24,7 @@ export type FormData = {
     branches?: string[];
 
     commission?: number;
+    userConnectingRoleIds?: Record<string, any>[];
 };
 
 export type Component = {
@@ -160,8 +162,8 @@ export default function UsersModal({
         (role) => role?.baseRoleName === "contractor"
     );
 
-    const hasCustomerBaseRole = selectedRoles.some(
-        (role) => role?.baseRoleName === "customer"
+    const hasEmployeeBaseRole = selectedRoles.some(
+        (role) => role?.baseRoleName === "employee"
     );
 
     const hasAdminEmployeeBaseRole = selectedRoles.some(
@@ -221,6 +223,12 @@ export default function UsersModal({
             onSuccess();
             setFormData({ roles: [] });
             closeModal();
+
+            formData.userConnectingRoleIds?.forEach((roleRecord) => {
+                invalidateCache(`/api/${roleRecord.role}s/${roleRecord.id}`);
+            });
+            invalidateCache(`/api/approval-logs`);
+            invalidateCache(`/api/activity-logs`);
         }
     };
 
@@ -260,10 +268,10 @@ useEffect(() => {
         }
     };
 
-    if (hasCustomerBaseRole) {
+    if (hasEmployeeBaseRole) {
         fetchComponentsOptions();
     }
-}, [hasCustomerBaseRole]);
+}, [hasEmployeeBaseRole]);
 
     return (
         <>
@@ -385,7 +393,7 @@ useEffect(() => {
                             </fieldset>
 
                             {/* Branch Section (Conditional) */}
-                            {(showBranches || hasContractorBaseRole || hasCustomerBaseRole) &&
+                            {(showBranches || hasContractorBaseRole || hasEmployeeBaseRole) &&
                                 <fieldset className="card">
                                     <h4 className="text-lg font-bold mb-5">Additional Information</h4>
 
@@ -424,7 +432,7 @@ useEffect(() => {
                                             />
                                         }
 
-                                        {hasCustomerBaseRole &&
+                                        {hasEmployeeBaseRole &&
                                             <div className="col-span-full">
                                                 <div className="mb-5 flex justify-between items-center">
                                                     <h4 className="text-lg font-semibold">Components</h4>

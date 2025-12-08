@@ -60,8 +60,8 @@ export default function TransactionsTable({ setPresetData, reloadFlag, setShowMo
 
     const handleEdit = async (item: any) => {
         setSelectedId(item.id)
-        const jobOrder = (await get({ route: `/api/job-orders?search=${item.jobOrderCode}` })).data.jobOrders[0];
-        setPresetData({ referenceNumber: item.referenceNumber, jobOrderCode: item.jobOrderCode, senderName: item.senderName, amount: item.amount / 100, mop: item.mop, plateNumber: jobOrder.plateNumber } as FormData)
+        // const jobOrder = (await get({ route: `/api/job-orders?search=${item.jobOrderCode}` })).data.jobOrders[0];
+        setPresetData({ referenceNumber: item.referenceNumber, jobOrderCode: item.jobOrderCode, senderName: item.senderName, amount: item.amount / 100, mop: item.mop, plateNumber: item.jobOrder.truck.plate, customerId: item.jobOrder.customerId, contractorId: item.jobOrder.contractorId, truckId: item.jobOrder.truckId, jobOrderId: item.jobOrder.id } as FormData)
         setShowModal('edit');
     }
 

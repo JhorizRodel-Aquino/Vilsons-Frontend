@@ -8,6 +8,7 @@ import StatusFilter from "../../../components/StatusFilter";
 import useStatusFilter from "../../../hooks/useStatusFilter";
 import getStatuses from "../../../utils/statusOptions";
 import Selection from "../../../components/Selection";
+import { invalidateCache } from "../../../hooks/useGetData";
 
 export type FormData = {
     status: string,
@@ -24,9 +25,10 @@ type ChangeStatusModalProps = {
     onSuccess: () => void,
     id: string;
     selectedJobOrder: { jobNumber: string, status: string };
+    invalidateData: Record<string, any>;
 }
 
-export default function ChangeStatusModal({ setShowModal, onSuccess, id, selectedJobOrder }: ChangeStatusModalProps) {
+export default function ChangeStatusModal({ setShowModal, onSuccess, id, selectedJobOrder, invalidateData }: ChangeStatusModalProps) {
     // const { options, status, setStatus } = useStatusFilter(true);
     const statusOptions = getStatuses();
     const [formData, setFormData] = useState<FormData>({ status: selectedJobOrder.status })
@@ -51,6 +53,20 @@ export default function ChangeStatusModal({ setShowModal, onSuccess, id, selecte
             onSuccess();
             setFormData({ status: "" });
             closeModal();
+
+            invalidateCache(`/api/job-orders/${id}`);
+            invalidateCache(`/api/contractors/${invalidateData.contractorId}`);
+            invalidateCache(`/api/customers/${invalidateData.customerId}`);
+            invalidateCache(`/api/trucks/${invalidateData.truckId}`);
+            invalidateCache(`/api/approval-logs`);
+            invalidateCache(`/api/activity-logs`);
+            
+            invalidateCache(`/api/dashboard/customer-balance`);
+            invalidateCache(`/api/dashboard/expenses`);
+            invalidateCache(`/api/dashboard/job-orders`);
+            invalidateCache(`/api/dashboard/profit`);
+            invalidateCache(`/api/dashboard/revenue`);
+            invalidateCache(`/api/dashboard/revenue-profit-chart`);
         }
     };
 

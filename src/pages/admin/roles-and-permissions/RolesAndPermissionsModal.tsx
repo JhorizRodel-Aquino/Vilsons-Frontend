@@ -8,6 +8,7 @@ import type { ModulePermissions } from "./PermissionsTable";
 import PermissionsTable from "./PermissionsTable";
 import Selection, { type SelectionOptions } from "../../../components/Selection";
 import useGetDataWithTrigger from "../../../hooks/useGetDataWithTrigger";
+import { invalidateCache } from "../../../hooks/useGetData";
 
 const formSchema: ValidationSchema = {
     roleName: { required: true, label: "Role Name" },
@@ -129,6 +130,9 @@ export default function RolesAndPermissionsModal({
             setRole({ roleName: "", baseRoleId: "" });
             setPermissions(null);
             closeModal();
+
+            invalidateCache(`/api/approval-logs`);
+            invalidateCache(`/api/activity-logs`);
         }
     };
 

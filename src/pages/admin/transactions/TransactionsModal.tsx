@@ -6,14 +6,21 @@ import ErrorModal from "../../../components/ErrorModal";
 import validateAndSanitize, { type ValidationSchema } from "../../../utils/validateAndSanitize";
 import useFieldList from "../../../hooks/useFieldList";
 import formatPesoFromCents from "../../../utils/formatPesoFromCents";
+import { invalidateCache } from "../../../hooks/useGetData";
+import Selection, { type SelectionOptions } from "../../../components/Selection";
 
 export type FormData = {
+    branchId?: string,
     referenceNumber: string,
     jobOrderCode: string,
     senderName: string
     amount: number | null,
     mop: string,
     plateNumber?: string,
+    truckId?: string,
+    customerId?: string,
+    contractorId?: string,
+    jobOrderId?: string,
 }
 
 const formSchema: ValidationSchema = {
@@ -30,9 +37,10 @@ type TransactionsModalProps = {
     action: 'create' | 'edit',
     presetData: FormData;
     id?: string;
+    branchOptions?: SelectionOptions[];
 }
 
-export default function TransactionModal({ setShowModal, onSuccess, action, presetData, id }: TransactionsModalProps) {
+export default function TransactionModal({ setShowModal, onSuccess, action, presetData, id, branchOptions }: TransactionsModalProps) {
     const [formData, setFormData] = useState<FormData>(presetData)
     const { loading, error, closeError, postData, putData } = usePostPutData('/api/transactions')
     const isSelectingRef = useRef(false);
@@ -63,9 +71,24 @@ export default function TransactionModal({ setShowModal, onSuccess, action, pres
         const success = action === 'create' ? await postData(formattedData) : await putData(id, formattedData)
         if (success) {
             onSuccess();
-            setFormData({ referenceNumber: '', jobOrderCode: '', senderName: '', amount: null, mop: '', plateNumber: '' }); // reset form
+            setFormData({ referenceNumber: '', jobOrderCode: '', senderName: '', amount: null, mop: '', plateNumber: '', branchId: '' }); // reset form
             closeModal();
             setJobCodeOptions([])
+
+            invalidateCache(`/api/job-orders/${selectedJobCode?.jobOrderId}`);
+            invalidateCache(`/api/contractors/${selectedJobCode?.contractorId}`);
+            invalidateCache(`/api/customers/${selectedJobCode?.customerId}`);
+            invalidateCache(`/api/trucks/${selectedJobCode?.truckId}`);
+            invalidateCache(`/api/finances`);
+            invalidateCache(`/api/approval-logs`);
+            invalidateCache(`/api/activity-logs`);
+
+            invalidateCache(`/api/dashboard/customer-balance`);
+            invalidateCache(`/api/dashboard/expenses`);
+            invalidateCache(`/api/dashboard/job-orders`);
+            invalidateCache(`/api/dashboard/profit`);
+            invalidateCache(`/api/dashboard/revenue`);
+            invalidateCache(`/api/dashboard/revenue-profit-chart`);
         }
     };
 
@@ -74,7 +97,11 @@ export default function TransactionModal({ setShowModal, onSuccess, action, pres
             name: jobCode.jobOrderCode,
             status: jobCode.status,
             plateNumber: jobCode.plateNumber,
-            balance: jobCode.balance
+            balance: jobCode.balance,
+            truckId: jobCode.truckId,
+            customerId: jobCode.customerId,
+            contractorId: jobCode.contractorId,
+            jobOrderId: jobCode.id,
         });
         setJobCodeSearch(jobCode.jobOrderCode); // show name in input
     };
@@ -96,6 +123,11 @@ export default function TransactionModal({ setShowModal, onSuccess, action, pres
             setSelectedJobCode({
                 name: formData.jobOrderCode,
                 plateNumber: formData.plateNumber,
+                truckId: formData.truckId,
+                customerId: formData.customerId,
+                contractorId: formData.contractorId,
+                jobOrderId: formData.jobOrderId,
+
             });
         }
         setJobCodeSearch(formData.jobOrderCode || "");
@@ -110,6 +142,15 @@ export default function TransactionModal({ setShowModal, onSuccess, action, pres
                             <h2 className="font-bold">Add Transaction</h2>
                             <Button.X onClick={closeModal} disabled={loading} />
                         </div>
+
+                        <fieldset>
+                            Branch
+                            <Selection
+                                options={branchOptions}
+                                value={formData.branchId}
+                                onChange={(e) => setFormData({ ...formData, branchId: e.target.value })}
+                            />
+                        </fieldset>
 
                         <fieldset className="card">
                             <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-x-10 gap-y-[20px]">

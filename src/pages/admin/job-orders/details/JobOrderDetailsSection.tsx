@@ -176,7 +176,7 @@ export default function CustomerDetailsSection() {
                 <>
                     {(showModal === "create" || showModal === "edit") && <JobOrderModal branchOptions={branchOptions} setShowModal={setShowModal} presetData={presetData} onSuccess={reload} id={id} action={showModal} />}
 
-                    {showModal === "status" && <ChangeStatusModal onSuccess={reload} setShowModal={setShowModal} id={id ?? ""} selectedJobOrder={{ jobNumber: jobOrderCode, status: status }} />}
+                    {showModal === "status" && <ChangeStatusModal onSuccess={reload} setShowModal={setShowModal} id={id ?? ""} selectedJobOrder={{ jobNumber: jobOrderCode, status: status }} invalidateData={{customerId: customerId, contractorId: contractorId, truckId: truckId}} />}
                 </>
             }
 

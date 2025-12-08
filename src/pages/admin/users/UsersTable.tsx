@@ -90,7 +90,8 @@ export default function UsersTable({ setPresetData, reloadFlag, setShowModal, se
             roles: roleIds,
             branches: branchIds,
 
-            commission: item.commission * 100
+            commission: item.commission * 100,
+            userConnectingRoleIds: [{ role: 'admin', id: item.admin?.id }, { role: 'customer', id: item.customer?.id }, { role: 'contractor', id: item.contractor?.id }, { role: 'employee', id: item.employee?.id }]
         } as FormData);
 
         setShowModal("edit");

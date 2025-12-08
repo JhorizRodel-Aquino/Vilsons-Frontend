@@ -23,7 +23,7 @@ export default function CustomerDetailsSection() {
     const [activeTab, setActiveTab] = useState(tabs[0]);
 
     const customerData = data?.data || {}
-    const { jobOrders, jobOrderSummary, user } = customerData
+    const { jobOrders, jobOrderSummary, user, trucks } = customerData
 
     if (loading) return <Loading />
 
@@ -68,7 +68,7 @@ export default function CustomerDetailsSection() {
                 <section className="grid card p-0 overflow-y-auto thin-scrollbar">
                     {activeTab === tabs[0] && <ActiveOrdersTable data={jobOrders?.active} />}
                     {activeTab === tabs[1] && <ArchivedOrdersTable data={jobOrders?.archived} />}
-                    {activeTab === tabs[2] && <TrucksTable data={data?.trucks} />}
+                    {activeTab === tabs[2] && <TrucksTable data={trucks} />}
                 </section>
 
                 <div className="grid gap-[20px] content-start overflow-y-auto thin-scrollbar">
@@ -92,7 +92,7 @@ export default function CustomerDetailsSection() {
                         <button className={`p-[10px] ${activeTab === tabs[2] && 'bg-light-primary border-primary rounded-[10px] p-[10px]'}`}
                             onClick={() => setActiveTab(tabs[2])}
                         >
-                            <Detail label='Trucks Owned' value={data?.trucks?.length} align="center" variant="flipped" highlight={activeTab === tabs[2]} />
+                            <Detail label='Trucks Owned' value={trucks?.length || 0} align="center" variant="flipped" highlight={activeTab === tabs[2]} />
                         </button>
                     </section>
 

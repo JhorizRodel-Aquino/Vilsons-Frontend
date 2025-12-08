@@ -1,9 +1,15 @@
+import { useEffect } from "react";
 import Loading from "../../../../components/Loading";
-import useGetData from "../../../../hooks/useGetData";
+import useGetByMonthYear, { type MonthYearParams } from "../../../../hooks/useGetByMonthYear";
 import FinanceCard from "./FinanceCard";
 
-export default function RevenueCard() {
-    const {data, loading, error, closeError, refetch, reload} = useGetData('/api/dashboard/revenue');
+export default function RevenueCard({ monthYearParams, branchParams } : {monthYearParams: MonthYearParams, branchParams: string}) {
+    const {data, loading, error, closeError, refetch, reload, setMonthYearParams, setBranchParams} = useGetByMonthYear('/api/dashboard/revenue');
+
+    useEffect(() => {
+        setMonthYearParams(monthYearParams)
+        setBranchParams(branchParams)
+    }, [monthYearParams, branchParams])
 
     console.log({data});
 

@@ -5,6 +5,7 @@ import validateAndSanitize, { type ValidationSchema } from "../../../utils/valid
 import ErrorModal from "../../../components/ErrorModal";
 import usePostPutData from "../../../hooks/usePostPutData";
 import useFieldList from "../../../hooks/useFieldList";
+import { invalidateCache } from "../../../hooks/useGetData";
 // import type { SelectedCustomer } from "./TrucksSection";
 
 export type FormData = {
@@ -26,9 +27,10 @@ type ChangeOwnerModalProps = {
     // selectedCustomer: SelectedCustomer
     // setSelectedCustomer: (selected: SelectedCustomer) => void;
     selectedTruck: { plate: string };
+    invalidateData: Record<string, any>;
 }
 
-export default function ChangeOwnerModal({ setShowModal, onSuccess, truckId, selectedTruck }: ChangeOwnerModalProps) {
+export default function ChangeOwnerModal({ setShowModal, onSuccess, truckId, selectedTruck, invalidateData }: ChangeOwnerModalProps) {
     const isSelectingRef = useRef(false);
     const [formData, setFormData] = useState<FormData>({ truckId: truckId, customerId: "" })
     const { loading, error, closeError, putData } = usePostPutData('/api/trucks/ownership')
@@ -74,6 +76,12 @@ export default function ChangeOwnerModal({ setShowModal, onSuccess, truckId, sel
             setFormData({ truckId: "", customerId: "" });
             closeModal();
             setCustomerOptions([])
+   
+            invalidateCache(`/api/customers/${invalidateData?.customerId}`);
+            invalidateCache(`/api/customers/${selectedCustomer?.id}`);
+            invalidateCache(`/api/trucks/${truckId}`);
+            invalidateCache(`/api/approval-logs`);
+            invalidateCache(`/api/activity-logs`);
         }
     };
 

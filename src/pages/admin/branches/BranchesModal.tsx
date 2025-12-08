@@ -4,6 +4,7 @@ import Field from "../../../components/Field";
 import ErrorModal from "../../../components/ErrorModal";
 import validateAndSanitize, { type ValidationSchema } from "../../../utils/validateAndSanitize";
 import usePostPutData from "../../../hooks/usePostPutData";
+import { invalidateCache } from "../../../hooks/useGetData";
 
 export type FormData = {
     branch: string,
@@ -49,6 +50,9 @@ export default function BranchesModal({ setShowModal, onSuccess, action, presetD
             onSuccess(); // trigger reload in parent
             setFormData({ branch: "", address: "" }); // reset form
             closeModal();
+
+            invalidateCache(`/api/approval-logs`);
+            invalidateCache(`/api/activity-logs`);
         }
     };
 

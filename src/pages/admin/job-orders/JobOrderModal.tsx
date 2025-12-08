@@ -10,6 +10,7 @@ import validateAndSanitize from "../../../utils/validateAndSanitize";
 import usePostPutData from "../../../hooks/usePostPutData";
 import ErrorModal from "../../../components/ErrorModal";
 import ChangeOwnerModal from "../trucks/ChangeOwnerModal";
+import { invalidateCache } from "../../../hooks/useGetData";
 
 export type Material = {
     id: number;
@@ -199,6 +200,7 @@ export default function JobOrderModal({ branchOptions, setShowModal, presetData,
         })
 
         const success = action === 'create' ? await postData(multipartFormData) : await putData(id, multipartFormData)
+
         if (success) {
             onSuccess();
             setFormData({
@@ -210,6 +212,22 @@ export default function JobOrderModal({ branchOptions, setShowModal, presetData,
             setCustomerOptions([])
             setTruckOptions([])
             closeModal();
+
+            invalidateCache(`/api/job-orders/${id}`);
+            invalidateCache(`/api/contractors/${formData.contractorId}`);
+            invalidateCache(`/api/customers/${formData.customerId}`);
+            invalidateCache(`/api/trucks/${formData.truckId}`);
+            invalidateCache(`/api/materials`);
+            invalidateCache(`/api/finances`);
+            invalidateCache(`/api/approval-logs`);
+            invalidateCache(`/api/activity-logs`);
+
+            invalidateCache(`/api/dashboard/customer-balance`);
+            invalidateCache(`/api/dashboard/expenses`);
+            invalidateCache(`/api/dashboard/job-orders`);
+            invalidateCache(`/api/dashboard/profit`);
+            invalidateCache(`/api/dashboard/revenue`);
+            invalidateCache(`/api/dashboard/revenue-profit-chart`);
         }
     };
 
@@ -724,7 +742,7 @@ export default function JobOrderModal({ branchOptions, setShowModal, presetData,
 
                     <div className="backdrop"></div>
 
-                    {(selectedTruck && showTransferModal) && <ChangeOwnerModal setShowModal={setShowTransferModal} onSuccess={console.log} truckId={selectedTruck.id} selectedTruck={selectedTruck as any} />}
+                    {(selectedTruck && showTransferModal) && <ChangeOwnerModal setShowModal={setShowTransferModal} onSuccess={console.log} truckId={selectedTruck.id} selectedTruck={selectedTruck as any} invalidateData={{ customerId: formData.customerId }} />}
                 </>
             }
         </>

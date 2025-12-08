@@ -8,6 +8,7 @@ import validateAndSanitize from "../../../utils/validateAndSanitize";
 import Selection from "../../../components/Selection";
 import ErrorModal from "../../../components/ErrorModal";
 import useFieldList from "../../../hooks/useFieldList";
+import { invalidateCache } from "../../../hooks/useGetData";
 
 export type FormData = {
     description: string,
@@ -76,6 +77,17 @@ export default function OverheadModal({ branchOptions, setShowModal, onSuccess, 
             setFormData({ description: "", amount: null });
             setDescriptionOptions([])
             closeModal();
+
+            invalidateCache(`/api/finances`);
+            invalidateCache(`/api/approval-logs`);
+            invalidateCache(`/api/activity-logs`);
+
+            invalidateCache(`/api/dashboard/customer-balance`);
+            invalidateCache(`/api/dashboard/expenses`);
+            invalidateCache(`/api/dashboard/job-orders`);
+            invalidateCache(`/api/dashboard/profit`);
+            invalidateCache(`/api/dashboard/revenue`);
+            invalidateCache(`/api/dashboard/revenue-profit-chart`);
         }
     };
 

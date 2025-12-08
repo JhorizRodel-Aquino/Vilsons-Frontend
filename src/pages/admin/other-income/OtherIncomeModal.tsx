@@ -5,6 +5,7 @@ import Field from "../../../components/Field";
 import ErrorModal from "../../../components/ErrorModal";
 import validateAndSanitize, { type ValidationSchema } from "../../../utils/validateAndSanitize";
 import usePostPutData from "../../../hooks/usePostPutData";
+import { invalidateCache } from "../../../hooks/useGetData";
 
 export type FormData = {
     description: string,
@@ -49,6 +50,17 @@ export default function OtherIncomeModal({ branchOptions, setShowModal, onSucces
             onSuccess(); // trigger reload in parent
             setFormData({ description: "", amount: 0 }); // reset form
             closeModal();
+
+            invalidateCache(`/api/finances`);
+            invalidateCache(`/api/approval-logs`);
+            invalidateCache(`/api/activity-logs`);
+
+            invalidateCache(`/api/dashboard/customer-balance`);
+            invalidateCache(`/api/dashboard/expenses`);
+            invalidateCache(`/api/dashboard/job-orders`);
+            invalidateCache(`/api/dashboard/profit`);
+            invalidateCache(`/api/dashboard/revenue`);
+            invalidateCache(`/api/dashboard/revenue-profit-chart`);
         }
     };
 
@@ -65,9 +77,9 @@ export default function OtherIncomeModal({ branchOptions, setShowModal, onSucces
                         <fieldset>
                             Branch
                             <Selection
-                                 options={branchOptions}
-                                    value={formData.branchId}
-                                    onChange={(e) => setFormData({ ...formData, branchId: e.target.value })}
+                                options={branchOptions}
+                                value={formData.branchId}
+                                onChange={(e) => setFormData({ ...formData, branchId: e.target.value })}
                             />
                         </fieldset>
 

@@ -5,6 +5,7 @@ import validateAndSanitize, { type ValidationSchema } from "../../../utils/valid
 import ErrorModal from "../../../components/ErrorModal";
 import usePostPutData from "../../../hooks/usePostPutData";
 import Selection, { type SelectionOptions } from "../../../components/Selection";
+import { invalidateCache } from "../../../hooks/useGetData";
 
 export type FormData = {
     equipment: string,
@@ -55,6 +56,17 @@ export default function EquipmentModal({ branchOptions, setShowModal, onSuccess,
             onSuccess(); // trigger reload in parent
             setFormData({ equipment: "", quantity: 1, amount: null }); // reset form
             closeModal()
+
+            invalidateCache(`/api/finances`);
+            invalidateCache(`/api/approval-logs`);
+            invalidateCache(`/api/activity-logs`);
+
+            invalidateCache(`/api/dashboard/customer-balance`);
+            invalidateCache(`/api/dashboard/expenses`);
+            invalidateCache(`/api/dashboard/job-orders`);
+            invalidateCache(`/api/dashboard/profit`);
+            invalidateCache(`/api/dashboard/revenue`);
+            invalidateCache(`/api/dashboard/revenue-profit-chart`);
         }
     };
 

@@ -42,10 +42,11 @@ type TrucksTableProps = {
     selectedId: string;
     setSelectedId: (id: string) => void;
     setSelectedTruck: (truck: {plate: string}) => void;
+    setInvalidateData: (data: Record<string, any>) => void;
 }
 
 
-export default function TrucksTable({ setPresetData, reloadFlag, setShowModal, selectedId, setSelectedId, setSelectedTruck }: TrucksTableProps) {
+export default function TrucksTable({ setPresetData, reloadFlag, setShowModal, selectedId, setSelectedId, setSelectedTruck, setInvalidateData }: TrucksTableProps) {
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const { data, loading, error, closeError, reload, searchParams, setSearchParams, dateRangeParams, setDateRangeParams } = useGetByDateRange('/api/trucks');
     const {
@@ -99,6 +100,7 @@ export default function TrucksTable({ setPresetData, reloadFlag, setShowModal, s
                             setSelectedId(item.id);
                             setSelectedTruck({plate: item.plate});
                             setShowModal("change")
+                            setInvalidateData({ customerId: item.customerId })
                         }}
                     >
                         <Icon name="users" />Change Owner

@@ -52,9 +52,10 @@ type EquipmentTableProps = {
     selectedId: string;
     setSelectedId: (id: string) => void;
     setSelectedJobOrder: ({ }: { jobNumber: string, status: string }) => void;
+    setInvalidateData: (data: Record<string, any>) => void;
 }
 
-export default function ActiveOrdersTable({ setPresetData, reloadFlag, setShowModal, selectedId, setSelectedId, setSelectedJobOrder }: EquipmentTableProps) {
+export default function ActiveOrdersTable({ setPresetData, reloadFlag, setShowModal, selectedId, setSelectedId, setSelectedJobOrder, setInvalidateData }: EquipmentTableProps) {
     const branchOptions = getBranches()
     const statusOptions = [{ value: "", label: "All Statuses" }, ...getStatuses()];
     const [showDeleteModal, setShowDeleteModal] = useState(false)
@@ -140,6 +141,7 @@ export default function ActiveOrdersTable({ setPresetData, reloadFlag, setShowMo
                         setSelectedId(item.id)
                         setShowModal('status')
                         setSelectedJobOrder({ jobNumber: item.jobOrderCode, status: (item.status as string) })
+                        setInvalidateData({customerId: item.customerId, contractorId: item.contractorId, truckId: item.truckId});
                     }}>
                         <Icon name="edit" />Change Status
                     </button>

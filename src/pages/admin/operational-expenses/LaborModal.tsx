@@ -11,6 +11,7 @@ import validateAndSanitize from "../../../utils/validateAndSanitize";
 import ErrorModal from "../../../components/ErrorModal";
 import Selection from "../../../components/Selection";
 import useFieldList from "../../../hooks/useFieldList";
+import { invalidateCache } from "../../../hooks/useGetData";
 
 export type FormData = {
     userId?: string;
@@ -19,6 +20,7 @@ export type FormData = {
     payComponents?: PayComponents[];
     branchId?: string;
     remarks?: string;
+    userConnectingRoleIds?: { role: string; id: string }[];
 }
 
 export type PayComponents = {
@@ -156,6 +158,20 @@ export default function LaborModal({ branchOptions, setShowModal, onSuccess, act
             onSuccess();
             setFormData({ userId: '', branchId: branchOptions && branchOptions[0].value, payComponents: [] })
             closeModal();
+
+            formData.userConnectingRoleIds?.forEach((roleRecord) => {
+                invalidateCache(`/api/${roleRecord.role}s/${roleRecord.id}`);
+            });
+            invalidateCache(`/api/finances`);
+            invalidateCache(`/api/approval-logs`);
+            invalidateCache(`/api/activity-logs`);
+
+            invalidateCache(`/api/dashboard/customer-balance`);
+            invalidateCache(`/api/dashboard/expenses`);
+            invalidateCache(`/api/dashboard/job-orders`);
+            invalidateCache(`/api/dashboard/profit`);
+            invalidateCache(`/api/dashboard/revenue`);
+            invalidateCache(`/api/dashboard/revenue-profit-chart`);
         }
     };
 

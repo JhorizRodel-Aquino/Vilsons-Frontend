@@ -9,6 +9,7 @@ import ChangeStatusModal from "./ChangeStatusModal"
 
 export default function JobOrdersActiveTabContent() {
     const branchOptions = getBranches()
+    const [invalidateData, setInvalidateData] = useState<Record<string, any>>({customerId: '', contractorId: '', truckId: ''});
     const [selectedId, setSelectedId] = useState<string>('');
     const [selectedJobOrder, setSelectedJobOrder] = useState({jobNumber: '', status: ''});
     const [presetData, setPresetData] = useState<FormData>({
@@ -35,11 +36,11 @@ export default function JobOrdersActiveTabContent() {
                 }} variant="primary" />
             </SectionHeading>
 
-            <ActiveOrdersTable reloadFlag={reloadFlag} setPresetData={setPresetData} selectedId={selectedId} setSelectedId={setSelectedId} setShowModal={setShowModal} setSelectedJobOrder={setSelectedJobOrder}/>
+            <ActiveOrdersTable reloadFlag={reloadFlag} setPresetData={setPresetData} selectedId={selectedId} setSelectedId={setSelectedId} setShowModal={setShowModal} setSelectedJobOrder={setSelectedJobOrder} setInvalidateData={setInvalidateData} />
 
             {(showModal === "create" || showModal === "edit") && <JobOrderModal branchOptions={branchOptions} setShowModal={setShowModal} presetData={presetData} onSuccess={reload} id={selectedId} action={showModal} />}
 
-            {showModal === "status" && <ChangeStatusModal onSuccess={reload} setShowModal={setShowModal} id={selectedId} selectedJobOrder={selectedJobOrder} />}
+            {showModal === "status" && <ChangeStatusModal onSuccess={reload} setShowModal={setShowModal} id={selectedId} selectedJobOrder={selectedJobOrder} invalidateData={invalidateData}/>}
         </>
     )
 }

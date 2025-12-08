@@ -4,6 +4,7 @@ import Field from "../../../components/Field";
 import validateAndSanitize, { type ValidationSchema } from "../../../utils/validateAndSanitize";
 import ErrorModal from "../../../components/ErrorModal";
 import usePostPutData from "../../../hooks/usePostPutData";
+import { invalidateCache } from "../../../hooks/useGetData";
 
 export type FormData = {
     plate: string,
@@ -16,7 +17,7 @@ const formSchema: ValidationSchema = {
     plate: { required: true },
     make: { required: true },
     model: { required: true },
-    engine: { },
+    engine: {},
 };
 
 type TrucksModalProps = {
@@ -46,8 +47,12 @@ export default function TrucksModal({ setShowModal, onSuccess, action, presetDat
         const success = action === 'create' ? await postData(validatedData) : await putData(id, validatedData)
         if (success) {
             onSuccess();
-            setFormData({ plate: "", make: "", model: "", engine: ""});
+            setFormData({ plate: "", make: "", model: "", engine: "" });
             closeModal();
+
+            invalidateCache(`/api/trucks/${id}`);
+            invalidateCache(`/api/approval-logs`);
+            invalidateCache(`/api/activity-logs`);
         }
     };
 
