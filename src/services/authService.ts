@@ -1,10 +1,13 @@
 import API_URL from "../constants/API_URL";
 import axios from "axios";
+import { decodeBranches, getBranches } from "../utils/branchOptions";
 
-export type LoginData = { 
-    username: string; 
-    password: string; 
+export type LoginData = {
+  username: string;
+  password: string;
 }
+
+// const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 let inMemoryAccessToken: string | null = null; // 🔐 stored only in memory
 
@@ -14,11 +17,15 @@ export const login = async (loginData: LoginData) => {
   });
 
   const { accessToken } = response.data;
-  console.log(accessToken)
   inMemoryAccessToken = accessToken;
-  
+
+  // while (!getBranches()) {
+  //   decodeBranches();
+  //   await sleep(1000);
+  // }
+
   axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
-  return response.data;
+  return accessToken;
 };
 
 export const getAccessToken = () => inMemoryAccessToken;
@@ -36,6 +43,12 @@ export const refresh = async () => {
 
   const { accessToken } = response.data;
   inMemoryAccessToken = accessToken;
+
+  // while (!getBranches()) {
+  //   decodeBranches();
+  //   await sleep(1000);
+  // }
+
   axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
   return accessToken;
 };

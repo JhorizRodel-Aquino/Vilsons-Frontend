@@ -2,22 +2,22 @@ import { Outlet } from "react-router-dom";
 import { Routes, Route } from 'react-router'
 import LoginPage from './pages/LoginPage'
 import NotFoundPage from './pages/NotFoundPage'
-import DashboardPage from './pages/admin/dashboard/DashboardPage'
-import JobOrdersPage from './pages/admin/job-orders/JobOrdersPage'
-import OtherIncomePage from './pages/admin/other-income/OtherIncomePage'
-import TransactionsPage from './pages/admin/transactions/TransactionsPage'
-import RevenueAndProfitPage from './pages/admin/revenue-and-profit/RevenueAndProfitPage'
-import OperationalExpensesPage from './pages/admin/operational-expenses/OperationalExpensesPage'
-import OverheadExpensesPage from './pages/admin/overhead-expenses/OverheadExpensesPage'
-import TrucksPage from './pages/admin/trucks/TrucksPage'
-import ActivityLogsPage from './pages/admin/activity-logs/ActivityLogsPage'
-import UsersPage from './pages/admin/users/UsersPage'
-import RolesAndPermissionsPage from './pages/admin/roles-and-permissions/RolesAndPermissionsPage'
-import MyAccountPage from './pages/admin/my-account/MyAccountPage'
-import ContractorDetailsPage from './pages/admin/contractors/details/ContractorDetailsPage'
-import CustomerDetailsPage from './pages/admin/customers/details/CustomerDetailsPage'
-import JobOrderDetailsPage from './pages/admin/job-orders/details/JobOrderDetailsPage'
-import TruckDetailsPage from './pages/admin/trucks/details/TruckDetailsPage'
+import DashboardPage from './pages/dashboard/DashboardPage'
+import JobOrdersPage from './pages/job-orders/JobOrdersPage'
+import OtherIncomePage from './pages/other-income/OtherIncomePage'
+import TransactionsPage from './pages/transactions/TransactionsPage'
+import RevenueAndProfitPage from './pages/revenue-and-profit/RevenueAndProfitPage'
+import OperationalExpensesPage from './pages/operational-expenses/OperationalExpensesPage'
+import OverheadExpensesPage from './pages/overhead-expenses/OverheadExpensesPage'
+import TrucksPage from './pages/trucks/TrucksPage'
+import ActivityLogsPage from './pages/activity-logs/ActivityLogsPage'
+import UsersPage from './pages/users/UsersPage'
+import RolesAndPermissionsPage from './pages/roles-and-permissions/RolesAndPermissionsPage'
+import MyAccountPage from './pages/my-account/MyAccountPage'
+import ContractorDetailsPage from './pages/contractors/details/ContractorDetailsPage'
+import CustomerDetailsPage from './pages/customers/details/CustomerDetailsPage'
+import JobOrderDetailsPage from './pages/job-orders/details/JobOrderDetailsPage'
+import TruckDetailsPage from './pages/trucks/details/TruckDetailsPage'
 import AppLayout from './components/AppLayout'
 import Sidebar from './components/sidebar/Sidebar'
 import ContentLayout from './components/ContentLayout'
@@ -25,9 +25,9 @@ import Header from './components/Header'
 import Main from './components/Main'
 import './App.css'
 import { Toaster } from "react-hot-toast";
-import UserDetailsPage from "./pages/admin/users/details/UserDetailsPage";
-import ApprovalLogsPage from "./pages/admin/approval-logs/ActivityLogsPage";
-import BranchesPage from "./pages/admin/branches/BranchesPage";
+import UserDetailsPage from "./pages/users/details/UserDetailsPage";
+import ApprovalLogsPage from "./pages/approval-logs/ActivityLogsPage";
+import BranchesPage from "./pages/branches/BranchesPage";
 
 function MainLayout() {
   return (
