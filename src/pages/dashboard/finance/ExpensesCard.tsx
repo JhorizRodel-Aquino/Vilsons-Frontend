@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import Loading from "../../../components/Loading";
-import useGetData from "../../../hooks/useGetData";
 import FinanceCard from "./FinanceCard";
 import useGetByMonthYear, { type MonthYearParams } from "../../../hooks/useGetByMonthYear";
 

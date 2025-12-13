@@ -4,7 +4,6 @@ import Details from "../../components/Details"
 import Button from "../../components/Button";
 import EquipmentExpensesTable from "./EquipmentExpensesTable";
 import EquipmentModal, { type FormData } from "./EquipmentModal";
-import { getBranches } from "../../services/branchService";
 import useBranchOptions from "../../hooks/useBranchOptions";
 
 export default function EquipmentExpensesSection() {

@@ -4,7 +4,6 @@ import Details from "../../components/Details"
 import Button from "../../components/Button";
 import LaborExpensesTable from "./LaborExpensesTable"
 import LaborModal, { type FormData, type PayComponents } from "./LaborModal";
-import { getBranches } from "../../services/branchService";
 import useBranchOptions from "../../hooks/useBranchOptions";
 
 export type SelectedContractor = {

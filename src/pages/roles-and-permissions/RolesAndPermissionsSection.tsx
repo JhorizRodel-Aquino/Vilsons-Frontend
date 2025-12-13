@@ -13,8 +13,9 @@ import Icon from "../../components/Icon";
 import ConfirmModal from "../../components/ConfirmModal";
 import useDeleteData from "../../hooks/useDeleteData";
 import useGetDataWithTrigger from "../../hooks/useGetDataWithTrigger";
+import { hasPermissions } from "../../services/permissionService";
 
-export default function RolesAndPermissionsSection() {
+export default function RolesAndPermissionsSection({reloadPermissions} : {reloadPermissions: () => void}) {
   const { data, loading, error, closeError, reload } = useGetData('api/roles')
   const [rolePermissions, setRolePermissions] = useState<Record<string, ModulePermissions[]> | null>(null);
   const [selectedRoleId, setSelectedRoleId] = useState<string>("");
@@ -78,7 +79,7 @@ export default function RolesAndPermissionsSection() {
     if (success) {
       setSelectedRoleId("")
       reload();
-  
+
       setShowDeleteModal(false)
     }
   }
@@ -89,9 +90,10 @@ export default function RolesAndPermissionsSection() {
     <>
       <SectionHeading>
         <Details subtitle={"All Permissions"} modifiedDate="Aug 9, 2025" />
-        <Button label="Create New Role" onClick={() => {
-          setShowModal("create")
-        }} />
+        {hasPermissions(['create_role_permission']) &&
+          <Button label="Create New Role" onClick={() => {
+            setShowModal("create")
+          }} />}
       </SectionHeading>
 
       <div className="grid grid-cols-2 py-3 px-[20px] border-all rounded-[10px] text-base gap-[20px]">
@@ -103,7 +105,7 @@ export default function RolesAndPermissionsSection() {
             value={selectedRoleId}
             onChange={(e) => setSelectedRoleId(e.target.value)}
           />
-          <button type="button" onClick={() => setShowDeleteModal(true)}><Icon name="delete" color="dark" /></button>
+          {hasPermissions(['delete_role_permission']) && <button type="button" onClick={() => setShowDeleteModal(true)}><Icon name="delete" color="dark" /></button>}
         </div>
         <div className="px-2 row-start-2">
           <p className="text-primary">Role</p>
@@ -117,7 +119,7 @@ export default function RolesAndPermissionsSection() {
 
       <PermissionsTable rolePermissions={rolePermissions} setRolePermissions={setRolePermissions} action={showModal} setShowModal={setShowModal} />
 
-      {showModal && <RolesAndPermissionsModal action={showModal} setShowModal={setShowModal} rolePermissions={rolePermissions} setRolePermissions={setRolePermissions} onSuccess={() => { reload(); roleReload(); roleRefetch() }} selectedRole={role} customRoleOptions={customRoleOptions} baseRolesOptions={baseRoleOptions} />}
+      {showModal && <RolesAndPermissionsModal action={showModal} setShowModal={setShowModal} rolePermissions={rolePermissions} setRolePermissions={setRolePermissions} onSuccess={() => { reload(); roleReload(); roleRefetch() }} selectedRole={role} customRoleOptions={customRoleOptions} baseRolesOptions={baseRoleOptions} reloadPermissions={reloadPermissions} />}
 
       {(error || deleteError || roleError) ?
         <ErrorModal error={(error || deleteError || roleError)!} closeError={error ? closeError : deleteError ? closeDeleteError : closeRoleError} />

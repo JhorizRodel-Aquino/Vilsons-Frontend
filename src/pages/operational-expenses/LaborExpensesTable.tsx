@@ -18,6 +18,7 @@ import type { SelectedContractor, SelectedEmployee } from "./LaborExpensesSectio
 import { get } from "../../services/apiService";
 import Selection from "../../components/Selection";
 import { getBranches } from "../../services/branchService";
+import { hasPermissions } from "../../services/permissionService";
 
 type LaborExpense = {
     name: string;
@@ -118,10 +119,8 @@ export default function LaborExpensesTable({ setPresetData, reloadFlag, setShowM
             amount: item.amount,
             options:
                 <Options
-                    onEdit={() =>
-                        handleEdit(item, item.type)
-                    }
-                    onDelete={() => { setLaborType(item.type); setSelectedId(item.id); setShowDeleteModal(true) }}
+                    onEdit={hasPermissions(['edit_labor']) ? () => handleEdit(item, item.type) : undefined}
+                    onDelete={hasPermissions(['delete_labor']) ? () => { setLaborType(item.type); setSelectedId(item.id); setShowDeleteModal(true) } : undefined}
                 />
         })
     );

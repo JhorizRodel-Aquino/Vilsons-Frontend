@@ -14,6 +14,7 @@ import useDeleteData from "../../hooks/useDeleteData";
 import ConfirmModal from "../../components/ConfirmModal";
 import type { FormData } from "./TrucksModal";
 import Icon from "../../components/Icon";
+import { hasPermissions } from "../../services/permissionService";
 
 type Truck = {
     plateNumber: string;
@@ -41,7 +42,7 @@ type TrucksTableProps = {
     setShowModal: (action: 'create' | 'edit' | "change" | null) => void;
     selectedId: string;
     setSelectedId: (id: string) => void;
-    setSelectedTruck: (truck: {plate: string}) => void;
+    setSelectedTruck: (truck: { plate: string }) => void;
     setInvalidateData: (data: Record<string, any>) => void;
 }
 
@@ -89,16 +90,13 @@ export default function TrucksTable({ setPresetData, reloadFlag, setShowModal, s
             dateAdded: item.createdAt,
             options:
                 <Options
-                    onEdit={() => handleEdit(item)}
-                    onDelete={() => {
-                        setSelectedId(item.id);
-                        setShowDeleteModal(true)
-                    }}
+                    onEdit={hasPermissions(['edit_truck']) ? () => handleEdit(item) : undefined}
+                    onDelete={hasPermissions(['delete_truck']) ? () => { setSelectedId(item.id); setShowDeleteModal(true) } : undefined}
                 >
                     <button
                         onClick={() => {
                             setSelectedId(item.id);
-                            setSelectedTruck({plate: item.plate});
+                            setSelectedTruck({ plate: item.plate });
                             setShowModal("change")
                             setInvalidateData({ customerId: item.customerId })
                         }}

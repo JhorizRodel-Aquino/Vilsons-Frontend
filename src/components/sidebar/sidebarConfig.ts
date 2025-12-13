@@ -11,7 +11,7 @@ export const sidebarItems: NavItem[] = [
         label: 'Dashboard',
         iconName: 'dashboard', 
         path: '/dashboard',
-        permissions: ['admin_dashboard_revenue', 'admin_dashboard_profit', 'admin_dashboard_expenses', 'admin_dashboard_job_orders', 'admin_dashboard_customer_balance']
+        permissions: ['view_admin_dashboard_revenue', 'view_admin_dashboard_profit', 'view_admin_dashboard_expenses', 'view_admin_dashboard_job_orders', 'view_admin_dashboard_customer_balance']
     },
     {
         label: 'Job Orders',
@@ -91,7 +91,7 @@ export const sidebarItems: NavItem[] = [
             { 
                 label: 'Roles and Permissions', 
                 path: '/roles-and-permissions'  ,
-                permissions: ['view_roles']
+                permissions: ['view_role_permissions']
             },
 
         ]

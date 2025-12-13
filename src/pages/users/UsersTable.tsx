@@ -15,6 +15,7 @@ import Options from "../../components/Options";
 import { Link } from "react-router";
 import { getBranches } from "../../services/branchService";
 import Selection from "../../components/Selection";
+import { hasPermissions } from "../../services/permissionService";
 
 type AllUser = {
     name: string;
@@ -120,14 +121,14 @@ export default function UsersTable({ setPresetData, reloadFlag, setShowModal, se
     const allUsers: AllUser[] = userItems.map(
         (item: Record<string, any>) => ({
             name: item.fullName,
-            username: <Link to={`/users/${item.id}`}>{item.username}</Link>,
+            username: hasPermissions(['view_user_details']) ? <Link to={`/users/${item.id}`}>{item.username}</Link> : item.username,
             roles: item.roles,
             branches: item.branches,
             datetime: item.createdAt,
             options:
                 <Options
-                    onEdit={() => handleEdit(item)}
-                    onDelete={() => { setSelectedId(item.id); setShowDeleteModal(true) }}
+                    onEdit={hasPermissions(['edit_user']) ? () => handleEdit(item) : undefined}
+                    onDelete={hasPermissions(['delete_user']) ? () => { setSelectedId(item.id); setShowDeleteModal(true) } : undefined}
                 />
         })
     );

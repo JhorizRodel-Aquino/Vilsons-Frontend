@@ -9,8 +9,6 @@ import Icon from "../../components/Icon";
 import Selection from "../../components/Selection";
 import { toastWarning } from "../../utils/toastWarning";
 import ErrorModal from "../../components/ErrorModal";
-import fpo from "../../utils/formatPesoFromCents";
-import Dropdown from "../../components/Dropdown";
 import api from "../../utils/axiosInstance";
 import { invalidateCache } from "../../hooks/useGetData";
 
@@ -85,7 +83,7 @@ export default function UsersModal({
             .filter(Boolean) as { baseRoleName: string }[];
 
         const hasRestricted = selectedRoles.some((r) =>
-            ["customer", "contractor"].includes(r.baseRoleName)
+            ["_CUSTOMER_", "_CONTRACTOR_"].includes(r.baseRoleName)
         );
 
         if (hasRestricted) {
@@ -105,12 +103,12 @@ export default function UsersModal({
         const selectedRole = roleOptions.find((r) => r.value === value);
 
         // Reset commission if selected base role is not contractor
-        if (selectedRole && !["contractor"].includes(selectedRole.baseRoleName)) {
+        if (selectedRole && !["_CONTRACTOR_"].includes(selectedRole.baseRoleName)) {
             setFormData({ ...formData, commission: undefined })
         }
 
         // If user selected a restricted role (customer or contractor)
-        if (selectedRole && ["customer", "contractor"].includes(selectedRole.baseRoleName)) {
+        if (selectedRole && ["_CUSTOMER_", "_CONTRACTOR_"].includes(selectedRole.baseRoleName)) {
             setFormData((prev) => ({
                 ...prev,
                 roles: [value], // Replace all with just this one
@@ -125,7 +123,7 @@ export default function UsersModal({
                 .filter(Boolean) as { baseRoleName: string }[];
 
             const hasRestricted = currentRoles.some((r) =>
-                ["customer", "contractor"].includes(r.baseRoleName)
+                ["_CUSTOMER_", "_CONTRACTOR_"].includes(r.baseRoleName)
             );
 
             // Prevent adding another if a restricted role exists
@@ -159,15 +157,15 @@ export default function UsersModal({
     );
 
     const hasContractorBaseRole = selectedRoles.some(
-        (role) => role?.baseRoleName === "contractor"
+        (role) => role?.baseRoleName === "_CONTRACTOR_"
     );
 
     const hasEmployeeBaseRole = selectedRoles.some(
-        (role) => role?.baseRoleName === "employee"
+        (role) => role?.baseRoleName === "_EMPLOYEE_"
     );
 
     const hasAdminEmployeeBaseRole = selectedRoles.some(
-        (role) => role?.baseRoleName === "admin" || role?.baseRoleName === "employee"
+        (role) => role?.baseRoleName === "_ADMIN_" || role?.baseRoleName === "_EMPLOYEE_"
     );
 
     // Prevent mixing incompatible base roles
@@ -356,7 +354,7 @@ useEffect(() => {
                                             (formData.roles || [])
                                                 .map((id) => roleOptions.find((r) => r.value === id))
                                                 .some((r) =>
-                                                    ["customer", "contractor"].includes(r?.baseRoleName || "")
+                                                    ["_CUSTOMER_", "_CONTRACTOR_"].includes(r?.baseRoleName || "")
                                                 )
                                         }
                                     />

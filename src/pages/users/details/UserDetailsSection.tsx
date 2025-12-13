@@ -5,10 +5,7 @@ import useGetData from "../../../hooks/useGetData";
 import Loading from "../../../components/Loading";
 import formatDate from "../../../utils/formatDate";
 import ErrorModal from "../../../components/ErrorModal";
-import { useCallback, useState } from "react";
-
-// import MyInfoModal from "../MyInfoModal";
-// import MyPasswordModal from "../MyPasswordModal";
+import { useState } from "react";
 import API_URL from "../../../constants/API_URL";
 import type { FormData } from "../UsersModal";
 import { useParams } from "react-router";
@@ -16,6 +13,8 @@ import UsersModal from "../UsersModal";
 import { getBranches } from "../../../services/branchService";
 import type { SelectionOptions } from "../../../components/Selection";
 import UserPasswordModal from "./UserPasswordModal";
+import { hasPermissions } from "../../../services/permissionService";
+import userProfile from '../../../assets/user-profile.webp'
 
 export default function UserDetailsSection() {
     const { id } = useParams();
@@ -68,7 +67,7 @@ export default function UserDetailsSection() {
             <article className="grid grid-cols-[1fr_3fr] gap-7">
                 <section className="card w-full">
                     <div className="grid gap-6 justify-items-center">
-                        <ProfilePicture src={API_URL + `/images/${image}`} />
+                        <ProfilePicture src={image ? API_URL + '/images/' + image : userProfile}/>
                         <div className="grid gap-1 mb-1">
                             <p className="font-medium">{fullName}</p>
                             <p className="font-medium text-darker">@{username}</p>
@@ -130,23 +129,24 @@ export default function UserDetailsSection() {
                 </section>
             </article >
 
-            <section className="card w-full">
-                <div className="flex justify-between items-center mb-5">
-                    <div>
-                        <h2 className="font-bold text-primary">Security Settings</h2>
-                        <p className="text-dark">Update your security password</p>
+            {hasPermissions(['change_user_password']) &&
+                <section className="card w-full">
+                    <div className="flex justify-between items-center mb-5">
+                        <div>
+                            <h2 className="font-bold text-primary">Security Settings</h2>
+                            <p className="text-dark">Update your security password</p>
+                        </div>
+
+                        <Button
+                            label="Change Password"
+                            variant="outline"
+                            size="mini"
+                            onClick={() => setShowModal("password")}
+                        />
                     </div>
 
-                    <Button
-                        label="Change Password"
-                        variant="outline"
-                        size="mini"
-                        onClick={() => setShowModal("password")}
-                    />
-                </div>
-
-                <Detail label='Password' value={'********'} />
-            </section>
+                    <Detail label='Password' value={'********'} />
+                </section>}
 
             {/* {showModal === "info" && <MyInfoModal setShowModal={setShowModal} onSuccess={reload} presetData={presetData} />} */}
             {/* {showModal === "password" && <MyPasswordModal setShowModal={setShowModal} />} */}

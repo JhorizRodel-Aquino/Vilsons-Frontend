@@ -1,6 +1,7 @@
 import { Fragment } from "react/jsx-runtime";
 import RolesAndPermissionsTableData from "./RolesAndPermissionTableData";
 import Icon from "../../components/Icon";
+import { hasPermissions } from "../../services/permissionService";
 
 export type Permission = {
     permission: string;
@@ -95,7 +96,7 @@ export default function PermissionsTable({
                     <thead className="border-b">
                         <tr>
                             <th className="flex items-center gap-2">Permission
-                                <button type="button" className="cursor-pointer" onClick={() => setShowModal("edit")}><Icon name="edit" color="primary" /></button>
+                                {hasPermissions(['edit_role_permission']) && <button type="button" className="cursor-pointer" onClick={() => setShowModal("edit")}><Icon name="edit" color="primary" /></button>}
                             </th>
                             <th>Approval</th>
                         </tr>

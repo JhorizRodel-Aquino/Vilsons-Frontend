@@ -5,8 +5,8 @@ import JobOrderModal, { type FormData } from "./JobOrderModal"
 import { useCallback, useState } from "react"
 import Details from "../../components/Details"
 import ChangeStatusModal from "./ChangeStatusModal"
-import { getBranches } from "../../services/branchService"
 import useBranchOptions from "../../hooks/useBranchOptions"
+import { hasPermissions } from "../../services/permissionService"
 
 export default function JobOrdersActiveTabContent() {
     const { branchOptions } = useBranchOptions()
@@ -28,13 +28,14 @@ export default function JobOrdersActiveTabContent() {
         <>
             <SectionHeading>
                 <Details subtitle={'All Job Orders'} modifiedDate="Aug 9, 2025" />
-                <Button label={'Add Job Orders'} onClick={() => {
-                    setPresetData({
-                        truckId: '', plate: '', make: '', model: '',
-                        customerId: '', name: '', username: '', phone: '', email: '',
-                        contractorId: '', description: '', labor: null, branchId: branchOptions.length > 0 ? branchOptions[0].value : ''
-                    }); setShowModal('create')
-                }} variant="primary" />
+                {hasPermissions(['create_job_order']) &&
+                    <Button label={'Add Job Orders'} onClick={() => {
+                        setPresetData({
+                            truckId: '', plate: '', make: '', model: '',
+                            customerId: '', name: '', username: '', phone: '', email: '',
+                            contractorId: '', description: '', labor: null, branchId: branchOptions.length > 0 ? branchOptions[0].value : ''
+                        }); setShowModal('create')
+                    }} variant="primary" />}
             </SectionHeading>
 
             <ActiveOrdersTable reloadFlag={reloadFlag} setPresetData={setPresetData} selectedId={selectedId} setSelectedId={setSelectedId} setShowModal={setShowModal} setSelectedJobOrder={setSelectedJobOrder} setInvalidateData={setInvalidateData} />

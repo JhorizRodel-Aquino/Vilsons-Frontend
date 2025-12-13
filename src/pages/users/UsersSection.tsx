@@ -8,12 +8,11 @@ import { getBranches } from "../../services/branchService";
 import useGetData from "../../hooks/useGetData";
 import type { SelectionOptions } from "../../components/Selection";
 import ErrorModal from "../../components/ErrorModal";
+import useBranchOptions from "../../hooks/useBranchOptions";
+import { hasPermissions } from "../../services/permissionService";
 
 export default function UserSection() {
-    const branchOptions = [
-        { value: '', label: 'All Branches' },
-        ...(getBranches() || [])
-    ];
+    const { branchOptions } = useBranchOptions()
     const { data: roles, error, closeError } = useGetData('api/roles')
     const [selectedId, setSelectedId] = useState<string>('');
     const [presetData, setPresetData] = useState<FormData>({ roles: [], branches: [] });
@@ -37,7 +36,8 @@ export default function UserSection() {
                 <>
                     <SectionHeading>
                         <Details subtitle={'All Users'} modifiedDate="Aug 9, 2025" />
-                        <Button label={'Add User'} onClick={() => { setPresetData({ name: '', username: '', email: '', phone: undefined, roles: [], branches: [] }); setShowModal('create') }} variant="primary" />
+                        {hasPermissions(['create_user']) &&
+                            <Button label={'Add User'} onClick={() => { setPresetData({ name: '', username: '', email: '', phone: undefined, roles: [], branches: [] }); setShowModal('create') }} variant="primary" />}
                     </SectionHeading>
 
                     <UsersTable reloadFlag={reloadFlag} setPresetData={setPresetData} selectedId={selectedId} setSelectedId={setSelectedId} setShowModal={setShowModal} />

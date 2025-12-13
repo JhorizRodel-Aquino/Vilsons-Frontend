@@ -16,6 +16,7 @@ import ConfirmModal from "../../components/ConfirmModal";
 import Options from "../../components/Options";
 import Selection from "../../components/Selection";
 import { getBranches } from "../../services/branchService";
+import { hasPermissions } from "../../services/permissionService";
 
 
 type OverheadExpense = {
@@ -89,8 +90,8 @@ export default function OverheadExpensesTable({ setPresetData, reloadFlag, setSh
             amount: item.amount,
             options:
                 <Options
-                    onEdit={() => handleEdit(item)}
-                    onDelete={() => { setSelectedId(item.id); setShowDeleteModal(true) }}
+                    onEdit={hasPermissions(['edit_overhead']) ? () => handleEdit(item) : undefined}
+                    onDelete={hasPermissions(['delete_overhead']) ? () => { setSelectedId(item.id); setShowDeleteModal(true) } : undefined}
                 />
         })
     );

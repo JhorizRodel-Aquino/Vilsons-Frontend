@@ -22,6 +22,7 @@ import getStatuses from "../../utils/statusOptions";
 import Button from "../../components/Button";
 import usePostPutData from "../../hooks/usePostPutData";
 import { getBranches } from "../../services/branchService";
+import { hasPermissions } from "../../services/permissionService";
 
 type ActiveJobOrder = {
     jobNumber: ReactElement;
@@ -71,7 +72,7 @@ export default function ActiveOrdersTable({ setPresetData, reloadFlag, setShowMo
     } = useDeleteData('/api/job-orders');
 
     const [action, setAction] = useState<'accept' | 'reject' | 'released' | null>(null);
-    const { error: approveError, closeError: approveCloseError, putData } = usePostPutData(`/api/job-orders/${action}`);
+    const { error: approveError, closeError: closeApproveError, putData } = usePostPutData(`/api/job-orders/${action}`);
 
     useEffect(() => {
         const handleApproval = async () => {
@@ -123,35 +124,38 @@ export default function ActiveOrdersTable({ setPresetData, reloadFlag, setShowMo
 
     const activeJobOrders: ActiveJobOrder[] = jobOrderItems.map(
         (item: Record<string, any>) => ({
-            jobNumber: <Link to={`/job-orders/${item.id}`}>{item.jobOrderCode}</Link>,
+            jobNumber: hasPermissions(['view_job_order_details']) ? <Link to={`/job-orders/${item.id}`}>{item.jobOrderCode}</Link> : item.jobOrderCode,
             status: item.status,
             plateNumber: item.plateNumber,
-            contractor: <Link to={`/contractors/${item.contractorId}`}>{item.contractorName}</Link>,
+            contractor: hasPermissions(['view_contractor_details']) ? <Link to={`/contractors/${item.contractorId}`}>{item.contractorName}</Link> : item.contractorName,
             totalBill: item.totalBill,
             balance: item.balance,
             action: item.status.toLowerCase() === 'completed' ?
-                <div className="flex gap-2">
-                    <Button label="Accept" variant="primary" size="mini" onClick={() => { setSelectedId(item.id); setAction('accept') }} />
-                    <Button label="Reject" variant="outline" size="mini" onClick={() => { setSelectedId(item.id); setAction('reject') }} />
-                </div>
-                : item.status.toLowerCase() === 'forrelease' && <Button label="Released" variant="primary" size="mini" onClick={() => { setSelectedId(item.id); setAction('released') }} />,
+                (hasPermissions(['']) &&
+                    <div className="flex gap-2">
+                        <Button label="Accept" variant="primary" size="mini" onClick={() => { setSelectedId(item.id); setAction('accept') }} />
+                        <Button label="Reject" variant="outline" size="mini" onClick={() => { setSelectedId(item.id); setAction('reject') }} />
+                    </div>)
+                : item.status.toLowerCase() === 'forrelease' &&
+                (hasPermissions(['handle_for_release_job_orders']) &&
+                    <Button label="Released" variant="primary" size="mini" onClick={() => { setSelectedId(item.id); setAction('released') }} />),
             options:
                 <Options
-                    onEdit={() => handleEdit(item)}
-                    onDelete={() => { setSelectedId(item.id); setShowDeleteModal(true) }}
+                    onEdit={hasPermissions(['edit_job_order']) ? () => handleEdit(item) : undefined}
+                    onDelete={hasPermissions(['delete_job_order']) ? () => { setSelectedId(item.id); setShowDeleteModal(true) } : undefined}
                 >
-                    <button onClick={() => {
+                    {hasPermissions(['change_job_order_status']) && <button onClick={() => {
                         setSelectedId(item.id)
                         setShowModal('status')
                         setSelectedJobOrder({ jobNumber: item.jobOrderCode, status: (item.status as string) })
                         setInvalidateData({ customerId: item.customerId, contractorId: item.contractorId, truckId: item.truckId });
                     }}>
                         <Icon name="edit" />Change Status
-                    </button>
+                    </button>}
                 </Options>
         })
     );
-    
+
 
 
     return (
@@ -182,7 +186,7 @@ export default function ActiveOrdersTable({ setPresetData, reloadFlag, setShowMo
             {error && <ErrorModal error={error!} closeError={closeError} />}
 
             {(error || deleteError) ?
-                <ErrorModal error={(error || deleteError)!} closeError={error ? closeError : closeDeleteError} />
+                <ErrorModal error={(error || deleteError || approveError)!} closeError={error ? closeError : deleteError ? closeDeleteError : closeApproveError} />
                 : showDeleteModal &&
                 <ConfirmModal
                     title="Delete Job Order"

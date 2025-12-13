@@ -5,7 +5,7 @@ import Details from "../../components/Details"
 import Button from "../../components/Button";
 import BranchesTable from "./BranchesTable";
 import BranchesModal, { type FormData } from "./BranchesModal";
-
+import { hasPermissions } from "../../services/permissionService";
 
 export default function BranchesSection() {
     const [selectedId, setSelectedId] = useState<string>('');
@@ -19,7 +19,8 @@ export default function BranchesSection() {
         <>
             <SectionHeading>
                 <Details subtitle={'All Branches'} modifiedDate="Aug 9, 2025" />
-                <Button label={'Add Branches'} onClick={() => {setPresetData({ branch: '', address: '' }); setShowModal('create')}} variant="primary" />
+                {hasPermissions(['create_branch']) &&
+                    <Button label={'Add Branches'} onClick={() => { setPresetData({ branch: '', address: '' }); setShowModal('create') }} variant="primary" />}
             </SectionHeading>
 
             <BranchesTable reloadFlag={reloadFlag} setPresetData={setPresetData} selectedId={selectedId} setSelectedId={setSelectedId} setShowModal={setShowModal} />

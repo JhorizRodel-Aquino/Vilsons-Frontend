@@ -14,6 +14,7 @@ import usePostData from "../../hooks/usePostData";
 import usePostPutData from "../../hooks/usePostPutData";
 import Selection from "../../components/Selection";
 import { getBranches } from "../../services/branchService";
+import { hasPermissions } from "../../services/permissionService";
 
 type ApprovalLog = {
     tableName: string;
@@ -83,10 +84,11 @@ export default function ApprovalLogsTable() {
             // approvedByUser: item.approvedByUser || '',
             status: item.status,
             datetime: <div>{formatDate(item.createdAt as string, "date")} <br /> {formatDate(item.createdAt as string, "time")}</div>,
-            action: <div className="grid gap-2">
-                <Button label="Accept" onClick={() => { setSelectedId(item.id); setAction('approve') }} />
-                <Button label="Reject" variant="outline" onClick={() => { setSelectedId(item.id); setAction('reject') }} />
-            </div>
+            action: hasPermissions(['handle_approval_logs']) &&
+                <div className="grid gap-2">
+                    <Button label="Accept" onClick={() => { setSelectedId(item.id); setAction('approve') }} />
+                    <Button label="Reject" variant="outline" onClick={() => { setSelectedId(item.id); setAction('reject') }} />
+                </div>
         })
     );
 

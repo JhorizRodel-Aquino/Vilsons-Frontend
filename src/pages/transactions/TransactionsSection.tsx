@@ -4,13 +4,13 @@ import Details from "../../components/Details"
 import Button from "../../components/Button";
 import TransactionsTable from "./TransactionsTable";
 import TransactionsModal, { type FormData } from "./TransactionsModal";
-import { getBranches } from "../../services/branchService";
 import useBranchOptions from "../../hooks/useBranchOptions";
+import { hasPermissions } from "../../services/permissionService";
 
 export default function TransactionsSection() {
     const { branchOptions } = useBranchOptions()
     const [selectedId, setSelectedId] = useState<string>('');
-    const [presetData, setPresetData] = useState<FormData>({ referenceNumber: '', jobOrderCode: '', senderName: '', amount: null, mop: '', branchId: branchOptions.length > 0 ? branchOptions[0].value: '' });
+    const [presetData, setPresetData] = useState<FormData>({ referenceNumber: '', jobOrderCode: '', senderName: '', amount: null, mop: '', branchId: branchOptions.length > 0 ? branchOptions[0].value : '' });
     const [reloadFlag, setReloadFlag] = useState(false);
     const [showModal, setShowModal] = useState<'create' | 'edit' | null>(null)
 
@@ -20,7 +20,8 @@ export default function TransactionsSection() {
         <>
             <SectionHeading>
                 <Details subtitle={'All Transactions'} modifiedDate="Aug 9, 2025" />
-                <Button label={'Add Transaction'} onClick={() => { setPresetData({ referenceNumber: '', jobOrderCode: '', senderName: '', amount: null, mop: '', branchId: branchOptions.length > 0 ? branchOptions[0].value: '' }); setShowModal('create') }} variant="primary" />
+                {hasPermissions(['create_transaction']) &&
+                    <Button label={'Add Transaction'} onClick={() => { setPresetData({ referenceNumber: '', jobOrderCode: '', senderName: '', amount: null, mop: '', branchId: branchOptions.length > 0 ? branchOptions[0].value : '' }); setShowModal('create') }} variant="primary" />}
             </SectionHeading>
 
             <TransactionsTable reloadFlag={reloadFlag} setPresetData={setPresetData} selectedId={selectedId} setSelectedId={setSelectedId} setShowModal={setShowModal} />

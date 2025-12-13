@@ -6,12 +6,13 @@ import OverheadExpensesTable from "./OverheadExpensesTable";
 import OverheadModal, { type FormData } from "./OverheadModal";
 import { getBranches } from "../../services/branchService";
 import useBranchOptions from "../../hooks/useBranchOptions";
+import { hasPermissions } from "../../services/permissionService";
 
 
 export default function OverheadExpensesSection() {
     const { branchOptions } = useBranchOptions()
     const [selectedId, setSelectedId] = useState<string>('');
-    const [presetData, setPresetData] = useState<FormData>({ description: "", amount: null, branchId: branchOptions.length > 0 ? branchOptions[0].value: '' });
+    const [presetData, setPresetData] = useState<FormData>({ description: "", amount: null, branchId: branchOptions.length > 0 ? branchOptions[0].value : '' });
     const [reloadFlag, setReloadFlag] = useState(false);
     const [showModal, setShowModal] = useState<'create' | 'edit' | null>(null)
 
@@ -21,7 +22,8 @@ export default function OverheadExpensesSection() {
         <>
             <SectionHeading>
                 <Details subtitle={'All Overhead Expenses'} modifiedDate="Aug 9, 2025" />
-                <Button label={'Add Overhead'} onClick={() => { setPresetData({ description: "", amount: null, branchId: branchOptions.length > 0 ? branchOptions[0].value: '' }); setShowModal('create') }} variant="primary" />
+                {hasPermissions(['create_overhead']) &&
+                    <Button label={'Add Overhead'} onClick={() => { setPresetData({ description: "", amount: null, branchId: branchOptions.length > 0 ? branchOptions[0].value : '' }); setShowModal('create') }} variant="primary" />}
             </SectionHeading>
 
             <OverheadExpensesTable reloadFlag={reloadFlag} setPresetData={setPresetData} selectedId={selectedId} setSelectedId={setSelectedId} setShowModal={setShowModal} />

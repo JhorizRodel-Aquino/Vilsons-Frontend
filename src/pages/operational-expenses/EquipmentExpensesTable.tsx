@@ -15,6 +15,7 @@ import Options from "../../components/Options";
 import { useEffect, useState, type ReactElement } from "react";
 import Selection from "../../components/Selection";
 import { getBranches } from "../../services/branchService";
+import { hasPermissions } from "../../services/permissionService";
 
 type EquipmentExpense = {
     equipment: string;
@@ -91,8 +92,8 @@ export default function EquipmentExpensesTable({ setPresetData, reloadFlag, setS
             totalAmount: item.totalAmount,
             options:
                 <Options
-                    onEdit={() => handleEdit(item)}
-                    onDelete={() => { setSelectedId(item.id); setShowDeleteModal(true) }}
+                    onEdit={hasPermissions(['edit_equipment']) ? () => handleEdit(item) : undefined}
+                    onDelete={hasPermissions(['edit_equipment']) ? () => { setSelectedId(item.id); setShowDeleteModal(true) } : undefined}
                 />
         })
     );

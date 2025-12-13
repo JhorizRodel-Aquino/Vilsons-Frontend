@@ -25,6 +25,7 @@ type RolesAndPermissionsModalProps = {
     >;
     customRoleOptions: SelectionOptions[] | [];
     baseRolesOptions: SelectionOptions[] | [];
+    reloadPermissions: () => void
 };
 
 export default function RolesAndPermissionsModal({
@@ -35,6 +36,7 @@ export default function RolesAndPermissionsModal({
     rolePermissions,
     customRoleOptions,
     baseRolesOptions,
+    reloadPermissions
 }: RolesAndPermissionsModalProps) {
 
     const { loading, error, closeError, putData, postData } = usePostPutData("/api/roles");
@@ -133,6 +135,7 @@ export default function RolesAndPermissionsModal({
 
             invalidateCache(`/api/approval-logs`);
             invalidateCache(`/api/activity-logs`);
+            reloadPermissions()
         }
     };
 

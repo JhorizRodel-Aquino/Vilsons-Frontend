@@ -16,6 +16,7 @@ import useDeleteData from "../../hooks/useDeleteData";
 import type { FormData } from "./OtherIncomeModal";
 import Selection from "../../components/Selection";
 import { getBranches } from "../../services/branchService";
+import { hasPermissions } from "../../services/permissionService";
 
 type OtherIncome = {
     datetime: string;
@@ -92,8 +93,8 @@ export default function OtherIncomeTable({ setPresetData, reloadFlag, setShowMod
             amount: item.amount,
             options:
                 <Options
-                    onEdit={() => handleEdit(item)}
-                    onDelete={() => { setSelectedId(item.id); setShowDeleteModal(true) }}
+                    onEdit={hasPermissions(['edit_other_income']) ? () => handleEdit(item) : undefined}
+                    onDelete={hasPermissions(['delete_other_income']) ? () => { setSelectedId(item.id); setShowDeleteModal(true) } : undefined}
                 />
 
         })

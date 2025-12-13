@@ -17,6 +17,7 @@ import Options from "../../components/Options";
 import { get } from "../../services/apiService";
 import Selection from "../../components/Selection";
 import { getBranches } from "../../services/branchService";
+import { hasPermissions } from "../../services/permissionService";
 
 type Transaction = {
     referenceNumber: string;
@@ -96,8 +97,8 @@ export default function TransactionsTable({ setPresetData, reloadFlag, setShowMo
             amount: item.amount,
             options:
                 <Options
-                    onEdit={() => handleEdit(item)}
-                    onDelete={() => { setSelectedId(item.id); setShowDeleteModal(true) }}
+                    onEdit={hasPermissions(['edit_transaction']) ? () => handleEdit(item) : undefined}
+                    onDelete={hasPermissions(['delete_transaction']) ? () => { setSelectedId(item.id); setShowDeleteModal(true) } : undefined}
                 />
         })
     );

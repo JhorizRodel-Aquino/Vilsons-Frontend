@@ -3,8 +3,6 @@ import Details from "../../components/Details"
 import MaterialExpensesTable from "./MaterialExpensesTable"
 
 export default function MaterialExpensesSection() {
-
-
     return (
         <>
             <SectionHeading>

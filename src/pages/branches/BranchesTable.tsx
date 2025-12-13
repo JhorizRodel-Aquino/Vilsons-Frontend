@@ -1,20 +1,15 @@
 import type { Column } from "../../components/table/Table";
-import TableFilter from "../../components/TableFilter"
-import SearchBar from "../../components/SearchBar"
 import Table from "../../components/table/Table"
-import formatPesoFromCents from '../../utils/formatPesoFromCents';
-import MonthYearFilter from "../../components/MonthYearFilter";
 import Loading from "../../components/Loading";
 import formatDate from "../../utils/formatDate";
-import useMonthYearFilter from "../../hooks/useMonthYearFilter";
 import ErrorModal from "../../components/ErrorModal";
-import useGetByMonthYear from "../../hooks/useGetByMonthYear";
 import { useEffect, useState, type ReactElement } from "react";
 import Options from "../../components/Options";
 import ConfirmModal from "../../components/ConfirmModal";
 import useDeleteData from "../../hooks/useDeleteData";
 import type { FormData } from "./BranchesModal";
 import useGetData from "../../hooks/useGetData";
+import { hasPermissions } from "../../services/permissionService";
 
 type Branches = {
     branch: string;
@@ -41,7 +36,6 @@ type BranchesTableProps = {
 export default function BranchesTable({ setPresetData, reloadFlag, setShowModal, selectedId, setSelectedId }: BranchesTableProps) {
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const { data, loading, error, closeError, reload} = useGetData('/api/branches');
-    // const { options, option, setOption, monthYear, setMonthYear, year, setYear } = useMonthYearFilter(setMonthYearParams);
     const {
         loading: deleteLoading,
         error: deleteError,
@@ -82,10 +76,9 @@ export default function BranchesTable({ setPresetData, reloadFlag, setShowModal,
             address: item.address,
             options:
                 <Options 
-                    onEdit={() => handleEdit(item)} 
-                    onDelete={() => { setSelectedId(item.id); setShowDeleteModal(true) }} 
+                    onEdit={hasPermissions(['edit_branch']) ? () => handleEdit(item) : undefined} 
+                    onDelete={hasPermissions(['delete_branch']) ? () => { setSelectedId(item.id); setShowDeleteModal(true) } : undefined} 
                 />
-                
         })
     );
 
