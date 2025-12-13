@@ -36,6 +36,14 @@ import Loading from "./components/Loading";
 // Services / hooks
 import usePermissions from "./hooks/usePermissions";
 import { hasPermissions } from "./services/permissionService";
+import AssignedOrdersPage from "./pages/assigned-orders/AssignedOrdersPage";
+import MyOrdersPage from "./pages/my-orders/MyOrdersPage";
+import AssignedOrderDetailsPage from "./pages/assigned-orders/details/AssignedOrderDetailsPage";
+import MyOrderDetailsPage from "./pages/my-orders/details/MyOrderDetailsPage";
+import MyTransactionsPage from "./pages/my-transactions/MyTransactionsPage";
+import MyTrucksPage from "./pages/my-trucks/MyTrucksPage";
+import MyTruckDetailsSection from "./pages/my-trucks/details/MyTruckDetailsSection";
+import ContractorPayrollPage from "./pages/contractor-payroll/ContractorPayrollPage";
 
 // ProtectedRoute
 const ProtectedRoute = ({
@@ -60,7 +68,7 @@ const MainLayout = () => {
   const { permissions, loading, reload } = usePermissions();
   const [reloadFlag, setReloadFlag] = useState(false);
 
-  useEffect(() => {reload()}, [reloadFlag]);
+  useEffect(() => { reload() }, [reloadFlag]);
   const reloadPermissions = useCallback(() => setReloadFlag((prev) => !prev), []);
 
   if (loading || !permissions) return <Loading />;
@@ -217,12 +225,22 @@ const MainLayout = () => {
               }
             />
 
+            <Route path="assigned-orders" element={<AssignedOrdersPage />} />
+            <Route path="payroll" element={<ContractorPayrollPage />} />
+            <Route path="my-orders" element={<MyOrdersPage />} />
+            <Route path="my-transactions" element={<MyTransactionsPage />} />
+            <Route path="my-trucks" element={<MyTrucksPage />} />
+
             {/* Details Pages */}
             <Route path="customers/:id" element={<CustomerDetailsPage />} />
             <Route path="contractors/:id" element={<ContractorDetailsPage />} />
             <Route path="job-orders/:id" element={<JobOrderDetailsPage />} />
             <Route path="trucks/:id" element={<TruckDetailsPage />} />
             <Route path="users/:id" element={<UserDetailsPage />} />
+
+            <Route path="assigned-orders/:id" element={<AssignedOrderDetailsPage />} />
+            <Route path="my-orders/:id" element={<MyOrderDetailsPage />} />
+            <Route path="my-trucks/:id" element={<MyTruckDetailsSection />} />
 
             {/* 404 */}
             <Route path="*" element={<NotFoundPage />} />

@@ -46,7 +46,7 @@ const activeJobOrderColumns: Column<ActiveJobOrder>[] = [
     { key: "options", label: "", render: (value) => value as React.ReactElement },
 ];
 
-type EquipmentTableProps = {
+type ActiveOrdersTableProps = {
     setPresetData: (presets: FormData) => void,
     reloadFlag: boolean,
     setShowModal: (action: 'create' | 'edit' | 'status' | null) => void;
@@ -56,7 +56,7 @@ type EquipmentTableProps = {
     setInvalidateData: (data: Record<string, any>) => void;
 }
 
-export default function ActiveOrdersTable({ setPresetData, reloadFlag, setShowModal, selectedId, setSelectedId, setSelectedJobOrder, setInvalidateData }: EquipmentTableProps) {
+export default function ActiveOrdersTable({ setPresetData, reloadFlag, setShowModal, selectedId, setSelectedId, setSelectedJobOrder, setInvalidateData }: ActiveOrdersTableProps) {
     const branchOptions = [
         { value: '', label: 'All Branches' },
         ...(getBranches() || [])
@@ -131,7 +131,7 @@ export default function ActiveOrdersTable({ setPresetData, reloadFlag, setShowMo
             totalBill: item.totalBill,
             balance: item.balance,
             action: item.status.toLowerCase() === 'completed' ?
-                (hasPermissions(['']) &&
+                (hasPermissions(['handle_completed_job_orders']) &&
                     <div className="flex gap-2">
                         <Button label="Accept" variant="primary" size="mini" onClick={() => { setSelectedId(item.id); setAction('accept') }} />
                         <Button label="Reject" variant="outline" size="mini" onClick={() => { setSelectedId(item.id); setAction('reject') }} />
@@ -185,7 +185,7 @@ export default function ActiveOrdersTable({ setPresetData, reloadFlag, setShowMo
 
             {error && <ErrorModal error={error!} closeError={closeError} />}
 
-            {(error || deleteError) ?
+            {(error || deleteError || approveError) ?
                 <ErrorModal error={(error || deleteError || approveError)!} closeError={error ? closeError : deleteError ? closeDeleteError : closeApproveError} />
                 : showDeleteModal &&
                 <ConfirmModal

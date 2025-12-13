@@ -20,6 +20,18 @@ export const sidebarItems: NavItem[] = [
         permissions: ['view_job_orders']
     },
     {
+        label: 'Assigned Orders',
+        iconName: 'job-orders',
+        path: '/assigned-orders',
+        permissions: ['view_contractor_assigned_job_orders']
+    },
+    {
+        label: 'My Orders',
+        iconName: 'job-orders',
+        path: '/my-orders',
+        permissions: ['view_customer_own_job_orders']
+    },
+    {
         label: 'Other Income',
         iconName: 'other-income',
         path: '/other-income',
@@ -30,6 +42,18 @@ export const sidebarItems: NavItem[] = [
         iconName: 'transactions',
         path: '/transactions',
         permissions: ['view_transactions']
+    },
+    {
+        label: 'Payroll',
+        iconName: 'transactions',
+        path: '/payroll',
+        permissions: ['view_contractor_finances']
+    },
+    {
+        label: 'My Transactions',
+        iconName: 'transactions',
+        path: '/my-transactions',
+        permissions: ['view_customer_own_transactions']
     },
     {
         label: 'Finances',
@@ -65,6 +89,12 @@ export const sidebarItems: NavItem[] = [
         iconName: 'truck',
         path: '/trucks' ,
         permissions: ['view_trucks']
+    },
+    {
+        label: 'My Trucks',
+        iconName: 'truck',
+        path: '/my-trucks' ,
+        permissions: ['view_customer_own_trucks']
     },
     {
         label: 'Approval Logs',
