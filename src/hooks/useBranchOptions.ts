@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getBranches } from "../utils/branchOptions";
+import { getBranches } from "../services/branchService";
 
 export default function useBranchOptions(pollInterval = 200) {
   const [branchOptions, setBranchOptions] = useState<{ value: string; label: string }[]>([]);

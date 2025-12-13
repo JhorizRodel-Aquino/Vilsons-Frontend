@@ -4,7 +4,8 @@ import Field from '../components/Field'
 import MessageModal from '../components/MessageModal'
 import useAuth from '../hooks/useAuth'
 
-export default function LoginPage() {
+export default function LoginPage({ closeError }: {closeError: () => void}) {
+    closeError()
     const [showMessageModal, setShowMessageModal] = useState(false)
     const [loginData, setLoginData] = useState({ username: '', password: '' })
     const { handleLogin, loading, error } = useAuth();

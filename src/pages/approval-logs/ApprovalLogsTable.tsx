@@ -13,7 +13,7 @@ import Button from "../../components/Button";
 import usePostData from "../../hooks/usePostData";
 import usePostPutData from "../../hooks/usePostPutData";
 import Selection from "../../components/Selection";
-import { getBranches } from "../../utils/branchOptions";
+import { getBranches } from "../../services/branchService";
 
 type ApprovalLog = {
     tableName: string;

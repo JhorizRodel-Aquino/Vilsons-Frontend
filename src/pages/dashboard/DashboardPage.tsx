@@ -7,7 +7,7 @@ import RenderJobOrderCards from './job-orders/RenderJobOrderCards';
 import RenderRecentJobOrderCards from './job-orders/RenderRecentJobOrderCards';
 import FinanceChartSection from './finance/FinanceChartSection';
 import FinanceCardsSection from './finance/FinanceCardsSection';
-import { getBranches } from '../../utils/branchOptions';
+import { getBranches } from '../../services/branchService';
 import Selection from '../../components/Selection';
 
 

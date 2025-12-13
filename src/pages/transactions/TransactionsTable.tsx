@@ -16,7 +16,7 @@ import type { FormData } from "./TransactionsModal";
 import Options from "../../components/Options";
 import { get } from "../../services/apiService";
 import Selection from "../../components/Selection";
-import { getBranches } from "../../utils/branchOptions";
+import { getBranches } from "../../services/branchService";
 
 type Transaction = {
     referenceNumber: string;

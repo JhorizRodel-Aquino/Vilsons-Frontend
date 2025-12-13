@@ -8,7 +8,7 @@ import Loading from "../../components/Loading";
 import ErrorModal from "../../components/ErrorModal";
 import formatDate from "../../utils/formatDate";
 import Selection from "../../components/Selection";
-import { getBranches } from "../../utils/branchOptions";
+import { getBranches } from "../../services/branchService";
 
 type ActivityLog = {
     activity: string;

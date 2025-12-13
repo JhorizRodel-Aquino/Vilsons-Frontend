@@ -5,40 +5,44 @@ import { sidebarItems } from './sidebarConfig';
 import SidebarItem from './SidebarItem';
 import type { NavItem } from './sidebarConfig';
 import logo from '../../assets/logo.webp'
+import { hasPermissions } from '../../services/permissionService';
 
 
 function Sidebar() {
     const renderSidebarItems = (navs: NavItem[], depth = 0) => {
         return (
-            navs.map((nav, i) => (nav.children && nav.children.length > 0
-                ? (
-                    <SidebarItem key={i}>
-                        <SidebarGroup label={nav.label} iconName={depth > 0 ? undefined : nav.iconName} depth={depth} >
-                            {renderSidebarItems(nav.children, depth + 1)}
-                        </SidebarGroup>
-                    </SidebarItem>
-                ) : (
-                    <SidebarItem key={i}>
-                        {nav.path
-                            ? (
-                                <NavLink
-                                    to={nav.path}
-                                    className={({ isActive }) => (nav.path === sidebarItems[0].path && window.location.pathname === '/') || isActive ? 'active' : ''}
-                                >
-                                    {({ isActive }) => (
-                                        <SidebarLink
-                                            label={nav.label}
-                                            iconName={depth > 0 ? undefined : nav.iconName}
-                                            depth={depth}
-                                            isSelected={(nav.path === sidebarItems[0].path && window.location.pathname === '/') || isActive}
-                                        />
-                                    )}
-                                </NavLink>
-                            ) : (
-                                <SidebarLink label={nav.label} iconName={depth > 0 ? undefined : nav.iconName} depth={depth} />
-                            )
-                        }
-                    </SidebarItem>
+            navs.map((nav, i) => (
+                hasPermissions(nav.permissions) && (
+                    nav.children && nav.children.length > 0
+                        ? (
+                            <SidebarItem key={i}>
+                                <SidebarGroup label={nav.label} iconName={depth > 0 ? undefined : nav.iconName} depth={depth} >
+                                    {renderSidebarItems(nav.children, depth + 1)}
+                                </SidebarGroup>
+                            </SidebarItem>
+                        ) : (
+                            <SidebarItem key={i}>
+                                {nav.path
+                                    ? (
+                                        <NavLink
+                                            to={nav.path}
+                                            className={({ isActive }) => (nav.path === sidebarItems[0].path && window.location.pathname === '/') || isActive ? 'active' : ''}
+                                        >
+                                            {({ isActive }) => (
+                                                <SidebarLink
+                                                    label={nav.label}
+                                                    iconName={depth > 0 ? undefined : nav.iconName}
+                                                    depth={depth}
+                                                    isSelected={(nav.path === sidebarItems[0].path && window.location.pathname === '/') || isActive}
+                                                />
+                                            )}
+                                        </NavLink>
+                                    ) : (
+                                        <SidebarLink label={nav.label} iconName={depth > 0 ? undefined : nav.iconName} depth={depth} />
+                                    )
+                                }
+                            </SidebarItem>
+                        )
                 )
             ))
         )

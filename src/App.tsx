@@ -28,6 +28,11 @@ import { Toaster } from "react-hot-toast";
 import UserDetailsPage from "./pages/users/details/UserDetailsPage";
 import ApprovalLogsPage from "./pages/approval-logs/ActivityLogsPage";
 import BranchesPage from "./pages/branches/BranchesPage";
+import usePermissions from "./hooks/usePermissions";
+import Loading from "./components/Loading";
+import ErrorModal from "./components/ErrorModal";
+import { useEffect } from "react";
+import { hasPermissions } from "./services/permissionService";
 
 function MainLayout() {
   return (
@@ -45,30 +50,65 @@ function MainLayout() {
 }
 
 function App() {
+  const { permissions, loading, error, closeError } = usePermissions()
+
+  useEffect(() => {
+    console.log("PERMISSIONS", permissions)
+  }, [permissions])
+
+  if (loading) return <Loading />
+
   return (
     <>
       <Routes>
         {/* Public routes */}
-        <Route path="/login" element={<LoginPage />} />
+        <Route path="/login" element={<LoginPage closeError={closeError} />} />
 
         {/* Admin routes */}
         <Route path="/" element={<MainLayout />}>
           {/* Main Pages */}
           <Route index element={<DashboardPage />} />
-          <Route path='/dashboard' element={<DashboardPage />} />
-          <Route path='/job-orders' element={<JobOrdersPage />} />
-          <Route path='/other-income' element={<OtherIncomePage />} />
-          <Route path='/transactions' element={<TransactionsPage />} />
-          <Route path='/revenue-and-profit' element={<RevenueAndProfitPage />} />
-          <Route path='/operational-expenses' element={<OperationalExpensesPage />} />
-          <Route path='/overhead-expenses' element={<OverheadExpensesPage />} />
-          <Route path='/branches' element={<BranchesPage />} />
-          <Route path='/trucks' element={<TrucksPage />} />
-          <Route path='/approval-logs' element={<ApprovalLogsPage />} />
-          <Route path='/activity-logs' element={<ActivityLogsPage />} />
-          <Route path='/users' element={<UsersPage />} />
-          <Route path='/roles-and-permissions' element={<RolesAndPermissionsPage />} />
-          <Route path='/my-account' element={<MyAccountPage />} />
+          {hasPermissions(['admin_dashboard_revenue', 'admin_dashboard_profit', 'admin_dashboard_expenses', 'admin_dashboard_job_orders', 'admin_dashboard_customer_balance']) &&
+            <Route path='/dashboard' element={<DashboardPage />} />}
+
+          {hasPermissions(['view_job_orders']) &&
+            <Route path='/job-orders' element={<JobOrdersPage />} />}
+
+          {hasPermissions(['view_other_incomes']) &&
+            <Route path='/other-income' element={<OtherIncomePage />} />}
+
+          {hasPermissions(['view_transactions']) &&
+            <Route path='/transactions' element={<TransactionsPage />} />}
+
+          {hasPermissions(['view_revenue_profit']) &&
+            <Route path='/revenue-and-profit' element={<RevenueAndProfitPage />} />}
+
+          {hasPermissions(['view_materials', 'view_equipments', 'view_labors']) &&
+            <Route path='/operational-expenses' element={<OperationalExpensesPage />} />}
+
+          {hasPermissions(['view_overheads']) &&
+            <Route path='/overhead-expenses' element={<OverheadExpensesPage />} />}
+
+          {hasPermissions(['view_branches']) &&
+            <Route path='/branches' element={<BranchesPage />} />}
+
+          {hasPermissions(['view_trucks']) &&
+            <Route path='/trucks' element={<TrucksPage />} />}
+
+          {hasPermissions(['view_approval_logs']) &&
+            <Route path='/approval-logs' element={<ApprovalLogsPage />} />}
+
+          {hasPermissions(['view_activity_logs']) &&
+            <Route path='/activity-logs' element={<ActivityLogsPage />} />}
+
+          {hasPermissions(['view_users']) &&
+            <Route path='/users' element={<UsersPage />} />}
+
+          {hasPermissions(['view_roles']) &&
+            <Route path='/roles-and-permissions' element={<RolesAndPermissionsPage />} />}
+
+          {hasPermissions(['view_own_profile']) &&
+            <Route path='/my-account' element={<MyAccountPage />} />}
 
           {/* Details Pages */}
           <Route path="/customers/:id" element={<CustomerDetailsPage />} />
@@ -76,7 +116,6 @@ function App() {
           <Route path="/job-orders/:id" element={<JobOrderDetailsPage />} />
           <Route path="/trucks/:id" element={<TruckDetailsPage />} />
           <Route path="/users/:id" element={<UserDetailsPage />} />
-
         </Route>
 
         {/* 404 fallback */}
@@ -105,6 +144,8 @@ function App() {
           },
         }}
       />
+
+      {error && <ErrorModal closeError={closeError} />}
     </>
   );
 }

@@ -4,7 +4,7 @@ import Details from "../../components/Details"
 import Button from "../../components/Button";
 import UsersTable from "./UsersTable";
 import UsersModal, { type FormData } from "./UsersModal";
-import { getBranches } from "../../utils/branchOptions";
+import { getBranches } from "../../services/branchService";
 import useGetData from "../../hooks/useGetData";
 import type { SelectionOptions } from "../../components/Selection";
 import ErrorModal from "../../components/ErrorModal";

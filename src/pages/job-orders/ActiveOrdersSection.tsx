@@ -5,7 +5,7 @@ import JobOrderModal, { type FormData } from "./JobOrderModal"
 import { useCallback, useState } from "react"
 import Details from "../../components/Details"
 import ChangeStatusModal from "./ChangeStatusModal"
-import { getBranches } from "../../utils/branchOptions"
+import { getBranches } from "../../services/branchService"
 import useBranchOptions from "../../hooks/useBranchOptions"
 
 export default function JobOrdersActiveTabContent() {

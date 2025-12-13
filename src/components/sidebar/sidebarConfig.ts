@@ -3,44 +3,53 @@ export type NavItem = {
     iconName?: string;
     path?: string;
     children?: NavItem[];
+    permissions: string[];
 }
 
 export const sidebarItems: NavItem[] = [
     {
         label: 'Dashboard',
         iconName: 'dashboard', 
-        path: '/dashboard'
+        path: '/dashboard',
+        permissions: ['admin_dashboard_revenue', 'admin_dashboard_profit', 'admin_dashboard_expenses', 'admin_dashboard_job_orders', 'admin_dashboard_customer_balance']
     },
     {
         label: 'Job Orders',
         iconName: 'job-orders',
-        path: '/job-orders'
+        path: '/job-orders',
+        permissions: ['view_job_orders']
     },
     {
         label: 'Other Income',
         iconName: 'other-income',
-        path: '/other-income'
+        path: '/other-income',
+        permissions: ['view_other_incomes']
     },
     {
         label: 'Transactions',
         iconName: 'transactions',
-        path: '/transactions'
+        path: '/transactions',
+        permissions: ['view_transactions']
     },
     {
         label: 'Finances',
         iconName: 'finances',
+        permissions: ['view_revenue_profit', 'view_materials', 'view_equipments', 'view_labors', 'view_overheads'],
         children: [
             { 
                 label: 'Revenue and Profit', 
-                path: '/revenue-and-profit' 
+                path: '/revenue-and-profit', 
+                permissions: ['view_revenue_profit']
             },
             { 
                 label: 'Operational Expenses', 
-                path: '/operational-expenses'  
+                path: '/operational-expenses',  
+                permissions: ['view_materials', 'view_equipments', 'view_labors']
             },
             { 
                 label: 'Overhead Expenses', 
-                path: '/overhead-expenses'  
+                path: '/overhead-expenses',
+                permissions: ['view_overheads']
 
             }
         ]
@@ -48,34 +57,41 @@ export const sidebarItems: NavItem[] = [
     {
         label: 'Branches',
         iconName: 'truck',
-        path: '/branches' 
+        path: '/branches',
+        permissions: ['view_branches']
     },
     {
         label: 'Trucks',
         iconName: 'truck',
-        path: '/trucks' 
+        path: '/trucks' ,
+        permissions: ['view_trucks']
     },
     {
         label: 'Approval Logs',
         iconName: 'activity-logs',
-        path: '/approval-logs' 
+        path: '/approval-logs',
+        permissions: ['view_approval_logs'] 
     },
     {
         label: 'Activity Logs',
         iconName: 'activity-logs',
-        path: '/activity-logs' 
+        path: '/activity-logs' ,
+        permissions: ['view_activity_logs']
     },
     {
         label: 'User Management',
         iconName: 'users',
+        permissions: ['view_users', 'view_roles_permissions'],
         children: [
             { 
                 label: 'Users', 
-                path: '/users' 
+                path: '/users', 
+                permissions: ['view_users']
             },
             { 
                 label: 'Roles and Permissions', 
-                path: '/roles-and-permissions'  
+                path: '/roles-and-permissions'  ,
+                permissions: ['view_roles']
             },
 
         ]
@@ -83,7 +99,7 @@ export const sidebarItems: NavItem[] = [
     {
         label: 'My Account',
         iconName: 'users',            
-        path: '/my-account'  
-            
+        path: '/my-account',  
+        permissions: ['view_own_profile']
     },
 ];

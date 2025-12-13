@@ -4,7 +4,7 @@ import Details from "../../components/Details"
 import Button from "../../components/Button";
 import TransactionsTable from "./TransactionsTable";
 import TransactionsModal, { type FormData } from "./TransactionsModal";
-import { getBranches } from "../../utils/branchOptions";
+import { getBranches } from "../../services/branchService";
 import useBranchOptions from "../../hooks/useBranchOptions";
 
 export default function TransactionsSection() {

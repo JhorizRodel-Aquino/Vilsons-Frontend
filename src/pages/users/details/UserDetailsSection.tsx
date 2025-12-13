@@ -13,7 +13,7 @@ import API_URL from "../../../constants/API_URL";
 import type { FormData } from "../UsersModal";
 import { useParams } from "react-router";
 import UsersModal from "../UsersModal";
-import { getBranches } from "../../../utils/branchOptions";
+import { getBranches } from "../../../services/branchService";
 import type { SelectionOptions } from "../../../components/Selection";
 import UserPasswordModal from "./UserPasswordModal";
 

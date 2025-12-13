@@ -9,7 +9,7 @@ import useMonthYearFilter from "../../hooks/useMonthYearFilter";
 import ErrorModal from "../../components/ErrorModal";
 import useGetByMonthYear from "../../hooks/useGetByMonthYear";
 import Selection from "../../components/Selection";
-import { getBranches } from "../../utils/branchOptions";
+import { getBranches } from "../../services/branchService";
 
 export default function RevenueAndProfitSection() {
   const branchOptions = [

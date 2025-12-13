@@ -21,7 +21,7 @@ import Selection from "../../components/Selection";
 import getStatuses from "../../utils/statusOptions";
 import Button from "../../components/Button";
 import usePostPutData from "../../hooks/usePostPutData";
-import { getBranches } from "../../utils/branchOptions";
+import { getBranches } from "../../services/branchService";
 
 type ActiveJobOrder = {
     jobNumber: ReactElement;
@@ -151,6 +151,7 @@ export default function ActiveOrdersTable({ setPresetData, reloadFlag, setShowMo
                 </Options>
         })
     );
+    
 
 
     return (

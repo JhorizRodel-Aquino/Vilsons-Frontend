@@ -13,7 +13,7 @@ import type { FormData } from "./UsersModal";
 import ConfirmModal from "../../components/ConfirmModal";
 import Options from "../../components/Options";
 import { Link } from "react-router";
-import { getBranches } from "../../utils/branchOptions";
+import { getBranches } from "../../services/branchService";
 import Selection from "../../components/Selection";
 
 type AllUser = {

@@ -15,7 +15,7 @@ import { useEffect, useState, type ReactElement } from "react";
 import ConfirmModal from "../../components/ConfirmModal";
 import Options from "../../components/Options";
 import Selection from "../../components/Selection";
-import { getBranches } from "../../utils/branchOptions";
+import { getBranches } from "../../services/branchService";
 
 
 type OverheadExpense = {

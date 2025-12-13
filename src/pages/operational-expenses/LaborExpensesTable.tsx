@@ -17,7 +17,7 @@ import ConfirmModal from "../../components/ConfirmModal";
 import type { SelectedContractor, SelectedEmployee } from "./LaborExpensesSection";
 import { get } from "../../services/apiService";
 import Selection from "../../components/Selection";
-import { getBranches } from "../../utils/branchOptions";
+import { getBranches } from "../../services/branchService";
 
 type LaborExpense = {
     name: string;

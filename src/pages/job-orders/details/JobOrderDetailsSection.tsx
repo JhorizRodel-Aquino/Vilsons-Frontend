@@ -3,7 +3,7 @@ import Detail from "../../../components/Detail"
 import formatPesoFromCents from "../../../utils/formatPesoFromCents";
 import useGetData from "../../../hooks/useGetData";
 import Loading from "../../../components/Loading";
-import { getBranches } from "../../../utils/branchOptions";
+import { getBranches } from "../../../services/branchService";
 import API_URL from "../../../constants/API_URL";
 import ImagePreview from "./ImagePreview";
 import formatDate from "../../../utils/formatDate";

@@ -8,7 +8,7 @@ import useMonthYearFilter from "../../hooks/useMonthYearFilter";
 import ErrorModal from "../../components/ErrorModal";
 import Loading from "../../components/Loading";
 import useGetByMonthYear from "../../hooks/useGetByMonthYear";
-import { getBranches } from "../../utils/branchOptions";
+import { getBranches } from "../../services/branchService";
 import Selection from "../../components/Selection";
 
 type MaterialExpense = {

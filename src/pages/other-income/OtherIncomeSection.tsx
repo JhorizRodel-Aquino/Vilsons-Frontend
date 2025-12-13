@@ -5,7 +5,7 @@ import Details from "../../components/Details"
 import Button from "../../components/Button";
 import OtherIncomeTable from "./OtherIncomeTable";
 import OtherIncomeModal, { type FormData } from "./OtherIncomeModal";
-import { getBranches } from "../../utils/branchOptions";
+import { getBranches } from "../../services/branchService";
 import useBranchOptions from "../../hooks/useBranchOptions";
 
 

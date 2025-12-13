@@ -15,7 +15,7 @@ import ConfirmModal from "../../components/ConfirmModal";
 import useDeleteData from "../../hooks/useDeleteData";
 import type { FormData } from "./OtherIncomeModal";
 import Selection from "../../components/Selection";
-import { getBranches } from "../../utils/branchOptions";
+import { getBranches } from "../../services/branchService";
 
 type OtherIncome = {
     datetime: string;
