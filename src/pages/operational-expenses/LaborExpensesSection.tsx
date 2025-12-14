@@ -42,7 +42,7 @@ export default function LaborExpensesSection() {
                 <Button
                     label={'Pay Laborer'}
                     onClick={() => {
-                        setPresetData({ userId: '', branchId: branchOptions.length > 0 ? branchOptions[0].value: '', payComponents: [] })
+                        setPresetData({ userId: '', branchId: branchOptions.length > 0 ? branchOptions[0].value: '', payComponents: [], type: 'regular' })
                         setShowModal('create')
                     }}
                     variant="primary" />

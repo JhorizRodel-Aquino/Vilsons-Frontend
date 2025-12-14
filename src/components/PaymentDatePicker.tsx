@@ -1,71 +1,92 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const PaymentDatePicker = () => {
-  const [selectedDates, setSelectedDates] = useState<string[]>([]);
-  const [currentSelection, setCurrentSelection] = useState<string>("1");
+interface PaymentDatePickerProps {
+    onChange: (scheds: number[]) => void;
+    value?: number[];
+}
 
-  // Generate day options 1-28 plus "End of Month"
-  const dayOptions = [...Array(28)].map((_, i) => (i + 1).toString()).concat("End of Month");
+const PaymentDatePicker = ({ onChange, value = [] }: PaymentDatePickerProps) => {
+    const [selectedDates, setSelectedDates] = useState<string[]>([]);
+    const [currentSelection, setCurrentSelection] = useState<string>("1");
 
-  const addDate = () => {
-    if (!selectedDates.includes(currentSelection)) {
-      setSelectedDates([...selectedDates, currentSelection]);
-    }
-  };
+    // Generate day options 1-28 plus "End of Month"
+    const dayOptions = [...Array(28)].map((_, i) => (i + 1).toString()).concat("End of Month");
 
-  const removeDate = (date: string) => {
-    setSelectedDates(selectedDates.filter(d => d !== date));
-  };
+    // Initialize from value prop
+    useEffect(() => {
+        if (value && value.length > 0) {
+            const dateStrings = value.map(num => 
+                num === 31 ? "End of Month" : num.toString()
+            );
+            setSelectedDates(dateStrings);
+        }
+    }, [value]);
 
-  return (
-    <div className="p-4 max-w-md mx-auto">
-      <h2 className="text-lg font-semibold mb-2">Select Payment Dates</h2>
+    const addDate = () => {
+        if (!selectedDates.includes(currentSelection)) {
+            const newDates = [...selectedDates, currentSelection];
+            setSelectedDates(newDates);
+            // Convert to numbers and call onChange
+            const formattedSchedules = newDates.map(date => 
+                date === "End of Month" ? 31 : Number(date)
+            );
+            onChange(formattedSchedules);
+        }
+    };
 
-      <div className="flex gap-2 mb-4">
-        <select
-          className="border px-2 py-1 rounded flex-1"
-          value={currentSelection}
-          onChange={(e) => setCurrentSelection(e.target.value)}
-        >
-          {dayOptions.map((day) => (
-            <option key={day} value={day}>
-              {day}
-            </option>
-          ))}
-        </select>
+    const removeDate = (date: string) => {
+        const newDates = selectedDates.filter(d => d !== date);
+        setSelectedDates(newDates);
+        // Convert to numbers and call onChange
+        const formattedSchedules = newDates.map(d => 
+            d === "End of Month" ? 31 : Number(d)
+        );
+        onChange(formattedSchedules);
+    };
 
-        <button
-          type="button"
-          className="bg-blue-500 text-white px-4 py-1 rounded"
-          onClick={addDate}
-        >
-          Add
-        </button>
-      </div>
+    return (
+        <div className="">
+            <div className="flex gap-2">
+                <select
+                    className="bg-gray px-2 py-1 rounded-md flex-1"
+                    value={currentSelection}
+                    onChange={(e) => setCurrentSelection(e.target.value)}
+                >
+                    {dayOptions.map((day) => (
+                        <option key={day} value={day}>
+                            {day}
+                        </option>
+                    ))}
+                </select>
 
-      <div className="flex flex-wrap gap-2">
-        {selectedDates.map((date) => (
-          <div
-            key={date}
-            className="bg-gray-200 px-3 py-1 rounded flex items-center gap-2"
-          >
-            {date}
-            <button
-              type="button"
-              className="text-red-500 font-bold"
-              onClick={() => removeDate(date)}
-            >
-              ×
-            </button>
-          </div>
-        ))}
-      </div>
+                <button
+                    type="button"
+                    className="bg-primary text-white px-2 py-1 rounded-md"
+                    onClick={addDate}
+                >
+                    +
+                </button>
+            </div>
 
-      <pre className="mt-4 p-2 bg-gray-100 rounded">
-        {JSON.stringify(selectedDates, null, 2)}
-      </pre>
-    </div>
-  );
+            <div className="flex flex-wrap gap-2 mt-2">
+                {selectedDates.map((date) => (
+                    <div
+                        key={date}
+                        className="bg-gray-200 px-3 py-1 rounded flex items-center gap-2"
+                    >
+                        {date}
+                        <button
+                            type="button"
+                            className="text-red-500 font-bold"
+                            onClick={() => removeDate(date)}
+                        >
+                            ×
+                        </button>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
 };
 
 export default PaymentDatePicker;

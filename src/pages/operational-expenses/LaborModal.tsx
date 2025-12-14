@@ -116,7 +116,7 @@ export default function LaborModal({ branchOptions, setShowModal, onSuccess, act
                 value: comp.componentId,
                 label: comp.componentName
             })),
-            { value: '', label: 'New Component' }
+            { value: '', label: '+ New Component' }
         ]);
         setFormData({ ...formData, userId: selectedEmployee?.id, payComponents: nonEmptyComponents })
     }, [selectedEmployee])

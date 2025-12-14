@@ -198,10 +198,11 @@ type FieldNumber = {
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
     onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void, autoComplete?: string
     noSpinner?: boolean;
-    min?: number
+    min?: number;
+    max?: number;
 }
 
-Field.Number = function Number({ id, label, width = 'hug', placeholder = '', value, onChange, noSpinner = false, min }: FieldNumber) {
+Field.Number = function Number({ id, label, width = 'hug', placeholder = '', value, onChange, noSpinner = false, min, max }: FieldNumber) {
     const fieldWidth = {
         hug: 'w-auto',
         full: 'w-full'
@@ -216,7 +217,8 @@ Field.Number = function Number({ id, label, width = 'hug', placeholder = '', val
                     name={label}
                     type="number"
                     placeholder={placeholder}
-                    min={min || 0}
+                    min={min ?? 0}
+                    max={max ?? 1000000000000}
                     className={`input ${noSpinner && 'hide-spinner'}`}
                     value={value || ""}
                     onChange={onChange || console.log} />
