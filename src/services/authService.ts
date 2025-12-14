@@ -1,53 +1,104 @@
+// services/authService.ts
 import API_URL from "../constants/API_URL";
-import axios from "axios";
+import api from "../utils/axiosInstance";
 
-export type LoginData = { 
-    username: string; 
-    password: string; 
-}
+export type LoginData = {
+  username: string;
+  password: string;
+};
 
-let inMemoryAccessToken: string | null = null; // 🔐 stored only in memory
+// Store token in memory AND sessionStorage as backup
+let inMemoryAccessToken: string | null = null;
 
-export const login = async (loginData: LoginData) => {
-  const response = await axios.post(`${API_URL}/auth`, loginData, {
-    withCredentials: true, // send cookie for refresh token
-  });
-
-  const { accessToken } = response.data;
-  console.log(accessToken)
-  inMemoryAccessToken = accessToken;
+export const login = async (loginData: LoginData): Promise<string> => {
+  console.log('Login attempt with data:', loginData);
   
-  axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
-  return response.data;
+  try {
+    const response = await api.post("/auth", loginData);
+    console.log('Login response received:', response.data);
+    
+    const { accessToken } = response.data;
+    
+    if (!accessToken) {
+      throw new Error('No access token received from server');
+    }
+    
+    // Store token
+    setAccessToken(accessToken);
+    console.log('Access token stored:', accessToken.substring(0, 20) + '...');
+    
+    return accessToken;
+  } catch (error: any) {
+    console.error('Login failed:', error.response?.data || error.message);
+    throw error;
+  }
 };
 
-export const getAccessToken = () => inMemoryAccessToken;
-export const clearAccessToken = () => {
+export const refresh = async (): Promise<string> => {
+  console.log('Attempting token refresh...');
+  
+  try {
+    const response = await api.get("/refresh");
+    console.log('Refresh response:', response.data);
+    
+    const { accessToken } = response.data;
+    
+    if (!accessToken) {
+      throw new Error('No access token received from refresh');
+    }
+    
+    // Store the new token
+    setAccessToken(accessToken);
+    console.log('New access token stored');
+    
+    return accessToken;
+  } catch (error: any) {
+    console.error('Refresh failed:', error.response?.data || error.message);
+    // Clear token on refresh failure
+    clearAccessToken();
+    throw error;
+  }
+};
+
+// Store token in both memory and sessionStorage
+export const setAccessToken = (token: string): void => {
+  inMemoryAccessToken = token;
+  sessionStorage.setItem('access_token', token);
+  console.log('Token stored in memory and sessionStorage');
+};
+
+export const getAccessToken = (): string | null => {
+  // First check memory
+  if (inMemoryAccessToken) {
+    console.log('Getting token from memory');
+    return inMemoryAccessToken;
+  }
+  
+  // Fallback to sessionStorage
+  const storedToken = sessionStorage.getItem('access_token');
+  if (storedToken) {
+    console.log('Getting token from sessionStorage');
+    inMemoryAccessToken = storedToken;
+    return storedToken;
+  }
+  
+  console.log('No token found');
+  return null;
+};
+
+export const clearAccessToken = (): void => {
+  console.log('Clearing access token');
   inMemoryAccessToken = null;
+  sessionStorage.removeItem('access_token');
 };
 
-
-
-// services/authService.ts (continued)
-export const refresh = async () => {
-  const response = await axios.get(`${API_URL}/refresh`, {
-    withCredentials: true, // send cookie to backend
-  });
-
-  const { accessToken } = response.data;
-  inMemoryAccessToken = accessToken;
-  axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
-  return accessToken;
+export const logout = async (): Promise<void> => {
+  try {
+    await api.post("/logout");
+  } catch (error) {
+    console.warn("Logout API call failed");
+  } finally {
+    clearAccessToken();
+    window.location.href = "/login";
+  }
 };
-
-export const logout = async () => {
-  const response = await axios.post(
-    `${API_URL}/logout`,
-    {}, // empty body
-    { withCredentials: true } // config
-  );
-  clearAccessToken();
-  return response;
-};
-
-
