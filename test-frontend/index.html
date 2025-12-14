@@ -14,11 +14,14 @@
     <button type="submit">Login</button>
   </form>
 
+  <button id="refreshBtn">Refresh Token</button>
+
   <pre id="result"></pre>
 
   <script>
     const form = document.getElementById("loginForm");
     const result = document.getElementById("result");
+    const refreshBtn = document.getElementById("refreshBtn");
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -32,7 +35,7 @@
           headers: {
             "Content-Type": "application/json",
           },
-          credentials: "include", // 👈 THIS IS THE KEY
+          credentials: "include", // send cookies
           body: JSON.stringify({ username, password }),
         });
 
@@ -41,6 +44,22 @@
       } catch (err) {
         console.error(err);
         result.textContent = "Request failed";
+      }
+    });
+
+    // Refresh token simulation
+    refreshBtn.addEventListener("click", async () => {
+      try {
+        const res = await fetch("https://need-genesis-chips-welfare.trycloudflare.com/refresh", {
+          method: "GET",
+          credentials: "include", // send cookie for refresh token
+        });
+
+        const data = await res.json();
+        result.textContent = "Refresh response:\n" + JSON.stringify(data, null, 2);
+      } catch (err) {
+        console.error(err);
+        result.textContent = "Refresh failed";
       }
     });
   </script>

@@ -21,7 +21,7 @@ export default function useAuth(): UseAuthResult {
     setLoading(true);
     try {
       const data = await login(loginData);
-      window.location.href = "/"
+      window.location.href = "/dashboard"
       return data;
     } catch (err: unknown) {
       

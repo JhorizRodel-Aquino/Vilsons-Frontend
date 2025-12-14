@@ -1,6 +1,8 @@
+import useLogout from '../hooks/useLogout';
 import Icon from './Icon';
 
 function Header() {
+    const { handleLogout, loading, error } = useLogout()
     return (
         <header className='bg-light py-3 px-6 border-b z-30'>
             <div className='grid grid-flow-col justify-between text-darker'>
@@ -12,7 +14,7 @@ function Header() {
 
                 <div className='flex gap-[10px]'>
                     <Icon name='bell' />
-                    <Icon name='user' />
+                    <button onClick={handleLogout}><Icon name='user' /></button>
                 </div>
             </div>
         </header>

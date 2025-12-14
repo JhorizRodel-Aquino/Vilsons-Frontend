@@ -1,9 +1,9 @@
 import API_URL from "../constants/API_URL";
 import axios from "axios";
 
-export type LoginData = {
-  username: string;
-  password: string;
+export type LoginData = { 
+    username: string; 
+    password: string; 
 }
 
 let inMemoryAccessToken: string | null = null; // 🔐 stored only in memory
@@ -14,12 +14,21 @@ export const login = async (loginData: LoginData) => {
   });
 
   const { accessToken } = response.data;
+  console.log(accessToken)
   inMemoryAccessToken = accessToken;
-
+  
   axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
-  return accessToken;
+  return response.data;
 };
 
+export const getAccessToken = () => inMemoryAccessToken;
+export const clearAccessToken = () => {
+  inMemoryAccessToken = null;
+};
+
+
+
+// services/authService.ts (continued)
 export const refresh = async () => {
   const response = await axios.get(`${API_URL}/refresh`, {
     withCredentials: true, // send cookie to backend
@@ -27,13 +36,18 @@ export const refresh = async () => {
 
   const { accessToken } = response.data;
   inMemoryAccessToken = accessToken;
-
   axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
   return accessToken;
 };
 
-export const getAccessToken = () => inMemoryAccessToken;
-export const clearAccessToken = () => {
-  inMemoryAccessToken = null;
+export const logout = async () => {
+  const response = await axios.post(
+    `${API_URL}/logout`,
+    {}, // empty body
+    { withCredentials: true } // config
+  );
+  clearAccessToken();
+  return response;
 };
+
 

@@ -1,10 +1,10 @@
-import { Routes, Route } from "react-router";
-import { useCallback, useEffect, useState } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useEffect, useState, useCallback, type ReactElement } from "react";
 import { Toaster } from "react-hot-toast";
 
+// Pages
 import LoginPage from "./pages/LoginPage";
 import NotFoundPage from "./pages/NotFoundPage";
-
 import DashboardPage from "./pages/dashboard/DashboardPage";
 import JobOrdersPage from "./pages/job-orders/JobOrdersPage";
 import OtherIncomePage from "./pages/other-income/OtherIncomePage";
@@ -12,20 +12,20 @@ import TransactionsPage from "./pages/transactions/TransactionsPage";
 import RevenueAndProfitPage from "./pages/revenue-and-profit/RevenueAndProfitPage";
 import OperationalExpensesPage from "./pages/operational-expenses/OperationalExpensesPage";
 import OverheadExpensesPage from "./pages/overhead-expenses/OverheadExpensesPage";
+import BranchesPage from "./pages/branches/BranchesPage";
 import TrucksPage from "./pages/trucks/TrucksPage";
 import ActivityLogsPage from "./pages/activity-logs/ActivityLogsPage";
+import ApprovalLogsPage from "./pages/approval-logs/ActivityLogsPage";
 import UsersPage from "./pages/users/UsersPage";
 import RolesAndPermissionsPage from "./pages/roles-and-permissions/RolesAndPermissionsPage";
 import MyAccountPage from "./pages/my-account/MyAccountPage";
-import ApprovalLogsPage from "./pages/approval-logs/ActivityLogsPage";
-import BranchesPage from "./pages/branches/BranchesPage";
-
 import CustomerDetailsPage from "./pages/customers/details/CustomerDetailsPage";
 import ContractorDetailsPage from "./pages/contractors/details/ContractorDetailsPage";
 import JobOrderDetailsPage from "./pages/job-orders/details/JobOrderDetailsPage";
 import TruckDetailsPage from "./pages/trucks/details/TruckDetailsPage";
 import UserDetailsPage from "./pages/users/details/UserDetailsPage";
 
+// Components
 import AppLayout from "./components/AppLayout";
 import Sidebar from "./components/sidebar/Sidebar";
 import ContentLayout from "./components/ContentLayout";
@@ -33,36 +33,45 @@ import Header from "./components/Header";
 import Main from "./components/Main";
 import Loading from "./components/Loading";
 
+// Services / hooks
 import usePermissions from "./hooks/usePermissions";
 import { hasPermissions } from "./services/permissionService";
-
-import "./App.css";
 import AssignedOrdersPage from "./pages/assigned-orders/AssignedOrdersPage";
-import ContractorPayrollPage from "./pages/contractor-payroll/ContractorPayrollPage";
 import MyOrdersPage from "./pages/my-orders/MyOrdersPage";
-import MyTransactionsPage from "./pages/my-transactions/MyTransactionsPage";
-import MyTrucksPage from "./pages/my-trucks/MyTrucksPage";
 import AssignedOrderDetailsPage from "./pages/assigned-orders/details/AssignedOrderDetailsPage";
 import MyOrderDetailsPage from "./pages/my-orders/details/MyOrderDetailsPage";
+import MyTransactionsPage from "./pages/my-transactions/MyTransactionsPage";
+import MyTrucksPage from "./pages/my-trucks/MyTrucksPage";
 import MyTruckDetailsSection from "./pages/my-trucks/details/MyTruckDetailsSection";
+import ContractorPayrollPage from "./pages/contractor-payroll/ContractorPayrollPage";
 
-function MainLayout() {
+// ProtectedRoute
+const ProtectedRoute = ({
+  requiredPermissions,
+  permissions,
+  children,
+}: {
+  requiredPermissions?: string[];
+  permissions: any[];
+  children: ReactElement;
+}) => {
+  if (!permissions) return null;
+  if (!requiredPermissions || requiredPermissions.length === 0) return children;
+
+  const allowed = hasPermissions(requiredPermissions);
+  if (!allowed) return <Navigate to="/not-authorized" replace />;
+  return children;
+};
+
+// MainLayout
+const MainLayout = () => {
   const { permissions, loading, reload } = usePermissions();
-  const [reloadPermissionsFlag, setReloadPermissionsFlag] = useState(false);
+  const [reloadFlag, setReloadFlag] = useState(false);
 
-  useEffect(() => {
-    console.log("PERMISSIONS:", permissions);
-  }, [permissions]);
+  useEffect(() => { reload() }, [reloadFlag]);
+  const reloadPermissions = useCallback(() => setReloadFlag((prev) => !prev), []);
 
-  useEffect(() => {
-    reload();
-  }, [reloadPermissionsFlag]);
-
-  const reloadPermissions = useCallback(() => {
-    setReloadPermissionsFlag(prev => !prev);
-  }, []);
-
-  if (loading) return <Loading />;
+  if (loading || !permissions) return <Loading />;
 
   return (
     <AppLayout>
@@ -71,86 +80,150 @@ function MainLayout() {
         <Header />
         <Main>
           <Routes>
-            {hasPermissions([
-              "view_admin_dashboard_revenue",
-              "view_admin_dashboard_profit",
-              "view_admin_dashboard_expenses",
-              "view_admin_dashboard_job_orders",
-              "view_admin_dashboard_customer_balance",
-            ]) && (
-              <Route path="dashboard" element={<DashboardPage />} />
-            )}
+            {/* Dashboard */}
+            <Route
+              index
+              element={
+                <ProtectedRoute
+                  requiredPermissions={[
+                    "view_admin_dashboard_revenue",
+                    "view_admin_dashboard_profit",
+                    "view_admin_dashboard_expenses",
+                    "view_admin_dashboard_job_orders",
+                    "view_admin_dashboard_customer_balance",
+                  ]}
+                  permissions={permissions}
+                >
+                  <DashboardPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="dashboard"
+              element={
+                <ProtectedRoute
+                  requiredPermissions={[
+                    "view_admin_dashboard_revenue",
+                    "view_admin_dashboard_profit",
+                    "view_admin_dashboard_expenses",
+                    "view_admin_dashboard_job_orders",
+                    "view_admin_dashboard_customer_balance",
+                  ]}
+                  permissions={permissions}
+                >
+                  <DashboardPage />
+                </ProtectedRoute>
+              }
+            />
 
-            <Route path="job-orders" element={<JobOrdersPage />} />
-
-
-            {hasPermissions(["view_other_incomes"]) && (
-              <Route path="other-income" element={<OtherIncomePage />} />
-            )}
-
-            {hasPermissions(["view_transactions"]) && (
-              <Route path="transactions" element={<TransactionsPage />} />
-            )}
-
-            {hasPermissions(["view_revenue_profit"]) && (
-              <Route
-                path="revenue-and-profit"
-                element={<RevenueAndProfitPage />}
-              />
-            )}
-
-            {hasPermissions([
-              "view_materials",
-              "view_equipments",
-              "view_labors",
-            ]) && (
-              <Route
-                path="operational-expenses"
-                element={<OperationalExpensesPage />}
-              />
-            )}
-
-            {hasPermissions(["view_overheads"]) && (
-              <Route
-                path="overhead-expenses"
-                element={<OverheadExpensesPage />}
-              />
-            )}
-
-            {hasPermissions(["view_branches"]) && (
-              <Route path="branches" element={<BranchesPage />} />
-            )}
-
-            {hasPermissions(["view_trucks"]) && (
-              <Route path="trucks" element={<TrucksPage />} />
-            )}
-
-            {hasPermissions(["view_approval_logs"]) && (
-              <Route path="approval-logs" element={<ApprovalLogsPage />} />
-            )}
-
-            {hasPermissions(["view_activity_logs"]) && (
-              <Route path="activity-logs" element={<ActivityLogsPage />} />
-            )}
-
-            {hasPermissions(["view_users"]) && (
-              <Route path="users" element={<UsersPage />} />
-            )}
-
-            {hasPermissions(["view_role_permissions"]) && (
-              <Route
-                path="roles-and-permissions"
-                element={
-                  <RolesAndPermissionsPage
-                    reloadPermissions={reloadPermissions}
-                  />
-                }
-              />
-            )}
-
-            {hasPermissions(["view_own_profile"]) && (
-              <Route path="my-account" element={<MyAccountPage />} />
-            )}
+            {/* Other Pages */}
+            <Route
+              path="job-orders"
+              element={
+                <ProtectedRoute requiredPermissions={["view_job_orders"]} permissions={permissions}>
+                  <JobOrdersPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="other-income"
+              element={
+                <ProtectedRoute requiredPermissions={["view_other_incomes"]} permissions={permissions}>
+                  <OtherIncomePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="transactions"
+              element={
+                <ProtectedRoute requiredPermissions={["view_transactions"]} permissions={permissions}>
+                  <TransactionsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="revenue-and-profit"
+              element={
+                <ProtectedRoute requiredPermissions={["view_revenue_profit"]} permissions={permissions}>
+                  <RevenueAndProfitPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="operational-expenses"
+              element={
+                <ProtectedRoute
+                  requiredPermissions={["view_materials", "view_equipments", "view_labors"]}
+                  permissions={permissions}
+                >
+                  <OperationalExpensesPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="overhead-expenses"
+              element={
+                <ProtectedRoute requiredPermissions={["view_overheads"]} permissions={permissions}>
+                  <OverheadExpensesPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="branches"
+              element={
+                <ProtectedRoute requiredPermissions={["view_branches"]} permissions={permissions}>
+                  <BranchesPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="trucks"
+              element={
+                <ProtectedRoute requiredPermissions={["view_trucks"]} permissions={permissions}>
+                  <TrucksPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="activity-logs"
+              element={
+                <ProtectedRoute requiredPermissions={["view_activity_logs"]} permissions={permissions}>
+                  <ActivityLogsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="approval-logs"
+              element={
+                <ProtectedRoute requiredPermissions={["view_approval_logs"]} permissions={permissions}>
+                  <ApprovalLogsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="users"
+              element={
+                <ProtectedRoute requiredPermissions={["view_users"]} permissions={permissions}>
+                  <UsersPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="roles-and-permissions"
+              element={
+                <ProtectedRoute requiredPermissions={["view_role_permissions"]} permissions={permissions}>
+                  <RolesAndPermissionsPage reloadPermissions={reloadPermissions} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="my-account"
+              element={
+                <ProtectedRoute requiredPermissions={["view_own_profile"]} permissions={permissions}>
+                  <MyAccountPage />
+                </ProtectedRoute>
+              }
+            />
 
             <Route path="assigned-orders" element={<AssignedOrdersPage />} />
             <Route path="payroll" element={<ContractorPayrollPage />} />
@@ -170,38 +243,38 @@ function MainLayout() {
             <Route path="my-trucks/:id" element={<MyTruckDetailsSection />} />
 
             {/* 404 */}
-            {/* <Route path="*" element={<NotFoundPage />} /> */}
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Main>
       </ContentLayout>
     </AppLayout>
   );
-}
+};
 
-function App() {
+// Main App
+export default function App() {
   return (
     <>
       <Routes>
+        {/* Public */}
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/" element={<MainLayout />} />
+
+        {/* Protected Main Layout */}
+        <Route path="/*" element={<MainLayout />} />
+
+        {/* fallback */}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
 
       <Toaster
-        position="top-right"
+        position="top-center"
         reverseOrder={false}
         toastOptions={{
           style: { fontSize: "0.95rem" },
-          success: {
-            style: { background: "#22C55E", color: "#fff" },
-          },
-          error: {
-            style: { background: "#EF4444", color: "#fff" },
-          },
+          success: { style: { background: "#22C55E", color: "#fff" } },
+          error: { style: { background: "#EF4444", color: "#fff" } },
         }}
       />
     </>
   );
 }
-
-export default App;
