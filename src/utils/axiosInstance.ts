@@ -9,17 +9,24 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  const token = getAccessToken();
-  if (token) config.headers.Authorization = `Bearer ${token}`;
+  if (!config.url?.includes("/refresh")) {
+    const token = getAccessToken();
+    if (token) config.headers.Authorization = `Bearer ${token}`;
+  }
   return config;
 });
+
 
 api.interceptors.response.use(
   (res) => res,
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (
+      error.response?.status === 401 &&
+      !originalRequest._retry &&
+      !originalRequest.url?.includes("/refresh")
+    ) {
       originalRequest._retry = true;
 
       try {
