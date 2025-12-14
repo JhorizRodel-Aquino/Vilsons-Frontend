@@ -11,15 +11,13 @@ import ErrorModal from "../../components/ErrorModal";
     type ArchivedJobOrder = {
         jobNumber: string;
         plateNumber: string;
-        totalBill: number;
         contractorCommission: number;
     };
 
     const archivedJobOrderColumns: Column<ArchivedJobOrder>[] = [
         { key: "jobNumber", label: "Job Number" },
         { key: "plateNumber", label: "Plate Number" },
-        { key: "totalBill", label: "Total Bill", render: (value) => formatPesoFromCents(value as number) },
-        { key: "contractorCommission", label: "My Commission", render: (value) => formatPesoFromCents(value as number) },
+        { key: "contractorCommission", label: "My Commission", render: (value) => formatPesoFromCents(value as number) }
     ];
     
 export default function AssignedArchivedOrdersTable() {
@@ -32,8 +30,7 @@ export default function AssignedArchivedOrdersTable() {
         (item: Record<string, any>) => ({
             jobNumber: item.jobOrderCode,
             plateNumber: item.plateNumber,
-            totalBill: item.totalBill,
-            contractorCommission: item.balance,
+            contractorCommission: item.contractorCommission,
         })
     );
 
@@ -44,7 +41,7 @@ export default function AssignedArchivedOrdersTable() {
                 <DateRange dateRange={dateRangeParams} setDateRange={setDateRangeParams} />
             </TableFilter>
 
-            <Table columns={archivedJobOrderColumns} rows={archivedJobOrders} withOptions={true}/>
+            <Table columns={archivedJobOrderColumns} rows={archivedJobOrders}/>
 
             {error && <ErrorModal error={error!} closeError={closeError} />}
         </>

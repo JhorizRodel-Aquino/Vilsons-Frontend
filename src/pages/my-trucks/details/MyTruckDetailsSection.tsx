@@ -13,7 +13,7 @@ import truckProfile from '../../../assets/truck-profile.webp'
 
 export default function MyTruckDetailsSection() {
     const { id } = useParams(); 
-    const { data, loading, error, closeError } = useGetData(`/api/trucks/${id}`)
+    const { data, loading, error, closeError } = useGetData(`/api/me/my-trucks/${id}`)
     const tabs = ['active', 'archived'];
     const [activeTab, setActiveTab] = useState(tabs[0]);
 
@@ -30,7 +30,7 @@ export default function MyTruckDetailsSection() {
 
     return (
         <>
-            <section className="card border-t-primary border-t-[20px] flex gap-5">
+            <section className="card border-t-primary border-t-[20px] flex gap-5 mb-5">
                 <ProfilePicture src={
                     image ? API_URL + '/images/' + image : truckProfile
                 } />

@@ -8,7 +8,7 @@ import logo from '../../assets/logo.webp'
 import { hasPermissions } from '../../services/permissionService';
 
 
-function Sidebar() {
+function Sidebar({ openSidebar }: { openSidebar: boolean }) {
     const renderSidebarItems = (navs: NavItem[], depth = 0) => {
         return (
             navs.map((nav, i) => (
@@ -49,7 +49,9 @@ function Sidebar() {
     }
 
     return (
-        <aside className='bg-light px-4 w-96 border-r h-full overflow-y-auto thin-scrollbar z-30'>
+        <aside
+            className={` bg-light border-r h-full overflow-y-auto thin-scrollbar z-30 transition-[width,padding] duration-300 ease-in-out ${openSidebar ? "w-96 px-4" : "w-0 px-0 overflow-hidden"}`}
+        >
             <div className='grid gap-2'>
                 <div className='logo sticky top-0 bg-light py-3 flex justify-start z-10'>
                     <NavLink to='/' >

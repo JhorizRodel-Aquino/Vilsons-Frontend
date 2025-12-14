@@ -25,7 +25,7 @@ type ActiveJobOrder = {
     plateNumber: string;
     totalBill: number;
     balance: number;
-    action: ReactElement
+    // action: ReactElement
 };
 
 const activeJobOrderColumns: Column<ActiveJobOrder>[] = [
@@ -34,7 +34,7 @@ const activeJobOrderColumns: Column<ActiveJobOrder>[] = [
     { key: "plateNumber", label: "Plate Number" },
     { key: "totalBill", label: "Total Bill", render: (value) => formatPesoFromCents(value as number) },
     { key: "balance", label: "Balance", render: (value) => formatPesoFromCents(value as number) },
-    { key: "action", label: "Action", render: (value) => value as ReactElement },
+    // { key: "action", label: "Action", render: (value) => value as ReactElement },
 ];
 
 
@@ -79,16 +79,16 @@ export default function MyActiveOrdersTable() {
             plateNumber: item.plateNumber,
             contractor: item.contractorName,
             totalBill: item.totalBill,
-            balance: item.balance,
-            action: item.status.toLowerCase() === 'pending' ?
-                (hasPermissions(['handle_contractor_assigned_job_orders']) &&
-                    <div className="flex gap-2">
-                        <Button label="Accept" variant="primary" size="mini" onClick={() => { setSelectedId(item.id); setAction('accept') }} />
-                        <Button label="Reject" variant="outline" size="mini" onClick={() => { setSelectedId(item.id); setAction('reject') }} />
-                    </div>)
-                : item.status.toLowerCase() === 'ongoing' &&
-                (hasPermissions(['handle_contractor_assigned_job_orders']) &&
-                    <Button label="Mark As Complete" variant="primary" size="mini" onClick={() => { setSelectedId(item.id); setAction('complete') }} />)
+            balance: item.totalBalance,
+            // action: item.status.toLowerCase() === 'pending' ?
+            //     (hasPermissions(['handle_contractor_assigned_job_orders']) &&
+            //         <div className="flex gap-2">
+            //             <Button label="Accept" variant="primary" size="mini" onClick={() => { setSelectedId(item.id); setAction('accept') }} />
+            //             <Button label="Reject" variant="outline" size="mini" onClick={() => { setSelectedId(item.id); setAction('reject') }} />
+            //         </div>)
+            //     : item.status.toLowerCase() === 'ongoing' &&
+            //     (hasPermissions(['handle_contractor_assigned_job_orders']) &&
+            //         <Button label="Mark As Complete" variant="primary" size="mini" onClick={() => { setSelectedId(item.id); setAction('complete') }} />)
         })
     );
 
@@ -117,7 +117,7 @@ export default function MyActiveOrdersTable() {
                 </TableFilter.Group>
             </TableFilter>
 
-            <Table columns={activeJobOrderColumns} rows={activeJobOrders} withOptions={true} />
+            <Table columns={activeJobOrderColumns} rows={activeJobOrders} />
 
             {error && <ErrorModal error={error!} closeError={closeError} />}
 

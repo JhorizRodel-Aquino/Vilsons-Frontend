@@ -71,7 +71,7 @@ export default function ActiveOrdersTable({ setPresetData, reloadFlag, setShowMo
         deleteData,
     } = useDeleteData('/api/job-orders');
 
-    const [action, setAction] = useState<'accept' | 'reject' | 'released' | null>(null);
+    const [action, setAction] = useState<'accept' | 'reject' | 'released' | 'completed' | null>(null);
     const { error: approveError, closeError: closeApproveError, putData } = usePostPutData(`/api/job-orders/${action}`);
 
     useEffect(() => {
@@ -136,9 +136,13 @@ export default function ActiveOrdersTable({ setPresetData, reloadFlag, setShowMo
                         <Button label="Accept" variant="primary" size="mini" onClick={() => { setSelectedId(item.id); setAction('accept') }} />
                         <Button label="Reject" variant="outline" size="mini" onClick={() => { setSelectedId(item.id); setAction('reject') }} />
                     </div>)
-                : item.status.toLowerCase() === 'forrelease' &&
-                (hasPermissions(['handle_for_release_job_orders']) &&
-                    <Button label="Released" variant="primary" size="mini" onClick={() => { setSelectedId(item.id); setAction('released') }} />),
+                : item.status.toLowerCase() === 'forrelease' ?
+                    (hasPermissions(['handle_completed_job_orders']) &&
+                        <Button label="Released" variant="primary" size="mini" onClick={() => { setSelectedId(item.id); setAction('released') }} />)
+                    : item.status.toLowerCase() === 'ongoing' ?
+                        (hasPermissions(['handle_completed_job_orders']) &&
+                            <Button label="Mark as Completed" variant="primary" size="mini" onClick={() => { setSelectedId(item.id); setAction('completed') }} />)
+                        : <></>,
             options:
                 <Options
                     onEdit={hasPermissions(['edit_job_order']) ? () => handleEdit(item) : undefined}

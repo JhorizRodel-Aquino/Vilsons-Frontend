@@ -10,7 +10,7 @@ import ErrorModal from "../../../components/ErrorModal";
 
 export default function MyOrderDetailsSection() {
     const { id } = useParams();
-    const { data, loading, error, closeError, reload } = useGetData(`/api/job-orders/${id}`)
+    const { data, loading, error, closeError, reload } = useGetData(`/api/me/my-job-orders/${id}`)
 
     const userData = data?.data || {}
     const {
@@ -19,7 +19,7 @@ export default function MyOrderDetailsSection() {
         branchName,
         truckId, plate, make, model, engine,
         contractorId, contractorName, contractorUsername, contractorPhone, contractorEmail,
-        customerId, customerName, customerUsername, customerPhone, customerEmail,
+        customerId, customerName, customerUsername, customerPhone, customerEmail, balance, 
         description,
         images,
         materials, totalMaterialCost,
@@ -149,7 +149,7 @@ export default function MyOrderDetailsSection() {
                 <Detail label='Total Bill' value={formatPesoFromCents(totalBill)} variant="adjacent" align="between" highlight={true} className="font-bold" />
             </section> */}
 
-            <section className="card w-full flex flex-col max-h-[400px] overflow-hidden">
+            {/* <section className="card w-full flex flex-col max-h-[400px] overflow-hidden">
                 <h2 className="font-bold text-primary mb-5">Bill</h2>
                 <div className="flex flex-col flex-1 gap-5 overflow-y-auto justify-between relative thin-scrollbar">
                     <div className="space-y-5">
@@ -158,6 +158,19 @@ export default function MyOrderDetailsSection() {
                     </div>
 
                     <Detail label='Total Bill' value={formatPesoFromCents(totalBill)} variant="adjacent" align="between" highlight={true} className="font-bold sticky bottom-0 bg-light pt-2" />
+                </div>
+            </section> */}
+
+            <section className="card w-full flex flex-col max-h-[400px] overflow-hidden">
+                <h2 className="font-bold text-primary mb-5">Summary</h2>
+                <div className="flex flex-col flex-1 gap-5 overflow-y-auto justify-between relative thin-scrollbar">
+                    <div className="space-y-5">
+                        <Detail label='Total Material Cost' value={formatPesoFromCents(totalMaterialCost)} variant="adjacent" align="between" />
+                        <Detail label='Total Labor Cost' value={formatPesoFromCents(labor)} variant="adjacent" align="between" />
+                        <Detail label='Total Bill' value={formatPesoFromCents(totalBill)} variant="adjacent" align="between" />
+                        <Detail label='Total Paid' value={formatPesoFromCents(totalBill-balance)} variant="adjacent" align="between" />
+                        <Detail label='My Balance' value={formatPesoFromCents(balance)} variant="adjacent" align="between" />
+                    </div>
                 </div>
             </section>
             {error && <ErrorModal error={error!} closeError={closeError} />}

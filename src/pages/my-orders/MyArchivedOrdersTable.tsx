@@ -38,7 +38,7 @@ export default function MyActiveOrdersTable() {
             plateNumber: item.plateNumber,
             contractor: <Link to={`/contractors/${item.contractorId}`}>{item.contractorName}</Link>,
             totalBill: item.totalBill,
-            balance: item.balance,
+            balance: item.totalBalance,
         })
     );
 
@@ -49,7 +49,7 @@ export default function MyActiveOrdersTable() {
                 <DateRange dateRange={dateRangeParams} setDateRange={setDateRangeParams} />
             </TableFilter>
 
-            <Table columns={archivedJobOrderColumns} rows={archivedJobOrders} withOptions={true}/>
+            <Table columns={archivedJobOrderColumns} rows={archivedJobOrders} />
 
             {error && <ErrorModal error={error!} closeError={closeError} />}
         </>

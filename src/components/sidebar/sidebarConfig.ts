@@ -11,7 +11,17 @@ export const sidebarItems: NavItem[] = [
         label: 'Dashboard',
         iconName: 'dashboard', 
         path: '/dashboard',
-        permissions: ['view_admin_dashboard_revenue', 'view_admin_dashboard_profit', 'view_admin_dashboard_expenses', 'view_admin_dashboard_job_orders', 'view_admin_dashboard_customer_balance']
+        permissions: [
+            'view_admin_dashboard_revenue', 
+            'view_admin_dashboard_profit', 
+            'view_admin_dashboard_expenses', 
+            'view_admin_dashboard_job_orders', 
+            'view_admin_dashboard_customer_balance',
+            'view_contractor_dashboard_balance', 
+            'view_customer_dashboard_balance',
+            'view_contractor_dashboard_job_orders',
+            'view_customer_dashboard_job_orders'
+        ]
     },
     {
         label: 'Job Orders',

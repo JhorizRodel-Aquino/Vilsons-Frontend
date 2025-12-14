@@ -10,7 +10,7 @@ import ErrorModal from "../../../components/ErrorModal";
 
 export default function AssignedOrderDetailsSection() {
     const { id } = useParams();
-    const { data, loading, error, closeError, reload } = useGetData(`/api/job-orders/${id}`)
+    const { data, loading, error, closeError, reload } = useGetData(`/api/me/assigned-job-orders/${id}`)
 
     const userData = data?.data || {}
     const {
@@ -23,7 +23,7 @@ export default function AssignedOrderDetailsSection() {
         description,
         images,
         materials, totalMaterialCost,
-        contractorCommission, shopCommission, labor,
+        contractorCommission, shopCommission, labor, contractorPercent,
         totalBill,
     } = userData;
 
@@ -111,7 +111,7 @@ export default function AssignedOrderDetailsSection() {
 
             <ImagePreview images={images} API_URL={API_URL} onSuccess={reload} />
 
-            <div className="grid gap-[20px] grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
+            {/* <div className="grid gap-[20px] grid-cols-[repeat(auto-fit,minmax(300px,1fr))]">
                 <section className="card w-full flex flex-col max-h-[400px] overflow-hidden">
                     <h2 className="font-bold text-primary mb-5">Materials</h2>
                     <div className="flex flex-col flex-1 gap-5 overflow-y-auto justify-between relative thin-scrollbar">
@@ -143,11 +143,17 @@ export default function AssignedOrderDetailsSection() {
                         <Detail label='Total' value={formatPesoFromCents(labor)} variant="adjacent" align="between" highlight={true} className="font-bold sticky bottom-0 bg-light pt-2" />
                     </div>
                 </section>
+            </div> */}
 
-
-            </div>
-            <section className="card w-full grid items-center">
-                <Detail label='Total Bill' value={formatPesoFromCents(totalBill)} variant="adjacent" align="between" highlight={true} className="font-bold" />
+            <section className="card w-full flex flex-col max-h-[400px] overflow-hidden">
+                <h2 className="font-bold text-primary mb-5">Summary</h2>
+                <div className="flex flex-col flex-1 gap-5 overflow-y-auto justify-between relative thin-scrollbar">
+                    <div className="space-y-5">
+                        <Detail label='Total Material Cost' value={formatPesoFromCents(totalMaterialCost)} variant="adjacent" align="between" />
+                        <Detail label='Commission Percent' value={contractorPercent * 100 + "%"} variant="adjacent" align="between" />
+                        <Detail label='My Commission' value={formatPesoFromCents(contractorCommission)} variant="adjacent" align="between" />
+                    </div>
+                </div>
             </section>
 
             {error && <ErrorModal error={error!} closeError={closeError} />}

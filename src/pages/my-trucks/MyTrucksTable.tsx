@@ -40,7 +40,7 @@ const truckColumns: Column<Truck>[] = [
 // }
 
 export default function MyTrucksTable() {
-    const { data, loading, error, closeError, searchParams, setSearchParams, dateRangeParams, setDateRangeParams } = useGetByDateRange('/api/me/trucks');
+    const { data, loading, error, closeError, searchParams, setSearchParams, dateRangeParams, setDateRangeParams } = useGetByDateRange('/api/me/my-trucks');
 
 
     if (loading) return <Loading />;
@@ -65,7 +65,7 @@ export default function MyTrucksTable() {
                 <DateRange dateRange={dateRangeParams} setDateRange={setDateRangeParams} />
             </TableFilter>
 
-            <Table columns={truckColumns} rows={trucks} withOptions={true} />
+            <Table columns={truckColumns} rows={trucks} />
 
             {error && <ErrorModal error={error!} closeError={closeError} />}
         </>

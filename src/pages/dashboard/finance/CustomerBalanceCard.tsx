@@ -18,6 +18,6 @@ export default function CustomerBalanceCard({ monthYearParams, branchParams } : 
     loading && <Loading />
 
     return (
-        <FinanceCard label={'Balance'} iconName={'balance'} value={data?.totalBalanceAllCustomers} delta={12.5} />
+        <FinanceCard label={'Customer Balance'} iconName={'balance'} value={data?.totalBalanceAllCustomers} delta={12.5} />
     );
 }

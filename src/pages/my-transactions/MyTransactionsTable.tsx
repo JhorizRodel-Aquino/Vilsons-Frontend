@@ -78,7 +78,7 @@ export default function MyTransactionsTable() {
                 <MonthYearFilter options={options} option={option} setOption={setOption} monthYear={monthYear} year={year} setMonthYear={setMonthYear} setYear={setYear} />
             </TableFilter>
 
-            <Table columns={transactionColumns} rows={transactions} total={total} withOptions={true} />
+            <Table columns={transactionColumns} rows={transactions} total={total} />
 
             {error && <ErrorModal error={error!} closeError={closeError} />}
         </>

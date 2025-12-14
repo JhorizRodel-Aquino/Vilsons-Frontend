@@ -1,5 +1,4 @@
 // services/authService.ts
-import API_URL from "../constants/API_URL";
 import api from "../utils/axiosInstance";
 
 export type LoginData = {

@@ -182,7 +182,7 @@ export default function UsersModal({
             );
 
     // Branches only appear if no "customer" base role is selected
-    const showBranches = !selectedBaseRoles.includes("customer") && selectedBaseRoles.length > 0;
+    const showBranches = !selectedBaseRoles.includes("_CUSTOMER_") && selectedBaseRoles.length > 0;
 
     const toggleBranch = (value: string) => {
         setFormData((prev) => {

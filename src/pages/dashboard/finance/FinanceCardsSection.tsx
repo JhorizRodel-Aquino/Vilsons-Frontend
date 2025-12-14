@@ -7,6 +7,9 @@ import ExpensesCard from "./ExpensesCard";
 import ProfitCard from "./ProfitCard";
 import RevenueCard from "./RevenueCard";
 import dayjs from "dayjs";
+import { hasPermissions } from "../../../services/permissionService";
+import ContractorOwnBalanceCard from "./ContractorOwnBalanceCard";
+import CustomerOwnBalanceCard from "./CustomerOwnBalanceCard";
 
 export default function FinanceCardsSection({ branchParams }: { branchParams: string }) {
     const monthYearToday: MonthYearParams = { year: +dayjs().format("YYYY"), month: +dayjs().format("MM") }
@@ -20,10 +23,12 @@ export default function FinanceCardsSection({ branchParams }: { branchParams: st
                 <MonthYearFilter options={options} option={option} setOption={setOption} monthYear={monthYear} year={year} setMonthYear={setMonthYear} setYear={setYear} />
             </div>
             <div className='grid gap-[10px] grid-cols-[repeat(auto-fit,minmax(300px,1fr))]'>
-                <RevenueCard monthYearParams={monthYearParams} branchParams={branchParams}/>
-                <ProfitCard monthYearParams={monthYearParams} branchParams={branchParams}/>
-                <ExpensesCard monthYearParams={monthYearParams} branchParams={branchParams}/>
-                <CustomerBalanceCard monthYearParams={monthYearParams} branchParams={branchParams}/>
+                {hasPermissions(["view_admin_dashboard_revenue"]) && <RevenueCard monthYearParams={monthYearParams} branchParams={branchParams}/>}
+                {hasPermissions(["view_admin_dashboard_profit"]) && <ProfitCard monthYearParams={monthYearParams} branchParams={branchParams}/>}
+                {hasPermissions(["view_admin_dashboard_expenses"]) && <ExpensesCard monthYearParams={monthYearParams} branchParams={branchParams}/>}
+                {hasPermissions(["view_admin_dashboard_customer_balance"]) && <CustomerBalanceCard monthYearParams={monthYearParams} branchParams={branchParams}/>}
+                {hasPermissions(["view_contractor_dashboard_balance"]) && <ContractorOwnBalanceCard monthYearParams={monthYearParams} branchParams={branchParams}/>}
+                {hasPermissions(["view_customer_dashboard_balance"]) && <CustomerOwnBalanceCard monthYearParams={monthYearParams} branchParams={branchParams}/>}
             </div>
         </section>
     )

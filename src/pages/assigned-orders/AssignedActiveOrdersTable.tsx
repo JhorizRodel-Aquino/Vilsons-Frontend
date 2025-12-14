@@ -23,7 +23,6 @@ type ActiveJobOrder = {
     jobNumber: ReactElement;
     status: Status;
     plateNumber: string;
-    totalBill: number;
     contractorCommission: number;
     action: ReactElement
 };
@@ -32,7 +31,6 @@ const activeJobOrderColumns: Column<ActiveJobOrder>[] = [
     { key: "jobNumber", label: "Job Number", render: (value) => value as ReactElement },
     { key: "status", label: "Status", render: (value) => <StatusIndicator status={value as Status} /> },
     { key: "plateNumber", label: "Plate Number" },
-    { key: "totalBill", label: "Total Bill", render: (value) => formatPesoFromCents(value as number) },
     { key: "contractorCommission", label: "My Commission", render: (value) => formatPesoFromCents(value as number) },
     { key: "action", label: "Action", render: (value) => value as ReactElement },
 ];
@@ -46,13 +44,13 @@ export default function AssignedActiveOrdersTable() {
     const statusOptions = [{ value: "", label: "All Statuses" }, ...getStatuses()];
     const { data, loading, error, closeError, reload, searchParams, setSearchParams, dateRangeParams, setDateRangeParams, statusParams, setStatusParams, branchParams, setBranchParams } = useGetByDateRange('/api/me/assigned-job-orders/group/active');
     const [selectedId, setSelectedId] = useState<string>('');
-    const [action, setAction] = useState<'accept' | 'reject' | 'complete' | null>(null);
-    const { error: approveError, closeError: closeApproveError, putData } = usePostPutData(`/api/me/assigned-job-orders/${action}`);
+    const [action, setAction] = useState<'accept' | 'reject' | 'completed' | null>(null);
+    const { error: approveError, closeError: closeApproveError, putData } = usePostPutData(`/api/me/assigned-job-orders/action/${action}`);
 
     useEffect(() => {
         const handleApproval = async () => {
             if (selectedId && action) {
-                const success = await putData(selectedId, { responseComment: '_' });
+                const success = await putData(selectedId);
                 if (success) {
                     reload();
 
@@ -77,8 +75,7 @@ export default function AssignedActiveOrdersTable() {
             jobNumber: hasPermissions(['view_contractor_assigned_job_order_details']) ? <Link to={`/assigned-orders/${item.id}`}>{item.jobOrderCode}</Link> : item.jobOrderCode,
             status: item.status,
             plateNumber: item.plateNumber,
-            totalBill: item.totalBill,
-            contractorCommission: item.balance,
+            contractorCommission: item.contractorCommission,
             action: item.status.toLowerCase() === 'pending' ?
                 (hasPermissions(['handle_contractor_assigned_job_orders']) &&
                     <div className="flex gap-2">
@@ -87,7 +84,7 @@ export default function AssignedActiveOrdersTable() {
                     </div>)
                 : item.status.toLowerCase() === 'ongoing' &&
                 (hasPermissions(['handle_contractor_assigned_job_orders']) &&
-                    <Button label="Mark As Complete" variant="primary" size="mini" onClick={() => { setSelectedId(item.id); setAction('complete') }} />)
+                    <Button label="Mark As Complete" variant="primary" size="mini" onClick={() => { setSelectedId(item.id); setAction('completed') }} />)
         })
     );
 
@@ -116,7 +113,7 @@ export default function AssignedActiveOrdersTable() {
                 </TableFilter.Group>
             </TableFilter>
 
-            <Table columns={activeJobOrderColumns} rows={activeJobOrders} withOptions={true} />
+            <Table columns={activeJobOrderColumns} rows={activeJobOrders} />
 
             {error && <ErrorModal error={error!} closeError={closeError} />}
 

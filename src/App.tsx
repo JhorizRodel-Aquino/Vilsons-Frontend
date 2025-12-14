@@ -41,9 +41,9 @@ import MyOrdersPage from "./pages/my-orders/MyOrdersPage";
 import AssignedOrderDetailsPage from "./pages/assigned-orders/details/AssignedOrderDetailsPage";
 import MyOrderDetailsPage from "./pages/my-orders/details/MyOrderDetailsPage";
 import MyTransactionsPage from "./pages/my-transactions/MyTransactionsPage";
-import MyTrucksPage from "./pages/my-trucks/MyTrucksPage";
 import MyTruckDetailsSection from "./pages/my-trucks/details/MyTruckDetailsSection";
 import ContractorPayrollPage from "./pages/contractor-payroll/ContractorPayrollPage";
+import MyTrucksPage from "./pages/my-trucks/MyTrucksPage";
 
 // ProtectedRoute
 const ProtectedRoute = ({
@@ -67,17 +67,21 @@ const ProtectedRoute = ({
 const MainLayout = () => {
   const { permissions, loading, reload } = usePermissions();
   const [reloadFlag, setReloadFlag] = useState(false);
+  const [openSidebar, setOpenSidebar] = useState(true);
 
   useEffect(() => { reload() }, [reloadFlag]);
   const reloadPermissions = useCallback(() => setReloadFlag((prev) => !prev), []);
+
+  const toggleSidebar = useCallback(() => setOpenSidebar(prev => !prev), []);
+
 
   if (loading || !permissions) return <Loading />;
 
   return (
     <AppLayout>
-      <Sidebar />
+      <Sidebar openSidebar={openSidebar} />
       <ContentLayout>
-        <Header />
+        <Header toggleSidebar={toggleSidebar} />
         <Main>
           <Routes>
             {/* Dashboard */}
@@ -86,11 +90,15 @@ const MainLayout = () => {
               element={
                 <ProtectedRoute
                   requiredPermissions={[
-                    "view_admin_dashboard_revenue",
-                    "view_admin_dashboard_profit",
-                    "view_admin_dashboard_expenses",
-                    "view_admin_dashboard_job_orders",
-                    "view_admin_dashboard_customer_balance",
+                    'view_admin_dashboard_revenue',
+                    'view_admin_dashboard_profit',
+                    'view_admin_dashboard_expenses',
+                    'view_admin_dashboard_job_orders',
+                    'view_admin_dashboard_customer_balance',
+                    'view_contractor_dashboard_balance',
+                    'view_customer_dashboard_balance',
+                    'view_contractor_dashboard_job_orders',
+                    'view_customer_dashboard_job_orders'
                   ]}
                   permissions={permissions}
                 >
@@ -103,11 +111,15 @@ const MainLayout = () => {
               element={
                 <ProtectedRoute
                   requiredPermissions={[
-                    "view_admin_dashboard_revenue",
-                    "view_admin_dashboard_profit",
-                    "view_admin_dashboard_expenses",
-                    "view_admin_dashboard_job_orders",
-                    "view_admin_dashboard_customer_balance",
+                    'view_admin_dashboard_revenue',
+                    'view_admin_dashboard_profit',
+                    'view_admin_dashboard_expenses',
+                    'view_admin_dashboard_job_orders',
+                    'view_admin_dashboard_customer_balance',
+                    'view_contractor_dashboard_balance',
+                    'view_customer_dashboard_balance',
+                    'view_contractor_dashboard_job_orders',
+                    'view_customer_dashboard_job_orders'
                   ]}
                   permissions={permissions}
                 >

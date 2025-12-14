@@ -1,6 +1,6 @@
 import SectionHeading from "../../components/SectionHeading"
 import Details from "../../components/Details"
-import MyTrucksSection from "./MyTrucksSection"
+import MyTrucksTable from "./MyTrucksTable"
 
 export type SelectedCustomer = {
     name: string;
@@ -15,7 +15,7 @@ export default function TrucksSection() {
                 <Details subtitle={'All Trucks'} modifiedDate="Aug 9, 2025" />
             </SectionHeading>
 
-            <MyTrucksSection/>
+            <MyTrucksTable/>
         </>
     )
 }

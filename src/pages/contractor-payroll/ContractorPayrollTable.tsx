@@ -29,7 +29,7 @@ export default function ContractorPayrollTable({ setBalance }: { setBalance: (ba
         { value: '', label: 'All Branches' },
         ...(getBranches() || [])
     ];
-    const { data, loading, error, closeError, searchParams, setSearchParams, setMonthYearParams, branchParams, setBranchParams } = useGetByMonthYear('/api/me/contractor/payroll');
+    const { data, loading, error, closeError, searchParams, setSearchParams, setMonthYearParams, branchParams, setBranchParams } = useGetByMonthYear('/api/me/contractor/finances');
     const { options, option, setOption, monthYear, setMonthYear, year, setYear } = useMonthYearFilter(setMonthYearParams);
 
     useEffect(() => {
@@ -64,7 +64,7 @@ export default function ContractorPayrollTable({ setBalance }: { setBalance: (ba
                 <MonthYearFilter options={options} option={option} setOption={setOption} monthYear={monthYear} year={year} setMonthYear={setMonthYear} setYear={setYear} />
             </TableFilter>
 
-            <Table columns={transactionColumns} rows={transactions} total={total} withOptions={true} />
+            <Table columns={transactionColumns} rows={transactions} total={total} />
 
             {error && <ErrorModal error={error!} closeError={closeError} />}
         </>
