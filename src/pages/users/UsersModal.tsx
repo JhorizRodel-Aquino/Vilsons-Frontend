@@ -361,14 +361,14 @@ export default function UsersModal({
         if (isExisting) {
             setExistingComponents(prev =>
                 prev.map(comp =>
-                    comp.componentId === id ? { ...comp, [field]: value * 100 } : comp
+                    comp.componentId === id ? { ...comp, [field]: field === "amount" ? value * 100 : value } : comp
                 )
             );
         } else {
             // Must be in newComponents
             setNewComponents(prev =>
                 prev.map(comp =>
-                    comp.componentId === id ? { ...comp, [field]: value * 100 } : comp
+                    comp.componentId === id ? { ...comp, [field]: field === "amount" ? value * 100 : value } : comp
                 )
             );
         }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Button from "../../components/Button";
 import Field from "../../components/Field";
 import validateAndSanitize, { type ValidationSchema } from "../../utils/validateAndSanitize";
@@ -38,7 +38,7 @@ export default function RolesAndPermissionsModal({
     baseRolesOptions,
     reloadPermissions
 }: RolesAndPermissionsModalProps) {
-
+    const clonePopupRef = useRef<HTMLDivElement | null>(null);
     const { loading, error, closeError, putData, postData } = usePostPutData("/api/roles");
 
     const [permissions, setPermissions] = useState<Record<string, ModulePermissions[]> | null>(
@@ -68,6 +68,22 @@ export default function RolesAndPermissionsModal({
     useEffect(() => {
         if (activeRoleId) roleRefetch();
     }, [activeRoleId, fetchTrigger]);
+
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (
+                clonePopup &&
+                clonePopupRef.current &&
+                !clonePopupRef.current.contains(e.target as Node)
+            ) {
+                setClonePopup(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, [clonePopup]);
+
 
     // Reset all allowed/approval flags
     const resetAllPermissions = () => {
@@ -161,19 +177,16 @@ export default function RolesAndPermissionsModal({
                         <div>
                             {action === "create" ? (
                                 <fieldset className="card grid grid-cols-2 text-base gap-[20px]">
-                                    <div className="relative justify-self-start w-fit col-span-full">
+                                    <div className="relative justify-self-start w-fit col-span-full" ref={clonePopupRef}>
                                         <Button
                                             label="Clone Role ›"
                                             variant="outline"
                                             size="mini"
-                                            onClick={() => setClonePopup(true)}
+                                            onClick={() => setClonePopup((prev) => !prev)}
                                         />
 
                                         {clonePopup && (
-                                            <ul
-                                                className="absolute right-0 top-0 translate-x-[105%] bg-light border-all z-40 rounded-md shadow-lg whitespace-nowrap min-w-max py-1"
-                                                onMouseLeave={() => setClonePopup(false)} // closes on hover out
-                                            >
+                                            <ul className="absolute right-0 top-0 translate-x-[105%] bg-light border-all z-40 rounded-md shadow-lg whitespace-nowrap min-w-max" onMouseLeave={() => setClonePopup(false)} >
                                                 {customRoleOptions.map((roleOpt, i) => (
                                                     <li
                                                         key={i}
@@ -191,6 +204,7 @@ export default function RolesAndPermissionsModal({
                                             </ul>
                                         )}
                                     </div>
+
 
 
                                     <Field.Text
