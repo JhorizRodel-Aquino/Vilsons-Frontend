@@ -33,17 +33,18 @@ export default function ContractorPayrollTable({ setBalance }: { setBalance: (ba
     const { options, option, setOption, monthYear, setMonthYear, year, setYear } = useMonthYearFilter(setMonthYearParams);
 
     useEffect(() => {
-        setBalance(total)
+        setBalance(totalBalance)
     }, [data])
 
     if (loading) return <Loading />;
 
-    const transactionItems = data.data?.transactions || [];
-    const total = data.data?.totalTransactions || 0;
+    const transactionItems = data.data?.labors || [];
+    const totalBalance = data.data?.totalBalance || 0;
+    const total = data.data?.totalPayroll || 0;
 
     const transactions: Transaction[] = transactionItems.map(
         (item: Record<string, any>) => ({
-            salaryType: item.referenceNumber,
+            salaryType: item.type,
             datetime: item.createdAt,
             amount: item.amount,
         })
