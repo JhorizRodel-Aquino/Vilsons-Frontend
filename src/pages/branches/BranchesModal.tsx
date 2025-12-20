@@ -9,11 +9,13 @@ import { invalidateCache } from "../../hooks/useGetData";
 export type FormData = {
     branch: string,
     address: string,
+    remarks?: string
 }
 
 const formSchema: ValidationSchema = {
     branch: { required: true },
     address: { required: true },
+    remarks: { required: true }
 };
 
 type BranchesModalProps = {
@@ -66,36 +68,40 @@ export default function BranchesModal({ setShowModal, onSuccess, action, presetD
                             <Button.X onClick={closeModal} disabled={loading} />
                         </div>
 
-                        {/* <fieldset>
-                            Branch
-                            <Selection
-                                 options={branchOptions}
-                                    value={formData.branchId}
-                                    onChange={(e) => setFormData({ ...formData, branchId: e.target.value })}
-                            />
-                        </fieldset> */}
+                        <div className="fields grid gap-5">
+                            <fieldset className="card">
+                                <div className="grid gap-x-10 gap-y-[20px]">
+                                    <div className="fields grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-x-10 gap-y-[20px]">
+                                        <Field.Text
+                                            id="branch"
+                                            label="Branch"
+                                            value={formData.branch}
+                                            onChange={(e) => setFormData({ ...formData, branch: e.target.value })}
+                                        />
 
-                        <fieldset className="card">
-                            <div className="grid gap-x-10 gap-y-[20px]">
-
-                                <div className="fields grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-x-10 gap-y-[20px]">
-                                    <Field.Text
-                                        id="branch"
-                                        label="Branch"
-                                        value={formData.branch}
-                                        onChange={(e) => setFormData({ ...formData, branch: e.target.value })}
-                                    />
-
-                                    <Field.Text
-                                        id="address"
-                                        label="Address"
-                                        value={formData.address}
-                                        onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                                    />
+                                        <Field.Text
+                                            id="address"
+                                            label="Address"
+                                            value={formData.address}
+                                            onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                                        />
+                                    </div>
                                 </div>
+                            </fieldset>
 
-                            </div>
-                        </fieldset>
+                            {action === 'edit' &&
+                                <fieldset className="card">
+                                    <h4 className="text-lg font-bold mb-3">Remarks</h4>
+                                    <Field.TextArea
+                                        id="remarks"
+                                        value={formData.remarks}
+                                        onChange={(e) => {
+                                            setFormData({ ...formData, remarks: e.target.value });
+                                        }}
+                                    />
+                                </fieldset>
+                            }
+                        </div>
 
                         <div className="flex justify-end items-center gap-[20px]">
                             <Button variant="gray" label="Cancel" onClick={closeModal} disabled={loading} />

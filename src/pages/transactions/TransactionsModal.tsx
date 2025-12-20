@@ -21,6 +21,7 @@ export type FormData = {
     customerId?: string,
     contractorId?: string,
     jobOrderId?: string,
+    remarks?: string
 }
 
 const formSchema: ValidationSchema = {
@@ -28,7 +29,8 @@ const formSchema: ValidationSchema = {
     jobOrderCode: { required: true, label: "Job Number" },
     senderName: { required: true },
     amount: { required: true, type: "money" },
-    mop: { required: true, label: "Mode of Payment" }
+    mop: { required: true, label: "Mode of Payment" },
+    remarks: { required: true }
 };
 
 type TransactionsModalProps = {
@@ -152,92 +154,107 @@ export default function TransactionModal({ setShowModal, onSuccess, action, pres
                             />
                         </fieldset>
 
-                        <fieldset className="card">
-                            <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-x-10 gap-y-[20px]">
+                        <div className="fields grid gap-5">
+                            <fieldset className="card">
+                                <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-x-10 gap-y-[20px]">
 
-                                <div>
-                                    Job Number
-                                    <Field.List
-                                        id="jobCodeSelection"
-                                        placeholder="Select Job Number"
-                                        validated={!!selectedJobCode}
-                                        readOnly={action === "edit"}
-                                        value={jobCodeSearch}
-                                        supportingInfo={selectedJobCode &&
-                                            <>
-                                                plate: {selectedJobCode.plateNumber} {<br />}
-                                                {action === 'create' && (<>balance: {formatPesoFromCents(selectedJobCode.balance)}</>)}
-                                            </>
-                                        }
-                                        onChange={(e) => setJobCodeSearch(e.target.value)}
-                                        onBlur={() => {
-                                            if (isSelectingRef.current) return;
-                                            if (!selectedJobCode || jobCodeSearch !== selectedJobCode.name) setSelectedJobCode(null);
-                                        }}
-                                    >
-                                        {jobCodeOptions.map((jobCode, i) => (
-                                            <div
-                                                key={i}
-                                                onMouseDown={() => {
-                                                    isSelectingRef.current = true;
-                                                }}
-                                                onMouseUp={() => {
-                                                    handleSelectJobCode(jobCode);
-                                                    setTimeout(() => {
-                                                        isSelectingRef.current = false;
-                                                    }, 0);
-                                                }}
-                                                onMouseLeave={() => {
-                                                    if (isSelectingRef.current) {
+                                    <div>
+                                        Job Number
+                                        <Field.List
+                                            id="jobCodeSelection"
+                                            placeholder="Select Job Number"
+                                            validated={!!selectedJobCode}
+                                            readOnly={action === "edit"}
+                                            value={jobCodeSearch}
+                                            supportingInfo={selectedJobCode &&
+                                                <>
+                                                    plate: {selectedJobCode.plateNumber} {<br />}
+                                                    {action === 'create' && (<>balance: {formatPesoFromCents(selectedJobCode.balance)}</>)}
+                                                </>
+                                            }
+                                            onChange={(e) => setJobCodeSearch(e.target.value)}
+                                            onBlur={() => {
+                                                if (isSelectingRef.current) return;
+                                                if (!selectedJobCode || jobCodeSearch !== selectedJobCode.name) setSelectedJobCode(null);
+                                            }}
+                                        >
+                                            {jobCodeOptions.map((jobCode, i) => (
+                                                <div
+                                                    key={i}
+                                                    onMouseDown={() => {
+                                                        isSelectingRef.current = true;
+                                                    }}
+                                                    onMouseUp={() => {
+                                                        handleSelectJobCode(jobCode);
                                                         setTimeout(() => {
                                                             isSelectingRef.current = false;
                                                         }, 0);
-                                                    }
-                                                }}
-                                            >
-                                                <span>{jobCode.jobOrderCode}</span>
-                                                <p className="text-sm text-darker">
-                                                    plate: {jobCode.plateNumber}
-                                                </p>
-                                            </div>
-                                        ))}
-                                    </Field.List>
-                                </div>
+                                                    }}
+                                                    onMouseLeave={() => {
+                                                        if (isSelectingRef.current) {
+                                                            setTimeout(() => {
+                                                                isSelectingRef.current = false;
+                                                            }, 0);
+                                                        }
+                                                    }}
+                                                >
+                                                    <span>{jobCode.jobOrderCode}</span>
+                                                    <p className="text-sm text-darker">
+                                                        plate: {jobCode.plateNumber}
+                                                    </p>
+                                                </div>
+                                            ))}
+                                        </Field.List>
+                                    </div>
 
-                                <Field.Text
-                                    id="referenceNumber"
-                                    label="Reference Number"
-                                    value={formData.referenceNumber}
-                                    onChange={(e) => setFormData({ ...formData, referenceNumber: e.target.value })}
+                                    <Field.Text
+                                        id="referenceNumber"
+                                        label="Reference Number"
+                                        value={formData.referenceNumber}
+                                        onChange={(e) => setFormData({ ...formData, referenceNumber: e.target.value })}
 
-                                />
-
-                                <Field.Text
-                                    id="senderName"
-                                    label="Sender Name"
-                                    value={formData.senderName}
-                                    onChange={(e) => setFormData({ ...formData, senderName: e.target.value })}
-                                />
-                                <Field.Text
-                                    id="mop"
-                                    label="Mode of Payment"
-                                    value={formData.mop}
-                                    onChange={(e) => setFormData({ ...formData, mop: e.target.value })}
-                                />                                  <div className="flex justify-between items-end gap-2">
-                                    <Field.Money
-                                        id="amount"
-                                        label="Amount"
-                                        value={formData.amount}
-                                        onChange={(values) => {
-                                            setFormData({ ...formData, amount: values.floatValue ?? null });
-                                        }}
-                                        width="full"
                                     />
-                                    <Button label="Max" variant="outline" size="mini" onClick={applyMaxAmount} />
-                                </div>
 
-                            </div>
-                        </fieldset>
+                                    <Field.Text
+                                        id="senderName"
+                                        label="Sender Name"
+                                        value={formData.senderName}
+                                        onChange={(e) => setFormData({ ...formData, senderName: e.target.value })}
+                                    />
+                                    <Field.Text
+                                        id="mop"
+                                        label="Mode of Payment"
+                                        value={formData.mop}
+                                        onChange={(e) => setFormData({ ...formData, mop: e.target.value })}
+                                    />                                  <div className="flex justify-between items-end gap-2">
+                                        <Field.Money
+                                            id="amount"
+                                            label="Amount"
+                                            value={formData.amount}
+                                            onChange={(values) => {
+                                                setFormData({ ...formData, amount: values.floatValue ?? null });
+                                            }}
+                                            width="full"
+                                        />
+                                        <Button label="Max" variant="outline" size="mini" onClick={applyMaxAmount} />
+                                    </div>
+
+                                </div>
+                            </fieldset>
+
+                            {action === 'edit' &&
+                                <fieldset className="card">
+                                    <h4 className="text-lg font-bold mb-3">Remarks</h4>
+                                    <Field.TextArea
+                                        id="remarks"
+                                        value={formData.remarks}
+                                        onChange={(e) => {
+                                            setFormData({ ...formData, remarks: e.target.value });
+                                        }}
+                                    />
+                                </fieldset>
+                            }
+                        </div>
 
                         <div className="flex justify-end items-center gap-[20px]">
                             <Button variant="gray" label="Cancel" onClick={closeModal} disabled={loading} />

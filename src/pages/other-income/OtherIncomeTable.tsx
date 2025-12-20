@@ -59,7 +59,7 @@ export default function OtherIncomeTable({ setPresetData, reloadFlag, setShowMod
 
     const handleEdit = async (item: any) => {
         setSelectedId(item.id)
-        setPresetData({ description: item.description, amount: item.amount / 100, branchId: item.branchId } as FormData)
+        setPresetData({ description: item.description, amount: item.amount / 100, branchId: item.branchId, remarks: "" } as FormData)
         setShowModal('edit');
     }
 

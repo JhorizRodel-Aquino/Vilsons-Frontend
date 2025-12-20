@@ -59,7 +59,7 @@ export default function TrucksTable({ setPresetData, reloadFlag, setShowModal, s
 
     const handleEdit = async (item: any) => {
         setSelectedId(item.id)
-        setPresetData({ plate: item.plate, make: item.make, model: item.model, engine: item.engine } as FormData)
+        setPresetData({ plate: item.plate, make: item.make, model: item.model, engine: item.engine, remarks: "" } as FormData)
         setShowModal('edit');
     }
 

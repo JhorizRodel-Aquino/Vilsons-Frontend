@@ -61,7 +61,7 @@ export default function EquipmentExpensesTable({ setPresetData, reloadFlag, setS
 
     const handleEdit = async (item: any) => {
         setSelectedId(item.id)
-        setPresetData({ equipment: item.equipmentName, quantity: item.quantity, amount: item.price / 100, branchId: item.branchId } as FormData)
+        setPresetData({ equipment: item.equipmentName, quantity: item.quantity, amount: item.price / 100, branchId: item.branchId, remarks: "" } as FormData)
         setShowModal('edit');
     }
 

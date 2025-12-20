@@ -10,11 +10,12 @@ import formatDate from "../../utils/formatDate";
 import parsePayloadToHTML from "../../utils/parsePayloadToHTML";
 import { useEffect, useState, type ReactElement } from "react";
 import Button from "../../components/Button";
-import usePostData from "../../hooks/usePostData";
 import usePostPutData from "../../hooks/usePostPutData";
 import Selection from "../../components/Selection";
 import { getBranches } from "../../services/branchService";
 import { hasPermissions } from "../../services/permissionService";
+import Field from "../../components/Field";
+import { toastWarning } from "../../utils/toastWarning";
 
 type ApprovalLog = {
     tableName: string;
@@ -51,25 +52,32 @@ export default function ApprovalLogsTable() {
         ...(getBranches() || [])
     ];
     const [selectedId, setSelectedId] = useState<string | null>(null);
+    const [remarks, setRemarks] = useState("")
+    const [showRejectModal, setShowRejectModal] = useState(false)
     const [action, setAction] = useState<'approve' | 'reject' | null>(null);
     const { data, loading, error, closeError, reload, searchParams, setSearchParams, dateRangeParams, setDateRangeParams, branchParams, setBranchParams } = useGetByDateRange('/api/approval-logs');
-    const { error: approveError, closeError: approveCloseError, putData } = usePostPutData(`/api/approval-logs/${action}`);
+    const { error: approveError, closeError: approveCloseError, putData, loading: approveLoading } = usePostPutData(`/api/approval-logs/${action}`);
+
+    const handleApproval = async () => {
+        if (!remarks) {
+            toastWarning("Remarks is required")
+            return
+        }
+        if (selectedId && action) {
+            const success = await putData(selectedId, { responseComment: '_', remarks });
+            if (success) {
+                reload();
+            }
+            // Reset states regardless of success/failure
+            setSelectedId(null);
+            setAction(null);
+            setRemarks("")
+        }
+    };
 
     useEffect(() => {
-        const handleApproval = async () => {
-            if (selectedId && action) {
-                const success = await putData(selectedId, { responseComment: '_' });
-                if (success) {
-                    reload();
-                }
-                // Reset states regardless of success/failure
-                setSelectedId(null);
-                setAction(null);
-            }
-        };
-
         handleApproval();
-    }, [selectedId, action]);
+    }, [action]);
 
     if (loading) return <Loading />;
 
@@ -87,7 +95,7 @@ export default function ApprovalLogsTable() {
             action: hasPermissions(['handle_approval_logs']) &&
                 <div className="grid gap-2">
                     <Button label="Accept" onClick={() => { setSelectedId(item.id); setAction('approve') }} />
-                    <Button label="Reject" variant="outline" onClick={() => { setSelectedId(item.id); setAction('reject') }} />
+                    <Button label="Reject" variant="outline" onClick={() => { setSelectedId(item.id); setShowRejectModal(true) }} />
                 </div>
         })
     );
@@ -109,7 +117,36 @@ export default function ApprovalLogsTable() {
 
             <Table columns={approvalLogColumns} rows={approvalLogs} />
 
-            {(error || approveError) && <ErrorModal error={(error || approveError)!} closeError={error ? closeError : approveCloseError} />}
+            {(error || approveError) ? <ErrorModal error={(error || approveError)!} closeError={error ? closeError : approveCloseError} />
+                : showRejectModal &&
+                <>
+                    <form className="card modal gap-[20px]">
+                        <div className="text-xl flex justify-between items-center">
+                            <h2 className="font-bold">Reject Action</h2>
+                            <Button.X onClick={() => setShowRejectModal(false)} disabled={approveLoading} />
+                        </div>
+
+                        <div className="fields grid gap-5">
+                            <fieldset className="card">
+                                <h4 className="text-lg font-bold mb-3">Remarks</h4>
+                                <Field.TextArea
+                                    id="remarks"
+                                    value={remarks}
+                                    onChange={(e) => {
+                                        setRemarks(e.target.value);
+                                    }}
+                                />
+                            </fieldset>
+                        </div>
+
+                        <div className="flex justify-end items-center gap-[20px]">
+                            <Button variant="gray" label="Cancel" onClick={() => setShowRejectModal(false)} disabled={approveLoading} />
+                            <Button variant="primary" label={approveLoading ? "Rejecting..." : "Reject"} onClick={() => {setAction("reject"); handleApproval()}} disabled={approveLoading} />
+                        </div>
+                    </form>
+                    <div className="backdrop"></div>
+                </>
+            }
         </>
     )
 }

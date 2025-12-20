@@ -89,7 +89,7 @@ export default function EquipmentModal({ branchOptions, setShowModal, onSuccess,
                             />
                         </fieldset>
 
-                        <div className="fields">
+                        <div className="fields grid gap-5">
                             <fieldset className="card grid gap-[20px]">
                                 <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-x-10 gap-y-[20px]">
                                     <Field.Text
@@ -119,18 +119,20 @@ export default function EquipmentModal({ branchOptions, setShowModal, onSuccess,
                                         }}
                                     />
                                 </div>
+                            </fieldset>
 
-                                {action === 'edit' &&
+                            {action === 'edit' &&
+                                <fieldset className="card">
+                                    <h4 className="text-lg font-bold mb-3">Remarks</h4>
                                     <Field.TextArea
                                         id="remarks"
-                                        label="Remarks"
                                         value={formData.remarks}
                                         onChange={(e) => {
                                             setFormData({ ...formData, remarks: e.target.value });
                                         }}
                                     />
-                                }
-                            </fieldset>
+                                </fieldset>
+                            }
                         </div>
 
                         <div className="flex justify-end items-center gap-[20px]">

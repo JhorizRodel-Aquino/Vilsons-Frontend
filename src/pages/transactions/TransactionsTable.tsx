@@ -14,7 +14,6 @@ import { useEffect, useState, type ReactElement } from "react";
 import useDeleteData from "../../hooks/useDeleteData";
 import type { FormData } from "./TransactionsModal";
 import Options from "../../components/Options";
-import { get } from "../../services/apiService";
 import Selection from "../../components/Selection";
 import { getBranches } from "../../services/branchService";
 import { hasPermissions } from "../../services/permissionService";
@@ -65,7 +64,7 @@ export default function TransactionsTable({ setPresetData, reloadFlag, setShowMo
     const handleEdit = async (item: any) => {
         setSelectedId(item.id)
         // const jobOrder = (await get({ route: `/api/job-orders?search=${item.jobOrderCode}` })).data.jobOrders[0];
-        setPresetData({ referenceNumber: item.referenceNumber, jobOrderCode: item.jobOrderCode, senderName: item.senderName, amount: item.amount / 100, mop: item.mop, plateNumber: item.jobOrder.truck.plate, customerId: item.jobOrder.customerId, contractorId: item.jobOrder.contractorId, truckId: item.jobOrder.truckId, jobOrderId: item.jobOrder.id } as FormData)
+        setPresetData({ referenceNumber: item.referenceNumber, jobOrderCode: item.jobOrderCode, senderName: item.senderName, amount: item.amount / 100, mop: item.mop, plateNumber: item.jobOrder.truck.plate, customerId: item.jobOrder.customerId, contractorId: item.jobOrder.contractorId, truckId: item.jobOrder.truckId, jobOrderId: item.jobOrder.id, remarks: "" } as FormData)
         setShowModal('edit');
     }
 
@@ -89,7 +88,7 @@ export default function TransactionsTable({ setPresetData, reloadFlag, setShowMo
 
     const transactions: Transaction[] = transactionItems.map(
         (item: Record<string, any>) => ({
-            referenceNumber: item.referenceNumber || 'no ref number',
+            referenceNumber: item.referenceNumber || '',
             jobNumber: item.jobOrderCode,
             senderName: item.senderName,
             datetime: item.createdAt,

@@ -289,17 +289,6 @@ export default function LaborModal({ branchOptions, setShowModal, onSuccess, act
                                                 }}
                                             />
                                         </div>
-
-                                        {action === 'edit' &&
-                                            <Field.TextArea
-                                                id="remarks"
-                                                label="Remarks"
-                                                value={formData.remarks}
-                                                onChange={(e) => {
-                                                    setFormData({ ...formData, remarks: e.target.value });
-                                                }}
-                                            />
-                                        }
                                     </fieldset>
 
                                     <fieldset className="card">
@@ -312,6 +301,19 @@ export default function LaborModal({ branchOptions, setShowModal, onSuccess, act
                                                 variant="adjacent" align="between" />
                                         </div>
                                     </fieldset>
+
+                                    {action === 'edit' &&
+                                        <fieldset className="card">
+                                            <h4 className="text-lg font-bold mb-3">Remarks</h4>
+                                            <Field.TextArea
+                                                id="remarks"
+                                                value={formData.remarks}
+                                                onChange={(e) => {
+                                                    setFormData({ ...formData, remarks: e.target.value });
+                                                }}
+                                            />
+                                        </fieldset>
+                                    }
                                 </div>
                             }
 
@@ -465,16 +467,6 @@ export default function LaborModal({ branchOptions, setShowModal, onSuccess, act
                                                 </>
                                             }
                                         </div>
-                                        {action === 'edit' &&
-                                            <Field.TextArea
-                                                id="remarks"
-                                                label="Remarks"
-                                                value={formData.remarks}
-                                                onChange={(e) => {
-                                                    setFormData({ ...formData, remarks: e.target.value });
-                                                }}
-                                            />
-                                        }
                                     </fieldset>
 
                                     <fieldset className="card">
@@ -482,6 +474,19 @@ export default function LaborModal({ branchOptions, setShowModal, onSuccess, act
                                         <Detail className="font-medium" label='Total Salary' value={formatPesoFromCents([...(formData.payComponents ? formData.payComponents : []), ...newComponents]
                                             ?.reduce((sum, comp) => sum + (Number(comp.amount * 100) || 0), 0))} variant="adjacent" align="between" />
                                     </fieldset>
+
+                                    {action === 'edit' &&
+                                        <fieldset className="card">
+                                            <h4 className="text-lg font-bold mb-3">Remarks</h4>
+                                            <Field.TextArea
+                                                id="remarks"
+                                                value={formData.remarks}
+                                                onChange={(e) => {
+                                                    setFormData({ ...formData, remarks: e.target.value });
+                                                }}
+                                            />
+                                        </fieldset>
+                                    }
                                 </div>
                             }
                         </div>

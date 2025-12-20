@@ -10,13 +10,15 @@ import { invalidateCache } from "../../hooks/useGetData";
 export type FormData = {
     description: string,
     amount: number | null,
-    branchId?: string
+    branchId?: string,
+    remarks?: string
 }
 
 const formSchema: ValidationSchema = {
     description: { required: true },
     amount: { required: true, type: "money" },
-    branchId: { required: true }
+    branchId: { required: true },
+    remarks: { required: true }
 };
 
 type OtherIncomeModalProps = {
@@ -83,27 +85,42 @@ export default function OtherIncomeModal({ branchOptions, setShowModal, onSucces
                             />
                         </fieldset>
 
-                        <fieldset className="card">
-                            <div className="grid gap-x-10 gap-y-[20px]">
-                                <Field.Text
-                                    id="description"
-                                    label="Description"
-                                    value={formData.description}
-                                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                />
-                                <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-x-10 gap-y-[20px]">
-                                    <Field.Money
-                                        id="amount"
-                                        label="Amount"
-                                        value={formData.amount}
-                                        onChange={(values) => {
-                                            setFormData({ ...formData, amount: values.floatValue ?? null });
+                        <div className="fields grid gap-5">
+                            <fieldset className="card">
+                                <div className="grid gap-x-10 gap-y-[20px]">
+                                    <Field.Text
+                                        id="description"
+                                        label="Description"
+                                        value={formData.description}
+                                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                    />
+                                    <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-x-10 gap-y-[20px]">
+                                        <Field.Money
+                                            id="amount"
+                                            label="Amount"
+                                            value={formData.amount}
+                                            onChange={(values) => {
+                                                setFormData({ ...formData, amount: values.floatValue ?? null });
+                                            }}
+                                        />
+                                    </div>
+
+                                </div>
+                            </fieldset>
+
+                            {action === 'edit' &&
+                                <fieldset className="card">
+                                    <h4 className="text-lg font-bold mb-3">Remarks</h4>
+                                    <Field.TextArea
+                                        id="remarks"
+                                        value={formData.remarks}
+                                        onChange={(e) => {
+                                            setFormData({ ...formData, remarks: e.target.value });
                                         }}
                                     />
-                                </div>
-
-                            </div>
-                        </fieldset>
+                                </fieldset>
+                            }
+                        </div>
 
                         <div className="flex justify-end items-center gap-[20px]">
                             <Button variant="gray" label="Cancel" onClick={closeModal} disabled={loading} />

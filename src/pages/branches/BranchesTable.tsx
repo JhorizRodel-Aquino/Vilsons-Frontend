@@ -45,7 +45,7 @@ export default function BranchesTable({ setPresetData, reloadFlag, setShowModal,
 
     const handleEdit = async (item: any) => { 
         setSelectedId(item.id)
-        setPresetData({branch: item.branchName, address: item.address } as FormData) 
+        setPresetData({branch: item.branchName, address: item.address, remarks: "" } as FormData) 
         setShowModal('edit');
     }
 

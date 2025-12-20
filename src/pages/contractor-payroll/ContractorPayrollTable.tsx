@@ -40,7 +40,7 @@ export default function ContractorPayrollTable({ setBalance }: { setBalance: (ba
 
     const transactionItems = data.data?.labors || [];
     const totalBalance = data.data?.totalBalance || 0;
-    const total = data.data?.totalPayroll || 0;
+    const total = data.data?.totalLabor || 0;
 
     const transactions: Transaction[] = transactionItems.map(
         (item: Record<string, any>) => ({

@@ -14,7 +14,8 @@ export type FormData = {
     description: string,
     amount: number | null,
     branchId?: string,
-    isMonthly?: boolean
+    isMonthly?: boolean,
+    remarks?: string
 }
 
 const formSchema: ValidationSchema = {
@@ -119,9 +120,10 @@ export default function OverheadModal({ branchOptions, setShowModal, onSuccess, 
                             />
                         </fieldset>
 
-                        <fieldset className="card">
-                            <div className="grid gap-x-10 gap-y-[20px]">
-                                {/* <Field.Text
+                        <div className="fields grid gap-5">
+                            <fieldset className="card">
+                                <div className="grid gap-x-10 gap-y-[20px]">
+                                    {/* <Field.Text
                                     id="description"
                                     label="Description"
                                     placeholder="Electric Bill"
@@ -131,67 +133,81 @@ export default function OverheadModal({ branchOptions, setShowModal, onSuccess, 
                                     }}
                                 /> */}
 
-                                <Field.List
-                                    id="description"
-                                    placeholder="Enter Description"
-                                    value={formData.description}
-                                    noValidation={true}
-                                    onChange={(e) => {
-                                        // setDescriptionSearch(e.target.value); 
-                                        setFormData({ ...formData, description: e.target.value });
-                                    }}
-                                    onBlur={() => {
-                                        if (isSelectingRef.current) return;
-                                        // if (!selectedDescription || descriptionSearch !== selectedDescription.name) setSelectedDescription(null);
-                                    }}
-                                >
-                                    {descriptionOptions.map((description, i) => (
-                                        <div
-                                            key={i}
-                                            onMouseDown={() => {
-                                                isSelectingRef.current = true;
-                                            }}
-                                            onMouseUp={() => {
-                                                handleSelectDescription(description);
-                                                setTimeout(() => {
-                                                    isSelectingRef.current = false;
-                                                }, 0);
-                                            }}
-                                            onMouseLeave={() => {
-                                                if (isSelectingRef.current) {
+                                    <Field.List
+                                        id="description"
+                                        placeholder="Enter Description"
+                                        value={formData.description}
+                                        noValidation={true}
+                                        onChange={(e) => {
+                                            // setDescriptionSearch(e.target.value); 
+                                            setFormData({ ...formData, description: e.target.value });
+                                        }}
+                                        onBlur={() => {
+                                            if (isSelectingRef.current) return;
+                                            // if (!selectedDescription || descriptionSearch !== selectedDescription.name) setSelectedDescription(null);
+                                        }}
+                                    >
+                                        {descriptionOptions.map((description, i) => (
+                                            <div
+                                                key={i}
+                                                onMouseDown={() => {
+                                                    isSelectingRef.current = true;
+                                                }}
+                                                onMouseUp={() => {
+                                                    handleSelectDescription(description);
                                                     setTimeout(() => {
                                                         isSelectingRef.current = false;
                                                     }, 0);
-                                                }
-                                            }}
-                                        >
-                                            <span>{description.description}</span>
-                                        </div>
-                                    ))}
-                                </Field.List>
+                                                }}
+                                                onMouseLeave={() => {
+                                                    if (isSelectingRef.current) {
+                                                        setTimeout(() => {
+                                                            isSelectingRef.current = false;
+                                                        }, 0);
+                                                    }
+                                                }}
+                                            >
+                                                <span>{description.description}</span>
+                                            </div>
+                                        ))}
+                                    </Field.List>
 
-                                <div className="flex gap-2 -mt-2 items-center text-dark">
-                                    <input
-                                        id="isMonthly"
-                                        type="checkbox"
-                                        checked={!!formData.isMonthly}
-                                        onChange={(e) => setFormData({ ...formData, isMonthly: e.target.checked })}
+                                    <div className="flex gap-2 -mt-2 items-center text-dark">
+                                        <input
+                                            id="isMonthly"
+                                            type="checkbox"
+                                            checked={!!formData.isMonthly}
+                                            onChange={(e) => setFormData({ ...formData, isMonthly: e.target.checked })}
+                                        />
+                                        <label htmlFor="isMonthly">
+                                            Display as option next time.
+                                        </label>
+                                    </div>
+
+                                    <Field.Money
+                                        id="amount"
+                                        label="Amount"
+                                        value={formData.amount}
+                                        onChange={(values) => {
+                                            setFormData({ ...formData, amount: values.floatValue ?? null });
+                                        }}
                                     />
-                                    <label htmlFor="isMonthly">
-                                        Display as option next time.
-                                    </label>
                                 </div>
+                            </fieldset>
 
-                                <Field.Money
-                                    id="amount"
-                                    label="Amount"
-                                    value={formData.amount}
-                                    onChange={(values) => {
-                                        setFormData({ ...formData, amount: values.floatValue ?? null });
-                                    }}
-                                />
-                            </div>
-                        </fieldset>
+                            {action === 'edit' &&
+                                <fieldset className="card">
+                                    <h4 className="text-lg font-bold mb-3">Remarks</h4>
+                                    <Field.TextArea
+                                        id="remarks"
+                                        value={formData.remarks}
+                                        onChange={(e) => {
+                                            setFormData({ ...formData, remarks: e.target.value });
+                                        }}
+                                    />
+                                </fieldset>
+                            }
+                        </div>
 
                         <div className="flex justify-end items-center gap-[20px]">
                             <Button variant="gray" label="Cancel" onClick={closeModal} disabled={loading} />

@@ -60,7 +60,7 @@ export default function OverheadExpensesTable({ setPresetData, reloadFlag, setSh
 
     const handleEdit = async (item: any) => {
         setSelectedId(item.id)
-        setPresetData({ description: item.description, amount: item.amount / 100, branchId: item.branchId, isMonthly: item.isMonthly } as FormData)
+        setPresetData({ description: item.description, amount: item.amount / 100, branchId: item.branchId, isMonthly: item.isMonthly, remarks: "" } as FormData)
         setShowModal('edit');
     }
 

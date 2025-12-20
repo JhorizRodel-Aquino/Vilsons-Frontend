@@ -11,13 +11,14 @@ export type FormData = {
     make: string,
     model: string,
     engine?: string,
+    remarks?: string
 }
 
 const formSchema: ValidationSchema = {
     plate: { required: true },
     make: { required: true },
     model: { required: true },
-    engine: {},
+    remarks: { required: true },
 };
 
 type TrucksModalProps = {
@@ -66,45 +67,60 @@ export default function TrucksModal({ setShowModal, onSuccess, action, presetDat
                             <Button.X onClick={closeModal} disabled={loading} />
                         </div>
 
-                        <fieldset className="card">
-                            <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-x-10 gap-y-[20px]">
-                                <Field.Text
-                                    id="plate"
-                                    label="Plate"
-                                    value={formData.plate}
-                                    onChange={(e) => {
-                                        setFormData({ ...formData, plate: e.target.value });
-                                    }}
-                                />
+                        <div className="fields grid gap-5">
+                            <fieldset className="card">
+                                <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-x-10 gap-y-[20px]">
+                                    <Field.Text
+                                        id="plate"
+                                        label="Plate"
+                                        value={formData.plate}
+                                        onChange={(e) => {
+                                            setFormData({ ...formData, plate: e.target.value });
+                                        }}
+                                    />
 
-                                <Field.Text
-                                    id="make"
-                                    label="Make"
-                                    value={formData.make}
-                                    onChange={(e) => {
-                                        setFormData({ ...formData, make: e.target.value });
-                                    }}
-                                />
+                                    <Field.Text
+                                        id="make"
+                                        label="Make"
+                                        value={formData.make}
+                                        onChange={(e) => {
+                                            setFormData({ ...formData, make: e.target.value });
+                                        }}
+                                    />
 
-                                <Field.Text
-                                    id="model"
-                                    label="Model"
-                                    value={formData.model}
-                                    onChange={(e) => {
-                                        setFormData({ ...formData, model: e.target.value });
-                                    }}
-                                />
+                                    <Field.Text
+                                        id="model"
+                                        label="Model"
+                                        value={formData.model}
+                                        onChange={(e) => {
+                                            setFormData({ ...formData, model: e.target.value });
+                                        }}
+                                    />
 
-                                <Field.Text
-                                    id="engine"
-                                    label="Engine"
-                                    value={formData.engine}
-                                    onChange={(e) => {
-                                        setFormData({ ...formData, engine: e.target.value });
-                                    }}
-                                />
-                            </div>
-                        </fieldset>
+                                    <Field.Text
+                                        id="engine"
+                                        label="Engine"
+                                        value={formData.engine}
+                                        onChange={(e) => {
+                                            setFormData({ ...formData, engine: e.target.value });
+                                        }}
+                                    />
+                                </div>
+                            </fieldset>
+
+                            {action === 'edit' &&
+                                <fieldset className="card">
+                                    <h4 className="text-lg font-bold mb-3">Remarks</h4>
+                                    <Field.TextArea
+                                        id="remarks"
+                                        value={formData.remarks}
+                                        onChange={(e) => {
+                                            setFormData({ ...formData, remarks: e.target.value });
+                                        }}
+                                    />
+                                </fieldset>
+                            }
+                        </div>
 
                         <div className="flex justify-end items-center gap-[20px]">
                             <Button variant="gray" label="Cancel" onClick={closeModal} disabled={loading} />

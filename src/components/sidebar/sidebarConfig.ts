@@ -90,25 +90,25 @@ export const sidebarItems: NavItem[] = [
     },
     {
         label: 'Branches',
-        iconName: 'truck',
+        iconName: 'branches',
         path: '/branches',
         permissions: ['view_branches']
     },
     {
         label: 'Trucks',
-        iconName: 'truck',
+        iconName: 'trucks',
         path: '/trucks' ,
         permissions: ['view_trucks']
     },
     {
         label: 'My Trucks',
-        iconName: 'truck',
+        iconName: 'trucks',
         path: '/my-trucks' ,
         permissions: ['view_customer_own_trucks']
     },
     {
         label: 'Approval Logs',
-        iconName: 'activity-logs',
+        iconName: 'approval-logs',
         path: '/approval-logs',
         permissions: ['view_approval_logs'] 
     },
@@ -120,7 +120,7 @@ export const sidebarItems: NavItem[] = [
     },
     {
         label: 'User Management',
-        iconName: 'users',
+        iconName: 'multi-users',
         permissions: ['view_users', 'view_roles_permissions'],
         children: [
             { 

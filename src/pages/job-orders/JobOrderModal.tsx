@@ -53,9 +53,11 @@ export type FormData = {
     afterImages?: File[];
 
     labor?: number | null,
-    materials?: Material[]
+    materials?: Material[],
 
-    branchId?: string
+    branchId?: string,
+
+    remarks?: string
 }
 
 const formSchemaGeneral: ValidationSchema = {
@@ -70,6 +72,7 @@ const formSchemaGeneral: ValidationSchema = {
         },
     },
     branchId: { required: true, label: "Branch" },
+    remarks: { required: true }
 };
 
 const formSchemaNewTruck: ValidationSchema = {
@@ -729,6 +732,19 @@ export default function JobOrderModal({ branchOptions, setShowModal, presetData,
                                     </dd>
                                 </dl>
                             </div>
+
+                            {action === 'edit' &&
+                                <fieldset className="card">
+                                    <h4 className="text-lg font-bold mb-3">Remarks</h4>
+                                    <Field.TextArea
+                                        id="remarks"
+                                        value={formData.remarks}
+                                        onChange={(e) => {
+                                            setFormData({ ...formData, remarks: e.target.value });
+                                        }}
+                                    />
+                                </fieldset>
+                            }
                         </div>
 
                         <div className="flex justify-end items-center gap-[20px]">

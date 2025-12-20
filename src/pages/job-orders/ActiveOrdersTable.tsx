@@ -99,7 +99,7 @@ export default function ActiveOrdersTable({ setPresetData, reloadFlag, setShowMo
             customerId: jobOrder.customerId, name: jobOrder.customerName, username: jobOrder.customerUsername,
             contractorId: jobOrder.contractorId, contractorName: jobOrder.contractorName, contractorUsername: jobOrder.contractorUsername,
             description: jobOrder.description, labor: jobOrder.labor / 100 || null,
-            materials: jobOrder.materials.map((mat: Material) => ({ id: mat.id, materialName: mat.materialName, quantity: mat.quantity, price: mat.price! / 100 }))
+            materials: jobOrder.materials.map((mat: Material) => ({ id: mat.id, materialName: mat.materialName, quantity: mat.quantity, price: mat.price! / 100 })), remarks: ""
         } as FormData)
         setShowModal('edit');
     }
@@ -154,7 +154,7 @@ export default function ActiveOrdersTable({ setPresetData, reloadFlag, setShowMo
                         setSelectedJobOrder({ jobNumber: item.jobOrderCode, status: (item.status as string) })
                         setInvalidateData({ customerId: item.customerId, contractorId: item.contractorId, truckId: item.truckId });
                     }}>
-                        <Icon name="edit" />Change Status
+                        <Icon name="edit" size={20}/>Change Status
                     </button>}
                 </Options>
         })
