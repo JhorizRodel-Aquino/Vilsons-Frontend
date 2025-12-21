@@ -95,8 +95,8 @@ export default function BranchesTable({ setPresetData, reloadFlag, setShowModal,
                 <ErrorModal error={(error || deleteError)!} closeError={error ? closeError : closeDeleteError} /> 
                 : showDeleteModal && 
                 <ConfirmModal 
-                    title="Delete Job Order" 
-                    message="Are you sure you want to delete this job order?" 
+                    title="Delete Branch" 
+                    message="Are you sure you want to delete this branch?" 
                     onClose={() => {setShowDeleteModal(false)}} 
                     onConfirm={handleDelete} red={true} 
                     disabledButtons={deleteLoading}

@@ -309,7 +309,7 @@ export default function JobOrderModal({ branchOptions, setShowModal, presetData,
                 <>
                     <form onSubmit={handleSubmit} className="card modal gap-[20px]">
                         <div className="text-xl flex justify-between items-center">
-                            <h3 className="font-bold">{action === "create" ? 'Create Job Order' : 'Edit Job Order'}</h3>
+                            <h3 className="font-bold">{action === "create" ? 'Add Job Order' : 'Edit Job Order'}</h3>
                             <Button.X onClick={closeModal} disabled={loading} />
                         </div>
 

@@ -1,4 +1,4 @@
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import Detail from "../../../components/Detail"
 import formatPesoFromCents from "../../../utils/formatPesoFromCents";
 import useGetData from "../../../hooks/useGetData";
@@ -97,7 +97,9 @@ export default function CustomerDetailsSection() {
                 <section className="card w-full">
                     <h2 className="font-bold text-primary mb-5">Vehicle Information</h2>
                     <div className="flex flex-wrap gap-x-30 gap-y-5">
-                        <Detail label='Plate' value={plate} />
+                        <Detail label='Plate' value={
+                            <Link to={`/trucks/${truckId}`}>{plate}</Link>
+                        } />
                         <Detail label='Make' value={make} />
                         <Detail label='Model' value={model} />
                         <Detail label='Engine' value={engine} />
@@ -107,7 +109,9 @@ export default function CustomerDetailsSection() {
                 <section className="card w-full">
                     <h2 className="font-bold text-primary mb-5">Customer Information</h2>
                     <div className="flex flex-wrap gap-x-30 gap-y-5">
-                        <Detail label='Name' value={customerName} />
+                        <Detail label='Name' value={
+                            <Link to={`/customers/${customerId}`}>{customerName}</Link>
+                            } />
                         <Detail label='Contact Number' value={customerPhone} />
                         <Detail label='Email Address' value={customerEmail} />
                     </div>
@@ -118,7 +122,9 @@ export default function CustomerDetailsSection() {
                 <h2 className="font-bold text-primary mb-5">Assigned Contractor</h2>
                 {contractorId ?
                     <div className="flex flex-wrap gap-x-30 gap-y-5">
-                        <Detail label='Name' value={contractorName} />
+                        <Detail label='Name' value={
+                            <Link to={`/contractors/${contractorId}`}>{contractorName}</Link>
+                            } />
                         <Detail label='Contact Number' value={contractorPhone} />
                         <Detail label='Email Address' value={contractorEmail} />
                     </div>

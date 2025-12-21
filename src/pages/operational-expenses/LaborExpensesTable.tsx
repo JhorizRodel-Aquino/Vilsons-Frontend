@@ -129,7 +129,7 @@ export default function LaborExpensesTable({ setPresetData, reloadFlag, setShowM
         <>
             <TableFilter>
                 <TableFilter.Group>
-                    <SearchBar search={searchParams} setSearch={setSearchParams} placeholder='Laborer name' />
+                    <SearchBar search={searchParams} setSearch={setSearchParams} placeholder='Laborer Name' />
                     <Selection
                         options={branchOptions}
                         value={branchParams}

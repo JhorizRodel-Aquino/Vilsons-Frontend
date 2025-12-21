@@ -28,7 +28,7 @@ type AllUser = {
 
 const allUserColumns: Column<AllUser>[] = [
     { key: "name", label: "Name" },
-    { key: "username", label: "User Name", render: (value) => value as React.ReactElement },
+    { key: "username", label: "Username", render: (value) => value as React.ReactElement },
     {
         key: "roles", label: "Roles",
         render: (roles) => (
@@ -139,7 +139,7 @@ export default function UsersTable({ setPresetData, reloadFlag, setShowModal, se
         <>
             <TableFilter>
                 <TableFilter.Group>
-                    <SearchBar search={searchParams} setSearch={setSearchParams} placeholder="Truck make or model" />
+                    <SearchBar search={searchParams} setSearch={setSearchParams} placeholder="Name, Username, Role" />
                     <Selection
                         options={branchOptions}
                         value={branchParams}

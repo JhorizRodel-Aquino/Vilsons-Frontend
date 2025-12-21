@@ -58,7 +58,7 @@ api.interceptors.response.use(
     });
 
     // If 401 and not already retried, and not a refresh/login request
-    if (error.response?.status === 401 && 
+    if (error.response?.status === 403 && 
         !originalRequest._retry && 
         !originalRequest.url?.includes('/refresh') &&
         !originalRequest.url?.includes('/auth')) {

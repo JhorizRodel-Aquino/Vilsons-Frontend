@@ -112,7 +112,7 @@ export default function TrucksTable({ setPresetData, reloadFlag, setShowModal, s
     return (
         <>
             <TableFilter>
-                <SearchBar search={searchParams} setSearch={setSearchParams} placeholder="Truck make or model" />
+                <SearchBar search={searchParams} setSearch={setSearchParams} placeholder="Truck Make, Model" />
                 <DateRange dateRange={dateRangeParams} setDateRange={setDateRangeParams} />
             </TableFilter>
 

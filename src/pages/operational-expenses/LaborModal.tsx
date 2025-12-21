@@ -201,7 +201,7 @@ export default function LaborModal({ branchOptions, setShowModal, onSuccess, act
                 <>
                     <form onSubmit={handleSubmit} className="card modal gap-[20px]">
                         <div className="text-xl flex justify-between items-center">
-                            <h3 className="font-bold">Pay Laborer</h3>
+                            <h3 className="font-bold">{action === "create" ? 'Pay Laborer' : 'Edit Labor Pay'}</h3>
                             <Button.X onClick={closeModal} disabled={loading} />
                         </div>
 

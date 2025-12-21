@@ -54,30 +54,31 @@ export default function ApprovalLogsTable() {
     const [selectedId, setSelectedId] = useState<string | null>(null);
     const [remarks, setRemarks] = useState("")
     const [showRejectModal, setShowRejectModal] = useState(false)
-    const [action, setAction] = useState<'approve' | 'reject' | null>(null);
+    // const [action, setAction] = useState<'approve' | 'reject' | null>(null);
     const { data, loading, error, closeError, reload, searchParams, setSearchParams, dateRangeParams, setDateRangeParams, branchParams, setBranchParams } = useGetByDateRange('/api/approval-logs');
-    const { error: approveError, closeError: approveCloseError, putData, loading: approveLoading } = usePostPutData(`/api/approval-logs/${action}`);
+    const { error: approveError, closeError: approveCloseError, putData, loading: approveLoading } = usePostPutData(`/api/approval-logs`);
 
-    const handleApproval = async () => {
-        if (!remarks) {
+    const handleApproval = async (action: "approve" | "reject", id: string | null) => {
+        if (!remarks && action === "reject") {
             toastWarning("Remarks is required")
             return
         }
-        if (selectedId && action) {
-            const success = await putData(selectedId, { responseComment: '_', remarks });
+        if (action === "approve") setRemarks("")
+
+        if (id) {
+            const success = await putData(`${action}/${id}`, { responseComment: action === "reject" ? remarks : "" });
             if (success) {
                 reload();
+                setRemarks("")
+                setShowRejectModal(false)
+                setSelectedId(null); 
             }
             // Reset states regardless of success/failure
-            setSelectedId(null);
-            setAction(null);
-            setRemarks("")
+            
         }
     };
 
-    useEffect(() => {
-        handleApproval();
-    }, [action]);
+
 
     if (loading) return <Loading />;
 
@@ -94,7 +95,7 @@ export default function ApprovalLogsTable() {
             datetime: <div>{formatDate(item.createdAt as string, "date")} <br /> {formatDate(item.createdAt as string, "time")}</div>,
             action: hasPermissions(['handle_approval_logs']) &&
                 <div className="grid gap-2">
-                    <Button label="Accept" onClick={() => { setSelectedId(item.id); setAction('approve') }} />
+                    <Button label="Accept" onClick={() => { handleApproval("approve", item.id); }} />
                     <Button label="Reject" variant="outline" onClick={() => { setSelectedId(item.id); setShowRejectModal(true) }} />
                 </div>
         })
@@ -141,7 +142,7 @@ export default function ApprovalLogsTable() {
 
                         <div className="flex justify-end items-center gap-[20px]">
                             <Button variant="gray" label="Cancel" onClick={() => setShowRejectModal(false)} disabled={approveLoading} />
-                            <Button variant="primary" label={approveLoading ? "Rejecting..." : "Reject"} onClick={() => {setAction("reject"); handleApproval()}} disabled={approveLoading} />
+                            <Button variant="primary" label={approveLoading ? "Rejecting..." : "Reject"} onClick={() => {handleApproval("reject", selectedId)}} disabled={approveLoading} />
                         </div>
                     </form>
                     <div className="backdrop"></div>

@@ -60,7 +60,7 @@ export default function OverheadExpensesTable({ setPresetData, reloadFlag, setSh
 
     const handleEdit = async (item: any) => {
         setSelectedId(item.id)
-        setPresetData({ description: item.description, amount: item.amount / 100, branchId: item.branchId, isMonthly: item.isMonthly, remarks: "" } as FormData)
+        setPresetData({ description: item.description, amount: item.amount / 100, branchId: item.branchId, isMonthly: item.isMonthly, automated: item.automated, remarks: "" } as FormData)
         setShowModal('edit');
     }
 
@@ -100,7 +100,7 @@ export default function OverheadExpensesTable({ setPresetData, reloadFlag, setSh
         <>
             <TableFilter>
                 <TableFilter.Group>
-                    <SearchBar search={searchParams} setSearch={setSearchParams} placeholder='Overhead description' />
+                    <SearchBar search={searchParams} setSearch={setSearchParams} placeholder='Overhead Description' />
                     <Selection
                         options={branchOptions}
                         value={branchParams}

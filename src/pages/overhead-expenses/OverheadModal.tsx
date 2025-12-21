@@ -15,6 +15,7 @@ export type FormData = {
     amount: number | null,
     branchId?: string,
     isMonthly?: boolean,
+    automated?: boolean,
     remarks?: string
 }
 
@@ -62,6 +63,7 @@ export default function OverheadModal({ branchOptions, setShowModal, onSuccess, 
         setFormData({
             ...formData,
             isMonthly: description.isMonthly,
+            automated: description.automated || false
         });
     };
 
@@ -107,7 +109,7 @@ export default function OverheadModal({ branchOptions, setShowModal, onSuccess, 
                 <>
                     <form onSubmit={handleSubmit} className="card modal gap-[20px]">
                         <div className="text-xl flex justify-between items-center">
-                            <h2 className="font-bold">Add Bill</h2>
+                            <h2 className="font-bold">{action === "create" ? 'Add Overhead' : 'Edit Overhead'}</h2>
                             <Button.X onClick={closeModal} disabled={loading} />
                         </div>
 
@@ -180,7 +182,19 @@ export default function OverheadModal({ branchOptions, setShowModal, onSuccess, 
                                             onChange={(e) => setFormData({ ...formData, isMonthly: e.target.checked })}
                                         />
                                         <label htmlFor="isMonthly">
-                                            Display as option next time.
+                                            Display as option next time
+                                        </label>
+                                    </div>
+
+                                    <div className="flex gap-2 -mt-2 items-center text-dark">
+                                        <input
+                                            id="automated"
+                                            type="checkbox"
+                                            checked={!!formData.automated}
+                                            onChange={(e) => setFormData({ ...formData, automated: e.target.checked })}
+                                        />
+                                        <label htmlFor="automated">
+                                           Auto-record as monthly overhead
                                         </label>
                                     </div>
 

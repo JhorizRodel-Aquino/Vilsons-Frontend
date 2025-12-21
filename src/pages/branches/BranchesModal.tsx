@@ -64,7 +64,7 @@ export default function BranchesModal({ setShowModal, onSuccess, action, presetD
                 <>
                     <form onSubmit={handleSubmit} className="card modal gap-[20px]">
                         <div className="text-xl flex justify-between items-center">
-                            <h2 className="font-bold">Add  Income</h2>
+                            <h2 className="font-bold">{action === "create" ? 'Add Branch' : 'Edit Branch'}</h2>
                             <Button.X onClick={closeModal} disabled={loading} />
                         </div>
 

@@ -45,7 +45,10 @@ export default function useGetData(route: string, params?: {}) {
     // initial load
     useEffect(() => {
         const loadCache = async () => {
-            if (!cachedData[route]) {
+            if (route === '/api/activity-logs' || route === '/api/approval-logs') {
+                cachedData[route] = await fetchData();
+            }
+            else if (!cachedData[route]) {
                 setLoading(true);
                 cachedData[route] = await fetchData();
             }

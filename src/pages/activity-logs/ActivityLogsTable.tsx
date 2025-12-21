@@ -13,12 +13,14 @@ import { getBranches } from "../../services/branchService";
 type ActivityLog = {
     activity: string;
     remarks: string;
+    branch: string;
     datetime: string;
 };
 
 const activityLogColumns: Column<ActivityLog>[] = [
     { key: "activity", label: "Activity" },
     { key: "remarks", label: "Remarks" },
+    { key: "branch", label: "Branch" },
     { key: "datetime", label: "Datetime", render: (value) => formatDate(value) },
 ];
 
@@ -37,6 +39,7 @@ export default function ActivityLogsTable() {
         (item: Record<string, any>) => ({
             activity: item.activity,
             remarks: item.remarks || '',
+            branch: item?.branch?.branchName || "",
             datetime: item.createdAt,
         })
     );

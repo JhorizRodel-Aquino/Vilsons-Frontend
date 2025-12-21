@@ -102,7 +102,7 @@ export default function EquipmentExpensesTable({ setPresetData, reloadFlag, setS
         <>
             <TableFilter>
                 <TableFilter.Group>
-                    <SearchBar search={searchParams} setSearch={setSearchParams} placeholder='Equipment name' />
+                    <SearchBar search={searchParams} setSearch={setSearchParams} placeholder='Equipment Name' />
 
                     <Selection
                         options={branchOptions}

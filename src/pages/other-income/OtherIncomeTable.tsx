@@ -104,7 +104,7 @@ export default function OtherIncomeTable({ setPresetData, reloadFlag, setShowMod
         <>
             <TableFilter>
                 <TableFilter.Group>
-                    <SearchBar search={searchParams} setSearch={setSearchParams} placeholder='Income description' />
+                    <SearchBar search={searchParams} setSearch={setSearchParams} placeholder='Income Description' />
                     <Selection
                         options={branchOptions}
                         value={branchParams}

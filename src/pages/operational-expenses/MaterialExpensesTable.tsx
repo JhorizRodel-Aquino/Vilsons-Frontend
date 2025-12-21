@@ -57,7 +57,7 @@ export default function MaterialExpensesTable() {
         <>
             <TableFilter>
                 <TableFilter.Group>
-                    <SearchBar search={searchParams} setSearch={setSearchParams} placeholder='Material name or job number' />
+                    <SearchBar search={searchParams} setSearch={setSearchParams} placeholder='Material Name or Job#' />
                     <Selection
                         options={branchOptions}
                         value={branchParams}
