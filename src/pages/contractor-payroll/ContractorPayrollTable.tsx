@@ -61,7 +61,7 @@ export default function ContractorPayrollTable({ setBalance, setLastUpdated }: {
         <>
             <TableFilter>
                 <TableFilter.Group>
-                    <SearchBar search={searchParams} setSearch={setSearchParams} placeholder='Reference#, Job#, or Sender' />
+                    <SearchBar search={searchParams} setSearch={setSearchParams} placeholder='Salary Type' />
                     <Selection
                         options={branchOptions}
                         value={branchParams}

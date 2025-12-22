@@ -98,7 +98,7 @@ export default function MyActiveOrdersTable() {
         <>
             <TableFilter>
                 <TableFilter.Group>
-                    <SearchBar search={searchParams} setSearch={setSearchParams} placeholder="Job#, Plate#, or Contractor" />
+                    <SearchBar search={searchParams} setSearch={setSearchParams} placeholder="Job#, Plate#" />
 
                     <Selection
                         options={branchOptions}
