@@ -23,6 +23,7 @@ export default function PermissionsTable({
     setRolePermissions,
     action,
     setShowModal,
+    setLastUpdated
 }: {
     rolePermissions: Record<string, ModulePermissions[]> | null;
     setRolePermissions: React.Dispatch<
@@ -30,6 +31,7 @@ export default function PermissionsTable({
     >;
     action: "create" | "edit" | null,
     setShowModal: (action: "create" | "edit" | null) => void,
+    setLastUpdated: (date: string | undefined) => void;
 }) {
 
 
@@ -88,6 +90,7 @@ export default function PermissionsTable({
         });
     };
 
+    
 
     return (
         <div className="table-section">

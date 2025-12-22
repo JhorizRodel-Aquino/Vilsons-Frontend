@@ -10,6 +10,7 @@ import Loading from "../../components/Loading";
 import useGetByMonthYear from "../../hooks/useGetByMonthYear";
 import { getBranches } from "../../services/branchService";
 import Selection from "../../components/Selection";
+import { useEffect } from "react";
 
 type MaterialExpense = {
     jobNumber: string;
@@ -29,13 +30,19 @@ const materialExpenseColumns: Column<MaterialExpense>[] = [
     { key: "totalAmount", label: "Total Amount", render: (value) => formatPesoFromCents(value as number) },
 ];
 
-export default function MaterialExpensesTable() {
+export default function MaterialExpensesTable({ setLastUpdated }: { setLastUpdated: (date: string | undefined) => void }) {
     const branchOptions = [
         { value: '', label: 'All Branches' },
         ...(getBranches() || [])
     ];
     const { data, loading, error, closeError, searchParams, setSearchParams, setMonthYearParams, branchParams, setBranchParams } = useGetByMonthYear('/api/materials');
     const { options, option, setOption, monthYear, setMonthYear, year, setYear } = useMonthYearFilter(setMonthYearParams);
+
+    useEffect(() => {
+        if (data && data.lastUpdatedAt) {
+            setLastUpdated(data?.lastUpdatedAt);
+        }
+    }, [data, setLastUpdated]);
 
     if (loading) return <Loading />;
 

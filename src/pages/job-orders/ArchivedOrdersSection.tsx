@@ -1,20 +1,20 @@
+import { useState } from "react";
+import Details from "../../components/Details"
 import SectionHeading from "../../components/SectionHeading"
+import formatDate from "../../utils/formatDate"
 import ArchivedOrdersTable from "./ArchivedOrdersTable"
 
 export default function JobOrdersActiveTabContent() {
-
+    const [lastUpdated, setLastUpdated] = useState<string | undefined>(undefined);
 
     return (
         <>
             <SectionHeading>
-                <div>
-                    <h2 className="text-darker font-bold">All Archived Job Orders</h2>
-                    <p className="text-dark font-medium">Last Updated: Aug 9, 2025</p>
-                </div>
+                <Details subtitle={'All Archived Job Orders'} modifiedDate={lastUpdated && formatDate(lastUpdated)} />
             </SectionHeading>
 
 
-            <ArchivedOrdersTable />
+            <ArchivedOrdersTable setLastUpdated={setLastUpdated} />
         </>
     )
 }

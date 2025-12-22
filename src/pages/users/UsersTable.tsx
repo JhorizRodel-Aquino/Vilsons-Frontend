@@ -63,10 +63,11 @@ type UsersTableProps = {
     setShowModal: (action: 'create' | 'edit' | null) => void;
     selectedId: string;
     setSelectedId: (id: string) => void;
+    setLastUpdated: (date: string | undefined) => void;
 }
 
 
-export default function UsersTable({ setPresetData, reloadFlag, setShowModal, selectedId, setSelectedId }: UsersTableProps) {
+export default function UsersTable({ setPresetData, reloadFlag, setShowModal, selectedId, setSelectedId, setLastUpdated }: UsersTableProps) {
     const branchOptions = [
         { value: '', label: 'All Branches' },
         ...(getBranches() || [])
@@ -115,6 +116,12 @@ export default function UsersTable({ setPresetData, reloadFlag, setShowModal, se
     useEffect(() => {
         reload()
     }, [reloadFlag])
+
+    useEffect(() => {
+        if (data && data.lastUpdatedAt) {
+            setLastUpdated(data?.lastUpdatedAt);
+        }
+    }, [data, setLastUpdated]);
 
     if (loading) return <Loading />;
 

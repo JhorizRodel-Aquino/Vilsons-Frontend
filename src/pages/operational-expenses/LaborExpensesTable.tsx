@@ -50,9 +50,10 @@ type LaborTableProps = {
     presetData: FormData;
     setPreSelectedContractor: (preSelected: Record<string, any> | null) => void;
     setPreSelectedEmployee: (preSelected: Record<string, any> | null) => void;
+    setLastUpdated: (date: string | undefined) => void;
 }
 
-export default function LaborExpensesTable({ setPresetData, reloadFlag, setShowModal, selectedId, setSelectedId, setActiveTab, setPreSelectedContractor, setPreSelectedEmployee }: LaborTableProps) {
+export default function LaborExpensesTable({ setPresetData, reloadFlag, setShowModal, selectedId, setSelectedId, setActiveTab, setPreSelectedContractor, setPreSelectedEmployee,setLastUpdated }: LaborTableProps) {
     const branchOptions = [
         { value: '', label: 'All Branches' },
         ...(getBranches() || [])
@@ -103,6 +104,12 @@ export default function LaborExpensesTable({ setPresetData, reloadFlag, setShowM
         reload()
     }, [reloadFlag])
 
+
+    useEffect(() => {
+        if (data && data.lastUpdatedAt) {
+            setLastUpdated(data?.lastUpdatedAt);
+        }
+    }, [data, setLastUpdated]);
 
     if (loading) return <Loading />;
 

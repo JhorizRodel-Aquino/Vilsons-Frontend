@@ -14,6 +14,7 @@ import ConfirmModal from "../../components/ConfirmModal";
 import useDeleteData from "../../hooks/useDeleteData";
 import useGetDataWithTrigger from "../../hooks/useGetDataWithTrigger";
 import { hasPermissions } from "../../services/permissionService";
+import formatDate from "../../utils/formatDate";
 
 export default function RolesAndPermissionsSection({reloadPermissions} : {reloadPermissions: () => void}) {
   const { data, loading, error, closeError, reload } = useGetData('api/roles')
@@ -34,6 +35,7 @@ export default function RolesAndPermissionsSection({reloadPermissions} : {reload
   } = useDeleteData('/api/roles');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showModal, setShowModal] = useState<"create" | "edit" | null>(null);
+      const [lastUpdated, setLastUpdated] = useState<string | undefined>(undefined);
 
   const roleItems = data.data?.roles || [];
 
@@ -89,7 +91,7 @@ export default function RolesAndPermissionsSection({reloadPermissions} : {reload
   return (
     <>
       <SectionHeading>
-        <Details subtitle={"All Permissions"} modifiedDate="Aug 9, 2025" />
+        <Details subtitle={"All Permissions"} modifiedDate={lastUpdated && formatDate(lastUpdated)} />
         {hasPermissions(['create_role_permission']) &&
           <Button label="Create New Role" onClick={() => {
             setShowModal("create")
@@ -117,7 +119,7 @@ export default function RolesAndPermissionsSection({reloadPermissions} : {reload
         </div>
       </div>
 
-      <PermissionsTable rolePermissions={rolePermissions} setRolePermissions={setRolePermissions} action={showModal} setShowModal={setShowModal} />
+      <PermissionsTable rolePermissions={rolePermissions} setRolePermissions={setRolePermissions} action={showModal} setShowModal={setShowModal} setLastUpdated={setLastUpdated}/>
 
       {showModal && <RolesAndPermissionsModal action={showModal} setShowModal={setShowModal} rolePermissions={rolePermissions} setRolePermissions={setRolePermissions} onSuccess={() => { reload(); roleReload(); roleRefetch() }} selectedRole={role} customRoleOptions={customRoleOptions} baseRolesOptions={baseRoleOptions} reloadPermissions={reloadPermissions} />}
 

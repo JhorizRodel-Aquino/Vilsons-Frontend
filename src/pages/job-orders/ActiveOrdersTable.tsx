@@ -54,9 +54,10 @@ type ActiveOrdersTableProps = {
     setSelectedId: (id: string) => void;
     setSelectedJobOrder: ({ }: { jobNumber: string, status: string }) => void;
     setInvalidateData: (data: Record<string, any>) => void;
+    setLastUpdated: (date: string | undefined) => void;
 }
 
-export default function ActiveOrdersTable({ setPresetData, reloadFlag, setShowModal, selectedId, setSelectedId, setSelectedJobOrder, setInvalidateData }: ActiveOrdersTableProps) {
+export default function ActiveOrdersTable({ setPresetData, reloadFlag, setShowModal, selectedId, setSelectedId, setSelectedJobOrder, setInvalidateData, setLastUpdated }: ActiveOrdersTableProps) {
     const branchOptions = [
         { value: '', label: 'All Branches' },
         ...(getBranches() || [])
@@ -73,6 +74,12 @@ export default function ActiveOrdersTable({ setPresetData, reloadFlag, setShowMo
 
     const [action, setAction] = useState<'accept' | 'reject' | 'released' | 'completed' | null>(null);
     const { error: approveError, closeError: closeApproveError, putData } = usePostPutData(`/api/job-orders/${action}`);
+
+    useEffect(() => {
+        if (data && data.lastUpdatedAt) {
+            setLastUpdated(data?.lastUpdatedAt);
+        }
+    }, [data, setLastUpdated]);
 
     useEffect(() => {
         const handleApproval = async () => {
@@ -154,7 +161,7 @@ export default function ActiveOrdersTable({ setPresetData, reloadFlag, setShowMo
                         setSelectedJobOrder({ jobNumber: item.jobOrderCode, status: (item.status as string) })
                         setInvalidateData({ customerId: item.customerId, contractorId: item.contractorId, truckId: item.truckId });
                     }}>
-                        <Icon name="edit" size={20}/>Change Status
+                        <Icon name="edit" size={20} />Change Status
                     </button>}
                 </Options>
         })

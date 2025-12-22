@@ -41,9 +41,10 @@ type OverheadTableProps = {
     setShowModal: (action: 'create' | 'edit' | null) => void;
     selectedId: string;
     setSelectedId: (id: string) => void;
+    setLastUpdated: (date: string | undefined) => void;
 }
 
-export default function OverheadExpensesTable({ setPresetData, reloadFlag, setShowModal, selectedId, setSelectedId }: OverheadTableProps) {
+export default function OverheadExpensesTable({ setPresetData, reloadFlag, setShowModal, selectedId, setSelectedId, setLastUpdated }: OverheadTableProps) {
     const branchOptions = [
         { value: '', label: 'All Branches' },
         ...(getBranches() || [])
@@ -76,6 +77,12 @@ export default function OverheadExpensesTable({ setPresetData, reloadFlag, setSh
     useEffect(() => {
         reload()
     }, [reloadFlag])
+
+    useEffect(() => {
+        if (data && data.lastUpdatedAt) {
+            setLastUpdated(data?.lastUpdatedAt);
+        }
+    }, [data, setLastUpdated]);
 
     if (loading) return <Loading />;
 

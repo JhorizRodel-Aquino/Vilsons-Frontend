@@ -7,7 +7,7 @@ import Loading from "../../components/Loading";
 import ErrorModal from "../../components/ErrorModal";
 import formatDate from "../../utils/formatDate";
 import useGetByDateRange from "../../hooks/useGetByDateRange";
-import { type ReactElement } from "react";
+import { useEffect, type ReactElement } from "react";
 import { Link } from "react-router";
 
 type Truck = {
@@ -39,9 +39,14 @@ const truckColumns: Column<Truck>[] = [
 //     setInvalidateData: (data: Record<string, any>) => void;
 // }
 
-export default function MyTrucksTable() {
+export default function MyTrucksTable({ setLastUpdated }: { setLastUpdated: (date: string | undefined) => void; }) {
     const { data, loading, error, closeError, searchParams, setSearchParams, dateRangeParams, setDateRangeParams } = useGetByDateRange('/api/me/my-trucks');
 
+    useEffect(() => {
+        if (data && data.lastUpdatedAt) {
+            setLastUpdated(data?.lastUpdatedAt);
+        }
+    }, [data, setLastUpdated]);
 
     if (loading) return <Loading />;
 

@@ -38,7 +38,7 @@ const transactionColumns: Column<Transaction>[] = [
 //     setSelectedId: (id: string) => void;
 // }
 
-export default function MyTransactionsTable() {
+export default function MyTransactionsTable({setLastUpdated}: {setLastUpdated: (date: string | undefined) => void; }) {
     const branchOptions = [
         { value: '', label: 'All Branches' },
         ...(getBranches() || [])
@@ -46,6 +46,11 @@ export default function MyTransactionsTable() {
     const { data, loading, error, closeError, searchParams, setSearchParams, setMonthYearParams, branchParams, setBranchParams } = useGetByMonthYear('/api/me/customer/transactions');
     const { options, option, setOption, monthYear, setMonthYear, year, setYear } = useMonthYearFilter(setMonthYearParams);
 
+        useEffect(() => {
+        if (data && data.lastUpdatedAt) {
+            setLastUpdated(data?.lastUpdatedAt);
+        }
+    }, [data, setLastUpdated]);
 
     if (loading) return <Loading />;
 

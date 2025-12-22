@@ -42,9 +42,10 @@ type EquipmentTableProps = {
     setShowModal: (action: 'create' | 'edit' | null) => void;
     selectedId: string;
     setSelectedId: (id: string) => void;
+    setLastUpdated: (date: string | undefined) => void;
 }
 
-export default function EquipmentExpensesTable({ setPresetData, reloadFlag, setShowModal, selectedId, setSelectedId }: EquipmentTableProps) {
+export default function EquipmentExpensesTable({ setPresetData, reloadFlag, setShowModal, selectedId, setSelectedId, setLastUpdated }: EquipmentTableProps) {
     const branchOptions = [
         { value: '', label: 'All Branches' },
         ...(getBranches() || [])
@@ -77,6 +78,12 @@ export default function EquipmentExpensesTable({ setPresetData, reloadFlag, setS
     useEffect(() => {
         reload()
     }, [reloadFlag])
+
+      useEffect(() => {
+        if (data && data.lastUpdatedAt) {
+            setLastUpdated(data?.lastUpdatedAt);
+        }
+    }, [data, setLastUpdated]);
 
     if (loading) return <Loading />;
 

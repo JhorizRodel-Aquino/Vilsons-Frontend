@@ -44,9 +44,10 @@ type TransactionsTableProps = {
     setShowModal: (action: 'create' | 'edit' | null) => void;
     selectedId: string;
     setSelectedId: (id: string) => void;
+    setLastUpdated: (date: string | undefined) => void;
 }
 
-export default function TransactionsTable({ setPresetData, reloadFlag, setShowModal, selectedId, setSelectedId }: TransactionsTableProps) {
+export default function TransactionsTable({ setPresetData, reloadFlag, setShowModal, selectedId, setSelectedId, setLastUpdated }: TransactionsTableProps) {
     const branchOptions = [
         { value: '', label: 'All Branches' },
         ...(getBranches() || [])
@@ -80,6 +81,12 @@ export default function TransactionsTable({ setPresetData, reloadFlag, setShowMo
     useEffect(() => {
         reload()
     }, [reloadFlag])
+
+    useEffect(() => {
+        if (data && data.lastUpdatedAt) {
+            setLastUpdated(data?.lastUpdatedAt);
+        }
+    }, [data, setLastUpdated]);
 
     if (loading) return <Loading />;
 

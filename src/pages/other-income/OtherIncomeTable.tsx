@@ -40,9 +40,10 @@ type OtherIncomeTableProps = {
     setShowModal: (action: 'create' | 'edit' | null) => void;
     selectedId: string;
     setSelectedId: (id: string) => void;
+    setLastUpdated: (date: string | undefined) => void;
 }
 
-export default function OtherIncomeTable({ setPresetData, reloadFlag, setShowModal, selectedId, setSelectedId }: OtherIncomeTableProps) {
+export default function OtherIncomeTable({ setPresetData, reloadFlag, setShowModal, selectedId, setSelectedId, setLastUpdated }: OtherIncomeTableProps) {
     const branchOptions = [
         { value: '', label: 'All Branches' },
         ...(getBranches() || [])
@@ -75,6 +76,12 @@ export default function OtherIncomeTable({ setPresetData, reloadFlag, setShowMod
     useEffect(() => {
         reload()
     }, [reloadFlag])
+
+    useEffect(() => {
+        if (data && data.lastUpdatedAt) {
+            setLastUpdated(data?.lastUpdatedAt);
+        }
+    }, [data, setLastUpdated]);
 
     // useEffect(() => {
     //     if (!setShowDeleteModal) setSelectedId(null);

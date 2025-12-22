@@ -44,10 +44,11 @@ type TrucksTableProps = {
     setSelectedId: (id: string) => void;
     setSelectedTruck: (truck: { plate: string }) => void;
     setInvalidateData: (data: Record<string, any>) => void;
+    setLastUpdated: (date: string | undefined) => void;
 }
 
 
-export default function TrucksTable({ setPresetData, reloadFlag, setShowModal, selectedId, setSelectedId, setSelectedTruck, setInvalidateData }: TrucksTableProps) {
+export default function TrucksTable({ setPresetData, reloadFlag, setShowModal, selectedId, setSelectedId, setSelectedTruck, setInvalidateData, setLastUpdated }: TrucksTableProps) {
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const { data, loading, error, closeError, reload, searchParams, setSearchParams, dateRangeParams, setDateRangeParams } = useGetByDateRange('/api/trucks');
     const {
@@ -75,6 +76,12 @@ export default function TrucksTable({ setPresetData, reloadFlag, setShowModal, s
     useEffect(() => {
         reload()
     }, [reloadFlag])
+
+    useEffect(() => {
+        if (data && data.lastUpdatedAt) {
+            setLastUpdated(data?.lastUpdatedAt);
+        }
+    }, [data, setLastUpdated]);
 
     if (loading) return <Loading />;
 

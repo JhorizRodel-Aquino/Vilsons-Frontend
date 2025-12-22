@@ -24,7 +24,7 @@ const transactionColumns: Column<Transaction>[] = [
     { key: "amount", label: "Amount", render: (value) => formatPesoFromCents(value as number) },
 ];
 
-export default function ContractorPayrollTable({ setBalance }: { setBalance: (balance: number) => void }) {
+export default function ContractorPayrollTable({ setBalance, setLastUpdated }: { setBalance: (balance: number) => void; setLastUpdated: (date: string | undefined) => void }) {
     const branchOptions = [
         { value: '', label: 'All Branches' },
         ...(getBranches() || [])
@@ -35,6 +35,12 @@ export default function ContractorPayrollTable({ setBalance }: { setBalance: (ba
     useEffect(() => {
         setBalance(totalBalance)
     }, [data])
+
+    useEffect(() => {
+        if (data && data.lastUpdatedAt) {
+            setLastUpdated(data?.lastUpdatedAt);
+        }
+    }, [data, setLastUpdated]);
 
     if (loading) return <Loading />;
 

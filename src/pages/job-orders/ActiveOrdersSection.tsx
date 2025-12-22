@@ -7,6 +7,7 @@ import Details from "../../components/Details"
 import ChangeStatusModal from "./ChangeStatusModal"
 import useBranchOptions from "../../hooks/useBranchOptions"
 import { hasPermissions } from "../../services/permissionService"
+import formatDate from "../../utils/formatDate"
 
 export default function JobOrdersActiveTabContent() {
     const { branchOptions } = useBranchOptions()
@@ -21,13 +22,14 @@ export default function JobOrdersActiveTabContent() {
     const [reloadFlag, setReloadFlag] = useState(false);
 
     const [showModal, setShowModal] = useState<'create' | 'edit' | 'status' | null>(null)
+    const [lastUpdated, setLastUpdated] = useState<string | undefined>(undefined);
 
     const reload = useCallback(() => setReloadFlag(prev => !prev), []);
 
     return (
         <>
             <SectionHeading>
-                <Details subtitle={'All Job Orders'} modifiedDate="Aug 9, 2025" />
+                <Details subtitle={'All Active Job Orders'} modifiedDate={lastUpdated && formatDate(lastUpdated)} />
                 {hasPermissions(['create_job_order']) &&
                     <Button label={'Add Job Orders'} onClick={() => {
                         setPresetData({
@@ -38,7 +40,7 @@ export default function JobOrdersActiveTabContent() {
                     }} variant="primary" />}
             </SectionHeading>
 
-            <ActiveOrdersTable reloadFlag={reloadFlag} setPresetData={setPresetData} selectedId={selectedId} setSelectedId={setSelectedId} setShowModal={setShowModal} setSelectedJobOrder={setSelectedJobOrder} setInvalidateData={setInvalidateData} />
+            <ActiveOrdersTable reloadFlag={reloadFlag} setPresetData={setPresetData} selectedId={selectedId} setSelectedId={setSelectedId} setShowModal={setShowModal} setSelectedJobOrder={setSelectedJobOrder} setInvalidateData={setInvalidateData} setLastUpdated={setLastUpdated} />
 
             {(showModal === "create" || showModal === "edit") && <JobOrderModal branchOptions={branchOptions} setShowModal={setShowModal} presetData={presetData} onSuccess={reload} id={selectedId} action={showModal} />}
 

@@ -25,17 +25,18 @@ const branchesColumns: Column<Branches>[] = [
     { key: "options", label: "", render: (value) => value as React.ReactElement },
 ];
 
-type BranchesTableProps = { 
-    setPresetData: (presets: FormData) => void, 
-    reloadFlag: boolean, 
+type BranchesTableProps = {
+    setPresetData: (presets: FormData) => void,
+    reloadFlag: boolean,
     setShowModal: (action: 'create' | 'edit' | null) => void;
     selectedId: string;
     setSelectedId: (id: string) => void;
+    setLastUpdated: (date: string | undefined) => void;
 }
 
-export default function BranchesTable({ setPresetData, reloadFlag, setShowModal, selectedId, setSelectedId }: BranchesTableProps) {
+export default function BranchesTable({ setPresetData, reloadFlag, setShowModal, selectedId, setSelectedId, setLastUpdated }: BranchesTableProps) {
     const [showDeleteModal, setShowDeleteModal] = useState(false)
-    const { data, loading, error, closeError, reload} = useGetData('/api/branches');
+    const { data, loading, error, closeError, reload } = useGetData('/api/branches');
     const {
         loading: deleteLoading,
         error: deleteError,
@@ -43,9 +44,9 @@ export default function BranchesTable({ setPresetData, reloadFlag, setShowModal,
         deleteData,
     } = useDeleteData('/api/branches');
 
-    const handleEdit = async (item: any) => { 
+    const handleEdit = async (item: any) => {
         setSelectedId(item.id)
-        setPresetData({branch: item.branchName, address: item.address, remarks: "" } as FormData) 
+        setPresetData({ branch: item.branchName, address: item.address, remarks: "" } as FormData)
         setShowModal('edit');
     }
 
@@ -62,6 +63,12 @@ export default function BranchesTable({ setPresetData, reloadFlag, setShowModal,
         reload()
     }, [reloadFlag])
 
+    useEffect(() => {
+        if (data && data.lastUpdatedAt) {
+            setLastUpdated(data?.lastUpdatedAt);
+        }
+    }, [data, setLastUpdated]);
+
     // useEffect(() => {
     //     if (!setShowDeleteModal) setSelectedId(null);
     // }, [setShowDeleteModal])
@@ -75,9 +82,9 @@ export default function BranchesTable({ setPresetData, reloadFlag, setShowModal,
             branch: item.branchName,
             address: item.address,
             options:
-                <Options 
-                    onEdit={hasPermissions(['edit_branch']) ? () => handleEdit(item) : undefined} 
-                    onDelete={hasPermissions(['delete_branch']) ? () => { setSelectedId(item.id); setShowDeleteModal(true) } : undefined} 
+                <Options
+                    onEdit={hasPermissions(['edit_branch']) ? () => handleEdit(item) : undefined}
+                    onDelete={hasPermissions(['delete_branch']) ? () => { setSelectedId(item.id); setShowDeleteModal(true) } : undefined}
                 />
         })
     );
@@ -91,14 +98,14 @@ export default function BranchesTable({ setPresetData, reloadFlag, setShowModal,
 
             <Table columns={branchesColumns} rows={branchess} withOptions={true} />
 
-            {(error || deleteError) ? 
-                <ErrorModal error={(error || deleteError)!} closeError={error ? closeError : closeDeleteError} /> 
-                : showDeleteModal && 
-                <ConfirmModal 
-                    title="Delete Branch" 
-                    message="Are you sure you want to delete this branch?" 
-                    onClose={() => {setShowDeleteModal(false)}} 
-                    onConfirm={handleDelete} red={true} 
+            {(error || deleteError) ?
+                <ErrorModal error={(error || deleteError)!} closeError={error ? closeError : closeDeleteError} />
+                : showDeleteModal &&
+                <ConfirmModal
+                    title="Delete Branch"
+                    message="Are you sure you want to delete this branch?"
+                    onClose={() => { setShowDeleteModal(false) }}
+                    onConfirm={handleDelete} red={true}
                     disabledButtons={deleteLoading}
                     onProgressLabel={deleteLoading ? 'Deleting...' : ''}
                 />
